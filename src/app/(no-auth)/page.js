@@ -60,7 +60,7 @@ export default function LoginPage() {
                                             name="credencial"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel htmlFor="credencial">Credencial</FormLabel>
+                                                    <FormLabel htmlFor="credencial">E-mail</FormLabel>
                                                     <FormControl>
                                                         <Input
                                                             type="text"
