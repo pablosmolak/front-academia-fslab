@@ -29,8 +29,8 @@ export default function LoginPage() {
     const [send, setSend] = useState(false);
 
     const schema = z.object({
-        credencial: z.string({ required_error: "A credencial é obrigatória!" })
-            .min(1, { message: "A credencial é obrigatória" }),
+        email: z.string({ required_error: "O E-mail é obrigatória!" })
+            .min(1, { message: "A email é obrigatória" }),
         senha: z.string({ required_error: "A senha é obrigatória!" })
             .min(8, { message: "Deve ter no mínimo 8 caracteres!" })
     });
@@ -38,31 +38,37 @@ export default function LoginPage() {
     const form = useForm({
         resolver: zodResolver(schema),
         defaultValues: {
-            credencial: "",
+            email: "",
             senha: ""
         }
     });
 
     async function login(data) {
-        const response = await fetchApi("/auth/login", "POST", {
-            credencial: data.credencial,
-            senha: data.senha
-        }, null, true);
-
-        if (response.error) {
-            response.errors.forEach(error => {
-                if (error.path) {
-                    form.setError(error.path, { type: "custom", message: error.message });
-                } else {
-                    toast.error(error.message);
-                }
-            });
+        await new Promise(resolve => setTimeout(resolve, 1000));
+    
+        const response = await signIn("credentials", { // Pablo precisa fazer os metodos da autenticação aqui no caso o SignIn !
+          credencial: data.email,
+          senha: data.senha,
+          redirect: false
+        })
+    
+        if (response.ok && !response.error) {
+          router.replace("/inicio");
         } else {
-            toast.success("Login efetuado com sucesso!");
-            setSend(true);
-            form.reset();;
+    
+          switch (response.error) {
+            case "fetch failed":
+              toast.error("Servidor fora do ar, contate o Administrador do sistema!");
+              break;
+            case "CredentialsSignin":
+              toast.error("E-mail ou senha incorreta!");
+              break;
+            default:
+              toast.error("Erro ao capturar mensagem do servidor, contate o Administrador do sistema!");
+          }
         }
-    }
+      }
+    
 
     const logo = logoFslab;
 
@@ -87,14 +93,14 @@ export default function LoginPage() {
                                     <CardContent>
                                         <FormField
                                             control={form.control}
-                                            name="credencial"
+                                            name="email"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel htmlFor="credencial">E-mail</FormLabel>
+                                                    <FormLabel htmlFor="email">E-mail</FormLabel>
                                                     <FormControl>
                                                         <Input
                                                             type="text"
-                                                            id="credencial"
+                                                            id="email"
                                                             {...field}
                                                         />
                                                     </FormControl>
