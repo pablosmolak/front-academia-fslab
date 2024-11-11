@@ -1,6 +1,6 @@
 import { createURLSearch } from "./createURLSearch";
-import { getSessionClient } from "./getSessionClient";
-import { getSessionServer } from "./getSessionServer";
+//import { getSessionClient } from "./getSessionClient";
+//import { getSessionServer } from "./getSessionServer";
 
 // Função para verificar se onde a função está sendo chamada esta do lado do servidor ou esta do lado do cliente
 const verificarRenderizacao = () => {
@@ -15,11 +15,11 @@ const verificarRenderizacao = () => {
 
 const getSessionSafely = async () => {
   if (typeof window !== "undefined") {
-    return await getSessionClient();
+    return //await getSessionClient();
   } else {
     "use server";
 
-    return await getSessionServer();
+    return //await getSessionServer();
   }
 }
 
@@ -29,7 +29,7 @@ const getSessionSafely = async () => {
 export const fetchApi = async (route, method, data, ...props) => {
   try {
     // 
-    const token = await getSessionSafely();
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFmYTM3YzA1LTIzOTctNGRlMS04NGZmLTBhYjFiYzYyYWRjYyIsIm5vbWUiOiJBZG1pbmlzdHJhZG9yIiwiZW1haWwiOiJkZXZAZ21haWwuY29tIiwiYXRpdm8iOnRydWUsImdydXBvIjoiQWRtaW5pc3RyYWRvcmVzIiwiaWF0IjoxNzMxMTgzOTY3LCJleHAiOjE3MzEyNzAzNjd9.Tf6ziDNXyQz4wdyeu9DWvQBQo2guNRoTiA3xFHhWXB4"//await getSessionSafely();
 
     // chama função para pegar o env da API
     let urlApi = verificarRenderizacao();
@@ -111,7 +111,7 @@ export const fetchApiDespaginado = async (route, method, body, ...props) => {
     const { data, ...fetchInfo } = await fetchApi(route, method, {
       ...body,
       ...{
-        pagina: pagina, 
+        pagina: pagina,
         limite: 10
       }
     }, ...props);
