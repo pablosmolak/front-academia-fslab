@@ -23,6 +23,7 @@ export default async function CardsCursos({ filtros }) {
     });
 
     if (response.error) {
+        console.log(response.errors)
         /*return (
          <ErrorGetTable errors={response.errors} />
         )*/

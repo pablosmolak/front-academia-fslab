@@ -29,7 +29,7 @@ const getSessionSafely = async () => {
 export const fetchApi = async (route, method, data, ...props) => {
   try {
     // 
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFmYTM3YzA1LTIzOTctNGRlMS04NGZmLTBhYjFiYzYyYWRjYyIsIm5vbWUiOiJBZG1pbmlzdHJhZG9yIiwiZW1haWwiOiJkZXZAZ21haWwuY29tIiwiYXRpdm8iOnRydWUsImdydXBvIjoiQWRtaW5pc3RyYWRvcmVzIiwiaWF0IjoxNzMxMTgzOTY3LCJleHAiOjE3MzEyNzAzNjd9.Tf6ziDNXyQz4wdyeu9DWvQBQo2guNRoTiA3xFHhWXB4"//await getSessionSafely();
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVlYmYyNDNlLTg2OTItNDc3Zi1hODIyLWQ5ZjlkMWRiYjJkYSIsIm5vbWUiOiJBZG1pbmlzdHJhZG9yIiwiZW1haWwiOiJkZXZAZ21haWwuY29tIiwiYXRpdm8iOnRydWUsImdydXBvIjoiQWRtaW5pc3RyYWRvcmVzIiwiaWF0IjoxNzMxNTQ3MTIyLCJleHAiOjE3MzE2MzM1MjJ9.8qs1QewacP7ank8dVIUUXPaBkpFj-IG5BGBFt6CPbKw"//await getSessionSafely();
 
     // chama função para pegar o env da API
     let urlApi = verificarRenderizacao();
