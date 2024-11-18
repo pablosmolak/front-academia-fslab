@@ -37,18 +37,11 @@ export const fetchApi = async (route, method, data, ...props) => {
     let dados = null;
 
     // se for método GET recebe as querys e cria uma URL já com encode
+    
     if (method === "GET" && data) {
-      if (data?.searchParams && data?.schema) {
-
-        let urlSearch = createURLSearch(route, data.searchParams, data?.schema);
-        route = urlSearch;
-
-      } else {
-        let urlSearch = new URLSearchParams(data);
-        route = `${route}?${urlSearch}`;
-      }
-
-      // Perguntar para o Mateus como lidar com isso
+      let urlSearch = createURLSearch(route, data);
+      
+      route = urlSearch;
     }
 
     let headers = {
