@@ -114,54 +114,81 @@ export default function paginaInicial({ searchParams }) {
                 </form>
             </Form>
 
-            <div className="flex flex-wrap justify-center gap-4 m-4 mx-16">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-center">
-                    {!isLoading && cursos?.map((data, index) => (
-                        <Card key={index} className="max-w-xs max-h-96"> {/* Limite de largura e altura */}
+            <div className="flex flex-wrap justify-center gap-4 mt-10 ">
+               {!isLoading && ( <div className="flex flex-wrap justify-center gap-4">
+                    {cursos?.map((data, index) => (
+                        <Card
+                            key={index}
+                            className="w-72 flex-shrink-0" // Fixando o tamanho dos cards
+                        >
                             <CardHeader>
                                 {data.capa ? (
                                     <img
                                         src={handleImagePath(`/cursos/${data.id}/capa`)}
                                         alt="Capa do curso"
-                                        className="w-full h-40 object-cover"
+                                        className="w-full h-40 object-cover rounded-sm"
                                     />
                                 ) : (
                                     <span
-                                        className="w-full h-40 flex items-center justify-center object-cover">
+                                        className="w-full h-40 flex items-center justify-center text-gray-500 bg-gray-100"
+                                    >
                                         Imagem indisponível
-                                    </span> // Texto opcional para o caso de não ter imagem
+                                    </span>
                                 )}
                             </CardHeader>
                             <CardContent>
-                                <p>{data.nome}</p>
-                                <p>
+                                <p className="text-base font-bold truncate">{data.nome}</p>
+                                <p className="text-sm text-gray-600">
                                     {data.instrutores.map((instrutor) => instrutor.nome).join(', ')}
                                 </p>
                             </CardContent>
                             <CardFooter>
                                 <Link
                                     href={`/cursos/${data.id}`}
-                                    className="w-full 
-                                    flex 
-                                    justify-center 
-                                    items-center 
-                                    rounded-sm 
-                                    border-[0.1px]
-                                    border-solid 
-                                    border-black 
-                                    hover:bg-[#15803D] 
-                                    hover:text-white"
+                                    className="
+                                        w-full 
+                                        flex 
+                                        justify-center 
+                                        items-center 
+                                        py-2 
+                                        rounded-sm
+                                        border 
+                                        border-solid 
+                                        border-black 
+                                        hover:bg-[#15803D] 
+                                        hover:text-white"
                                 >
                                     <p>Quero fazer esse curso</p>
                                 </Link>
-
-
                             </CardFooter>
                         </Card>
                     ))}
+                </div>)}
 
-                </div>
-                {!isLoading && totalPaginas > 1 && (
+                {isLoading && (
+                    <div className="flex flex-wrap justify-center gap-4">
+                        {[...Array(12)].map((_, index) => (
+                            <Card
+                                key={index}
+                                className="w-72 flex-shrink-0"
+                            >
+                                <CardHeader>
+                                    <Skeleton className="w-full h-40" />
+                                </CardHeader>
+                                <CardContent className="space-y-2">
+                                    <Skeleton className="w-full h-4" />
+                                    <Skeleton className="w-3/6 h-4" />
+
+                                </CardContent>
+                                <CardFooter>
+                                    <Skeleton className="w-full h-10" />
+                                </CardFooter>
+                            </Card>
+                        ))}
+                    </div>
+                )}
+
+                {!isLoading && (
                     <PaginationComponent
                         route={"/"}
                         currentPage={pagina}
@@ -169,20 +196,6 @@ export default function paginaInicial({ searchParams }) {
                         querys={searchParams}
                         data-test="pagination-component"
                     />)}
-
-                {isLoading && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 m-4 mx-16">
-                        {[...Array(12)].map((_, index) => (
-                            <div key={index} className="flex flex-col space-y-3">
-                                <Skeleton className="h-[125px] w-[250px] rounded-xl" />
-                                <div className="space-y-2">
-                                    <Skeleton className="h-4 w-[250px]" />
-                                    <Skeleton className="h-4 w-[200px]" />
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
             </div>
         </>
     )
