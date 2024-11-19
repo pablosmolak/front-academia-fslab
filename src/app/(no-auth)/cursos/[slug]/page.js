@@ -3,8 +3,8 @@
 import { fetchApi } from "@/src/utils/fetchApi";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-
-
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { handleImagePath } from "@/src/utils/handleImagePath";
 
 export default function EditarInspecaoPage({ params }) {
 
@@ -41,7 +41,9 @@ export default function EditarInspecaoPage({ params }) {
                     </div>
 
                     <div>
-                       { curso.instrutores?.map(instrutor => <p>{instrutor.nome}</p>)}
+                        {curso.instrutores?.map(instrutor => (
+                            <p>{instrutor.nome}</p>
+                        ))}
                     </div>
 
                     <div>
@@ -49,6 +51,14 @@ export default function EditarInspecaoPage({ params }) {
                     </div>
                     <div>
                         {curso.cargaHoraria}
+                    </div>
+                    <div>
+                        {curso.instrutores?.map(instrutor => (
+                            <Avatar key={instrutor.id} className="h-28 w-28">
+                                <AvatarImage src={handleImagePath(`/usuarios/${instrutor.id}/image`)} />
+                                <AvatarFallback>CN</AvatarFallback>
+                            </Avatar>
+                        ))}
                     </div>
                 </div>
             )}

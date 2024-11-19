@@ -181,7 +181,7 @@ export default function paginaInicial({ searchParams }) {
 
                                 </CardContent>
                                 <CardFooter>
-                                    <Skeleton className="w-full h-10" />
+                                    <Skeleton className="w-full h-11" />
                                 </CardFooter>
                             </Card>
                         ))}
