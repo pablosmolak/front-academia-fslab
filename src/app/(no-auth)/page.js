@@ -115,33 +115,34 @@ export default function paginaInicial({ searchParams }) {
             </Form>
 
             <div className="flex flex-wrap justify-center gap-4 mt-10 ">
-               {!isLoading && ( <div className="flex flex-wrap justify-center gap-4">
+                {!isLoading && (<div className="flex flex-wrap justify-center gap-4">
                     {cursos?.map((data, index) => (
                         <Card
                             key={index}
                             className="w-72 flex-shrink-0" // Fixando o tamanho dos cards
                         >
                             <CardHeader>
-                                {data.capa ? (
-                                    <img
-                                        src={handleImagePath(`/cursos/${data.id}/capa`)}
-                                        alt="Capa do curso"
-                                        className="w-full h-40 object-cover rounded-sm"
-                                    />
-                                ) : (
-                                    <span
-                                        className="w-full h-40 flex items-center justify-center text-gray-500 bg-gray-100"
-                                    >
-                                        Imagem indisponível
-                                    </span>
-                                )}
+                                <img
+                                    src={handleImagePath(`/cursos/${data.id}/capa`)}
+                                    alt="Capa do curso"
+                                    className="w-full h-40 object-cover rounded-sm"
+                                    onError={(event) => {
+                                        event.target.parentNode.innerHTML =`
+                                            <span class="w-full h-40 flex items-center justify-center text-gray-500 bg-gray-100 rounded-sm">
+                                                Imagem indisponível
+                                            </span>
+                                        `
+                                    }}
+                                />
                             </CardHeader>
+
                             <CardContent>
                                 <p className="text-base font-bold truncate">{data.nome}</p>
                                 <p className="text-sm text-gray-600">
                                     {data.instrutores.map((instrutor) => instrutor.nome).join(', ')}
                                 </p>
                             </CardContent>
+
                             <CardFooter>
                                 <Link
                                     href={`/cursos/${data.id}`}
@@ -188,7 +189,7 @@ export default function paginaInicial({ searchParams }) {
                     </div>
                 )}
 
-                {!isLoading && (
+                {!isLoading && cursos.length > 0 && (
                     <PaginationComponent
                         route={"/"}
                         currentPage={pagina}

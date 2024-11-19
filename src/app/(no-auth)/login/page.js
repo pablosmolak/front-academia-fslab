@@ -22,18 +22,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import Image from "next/image";
 import logoFslab from "../../../../public/assets/logo_fslab.jpeg";
+import { authSchema } from "@/src/schemas/authSchema";
 
 export default function LoginPage() {
     const router = useRouter();
 
     const [send, setSend] = useState(false);
 
-    const schema = z.object({
-        email: z.string({ required_error: "O E-mail é obrigatório!" })
-            .min(1, { message: "A email é obrigatória" }),
-        senha: z.string({ required_error: "A senha é obrigatória!" })
-            .min(8, { message: "Deve ter no mínimo 8 caracteres!" })
-    });
+    const schema = authSchema.logar
 
     const form = useForm({
         resolver: zodResolver(schema),
@@ -45,35 +41,35 @@ export default function LoginPage() {
 
     async function login(data) {
         await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
         const response = await signIn("credentials", { // Pablo precisa fazer os metodos da autenticação aqui no caso o SignIn !
-          credencial: data.email,
-          senha: data.senha,
-          redirect: false
+            credencial: data.email,
+            senha: data.senha,
+            redirect: false
         })
-    
+
         if (response.ok && !response.error) {
-          router.replace("/inicio");
+            router.replace("/inicio");
         } else {
-    
-          switch (response.error) {
-            case "fetch failed":
-              toast.error("Servidor fora do ar, contate o Administrador do sistema!");
-              break;
-            case "CredentialsSignin":
-              toast.error("E-mail ou senha incorreta!");
-              break;
-            default:
-              toast.error("Erro ao capturar mensagem do servidor, contate o Administrador do sistema!");
-          }
+
+            switch (response.error) {
+                case "fetch failed":
+                    toast.error("Servidor fora do ar, contate o Administrador do sistema!");
+                    break;
+                case "CredentialsSignin":
+                    toast.error("E-mail ou senha incorreta!");
+                    break;
+                default:
+                    toast.error("Erro ao capturar mensagem do servidor, contate o Administrador do sistema!");
+            }
         }
-      }
-    
+    }
+
 
     const logo = logoFslab;
 
     return (
-        <div className="flex flex-col justify-center mt-16">
+        <div className="flex flex-col justify-center ">
             <main className="flex-grow flex items-center justify-center p-4">
                 <Tabs defaultValue="login" className="w-full max-w-md">
                     <TabsList className="grid w-full grid-cols-2">
@@ -86,9 +82,9 @@ export default function LoginPage() {
                                 <Image src={logo} alt="Logo FSLab" width={200} height={200} />
                             </CardHeader>
                             <Form {...form}>
-                                <form 
-                                className="space-y-4" id="formLogin"
-                                onSubmit={form.handleSubmit(login)}                                
+                                <form
+                                    className="space-y-4" id="formLogin"
+                                    onSubmit={form.handleSubmit(login)}
                                 >
                                     <CardContent>
                                         <FormField
