@@ -17,12 +17,12 @@ import {
 } from "@/components/ui/tabs";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import Image from "next/image";
 import logoFslab from "../../../../public/assets/logo_fslab.jpeg";
 import { authSchema } from "@/src/schemas/authSchema";
+import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -127,9 +127,11 @@ export default function LoginPage() {
                                         <Link className="text-sm mt-2 hover:underline" href={"/recuperarSenha"}>
                                             Esqueceu a senha?
                                         </Link>
+
                                     </CardFooter>
                                 </form>
                             </Form>
+                            <Button onClick={() => signIn('github',{callbackUrl: "/"})} >Login com Github</Button>
                         </Card>
                     </TabsContent>
                 </Tabs>
