@@ -1,143 +1,203 @@
 "use client";
+import PaginationComponent from "@/components/paginationComponent";
 import { Button } from "@/components/ui/button";
 import {
     Card,
     CardContent,
+    CardDescription,
     CardFooter,
     CardHeader,
-} from "@/components/ui/card";
+    CardTitle,
+} from "@/components/ui/card"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import {
-    Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger,
-} from "@/components/ui/tabs";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cursoSchema } from "@/src/schemas/cursoSchema";
+import { createURLSearch } from "@/src/utils/createURLSearch";
+import { fetchApi } from "@/src/utils/fetchApi";
+import { handleImagePath } from "@/src/utils/handleImagePath";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import Image from "next/image";
-import logoFslab from "../../../public/assets/logo_fslab.jpeg";
+import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 
-export default function LoginPage() {
+export default function paginaInicial({ searchParams }) {
+
     const router = useRouter();
+    const schema = cursoSchema.filtrarCurso
 
-    const [send, setSend] = useState(false);
+    const {
+        data: [cursos, pagina, totalPaginas] = [],
+        isLoading,
+        isError,
+        error } = useQuery({
+            queryKey: ["getCursos", searchParams],
+            queryFn: async () => {
+                const response = await fetchApi("/cursos", "GET", {
+                    querys: searchParams,
+                    schema: schema,
+                    hiddenQuerys: { limite: 12 }
+                });
 
-    const schema = z.object({
-        email: z.string({ required_error: "O E-mail é obrigatória!" })
-            .min(1, { message: "A email é obrigatória" }),
-        senha: z.string({ required_error: "A senha é obrigatória!" })
-            .min(8, { message: "Deve ter no mínimo 8 caracteres!" })
-    });
+                if (response.error) {
+                    throw response.errors;
+                } else {
+
+
+                    return [response.data, response.pagina, response.totalPaginas];
+                }
+            }
+        })
 
     const form = useForm({
         resolver: zodResolver(schema),
         defaultValues: {
-            email: "",
-            senha: ""
+            filtro: ""
         }
-    });
+    })
+    // console.log(form.formState.errors)
 
-    async function login(data) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-    
-        const response = await signIn("credentials", { // Pablo precisa fazer os metodos da autenticação aqui no caso o SignIn !
-          credencial: data.email,
-          senha: data.senha,
-          redirect: false
-        })
-    
-        if (response.ok && !response.error) {
-          router.replace("/inicio");
-        } else {
-    
-          switch (response.error) {
-            case "fetch failed":
-              toast.error("Servidor fora do ar, contate o Administrador do sistema!");
-              break;
-            case "CredentialsSignin":
-              toast.error("E-mail ou senha incorreta!");
-              break;
-            default:
-              toast.error("Erro ao capturar mensagem do servidor, contate o Administrador do sistema!");
-          }
+    const filtrar = async (data) => {
+        data.pagina = 1
+        const url = createURLSearch("/", data);
+
+        router.replace(url);
+    }
+
+    if (isError) {
+        return (
+            <div>
+                <p>Deu erro</p>
+                {error?.map((erro) => (
+                    <span>{erro}</span>
+                ))}
+            </div>
+        )
+    }
+
+    useEffect(() => {
+        if (searchParams) {
+            for (let query in searchParams) {
+                let value = searchParams[query];
+
+                if (value) form.setValue(query, value);
+            }
         }
-      }
-    
-
-    const logo = logoFslab;
+    }, []);
 
     return (
-        <div className="flex flex-col justify-center mt-16">
-            <main className="flex-grow flex items-center justify-center p-4">
-                <Tabs defaultValue="login" className="w-full max-w-md">
-                    <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="login">Login</TabsTrigger>
-                        <TabsTrigger value="cadastrar">Cadastra-se</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="login">
-                        <Card>
-                            <CardHeader className="items-center">
-                                <Image src={logo} alt="Logo FSLab" width={200} height={200} />
+        <>
+            <Form {...form} className="flex justify-center items-center h-screen ">
+                <form onSubmit={form.handleSubmit(filtrar)} className="flex flex-row justify-center space-x-2 pt-4">
+                    <FormField
+                        control={form.control}
+                        name="filtro"
+                        render={({ field }) => (
+                            <FormItem className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
+                                { /*<FormLabel htmlFor="filtro" className="">Filtro</FormLabel>*/}
+                                <FormControl>
+                                    <Input
+                                        type="text"
+                                        id="filtro"
+                                        placeholder="Pesquisar"
+                                        className="w-full p-2 border rounded-md"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <Button className="w-32">Filtrar</Button>
+                </form>
+            </Form>
+
+            <div className="flex flex-wrap justify-center gap-4 mt-10 ">
+                {!isLoading && (<div className="flex flex-wrap justify-center gap-4">
+                    {cursos?.map((data, index) => (
+                        <Card
+                            key={index}
+                            className="w-72 flex-shrink-0" // Fixando o tamanho dos cards
+                        >
+                            <CardHeader>
+                                <img
+                                    src={handleImagePath(`/cursos/${data.id}/capa`)}
+                                    alt="Capa do curso"
+                                    className="w-full h-40 object-cover rounded-sm"
+                                    onError={(event) => {
+                                        event.target.parentNode.innerHTML =`
+                                            <span class="w-full h-40 flex items-center justify-center text-gray-500 bg-gray-100 rounded-sm">
+                                                Imagem indisponível
+                                            </span>
+                                        `
+                                    }}
+                                />
                             </CardHeader>
-                            <Form {...form}>
-                                <form 
-                                className="space-y-4" id="formLogin"
-                                onSubmit={form.handleSubmit(login)}                                
+
+                            <CardContent>
+                                <p className="text-base font-bold truncate">{data.nome}</p>
+                                <p className="text-sm text-gray-600">
+                                    {data.instrutores.map((instrutor) => instrutor.nome).join(', ')}
+                                </p>
+                            </CardContent>
+
+                            <CardFooter>
+                                <Link
+                                    href={`/cursos/${data.id}`}
+                                    className="
+                                        w-full 
+                                        flex 
+                                        justify-center 
+                                        items-center 
+                                        py-2 
+                                        rounded-sm
+                                        border 
+                                        border-solid 
+                                        border-black 
+                                        hover:bg-[#15803D] 
+                                        hover:text-white"
                                 >
-                                    <CardContent>
-                                        <FormField
-                                            control={form.control}
-                                            name="email"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel htmlFor="email">E-mail</FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            type="text"
-                                                            id="email"
-                                                            {...field}
-                                                        />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name="senha"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel htmlFor="senha">Senha</FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            type="password"
-                                                            id="senha"
-                                                            {...field}
-                                                        />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </CardContent>
-                                    <CardFooter className="flex flex-col">
-                                        <Button type="submit" className="w-full" form="formLogin">Entrar</Button>
-                                        <Link className="text-sm mt-2 hover:underline" href={"/recuperarSenha"}>
-                                            Esqueceu a senha?
-                                        </Link>
-                                    </CardFooter>
-                                </form>
-                            </Form>
+                                    <p>Quero fazer esse curso</p>
+                                </Link>
+                            </CardFooter>
                         </Card>
-                    </TabsContent>
-                </Tabs>
-            </main>
-        </div>
-    );
+                    ))}
+                </div>)}
+
+                {isLoading && (
+                    <div className="flex flex-wrap justify-center gap-4">
+                        {[...Array(12)].map((_, index) => (
+                            <Card
+                                key={index}
+                                className="w-72 flex-shrink-0"
+                            >
+                                <CardHeader>
+                                    <Skeleton className="w-full h-40" />
+                                </CardHeader>
+                                <CardContent className="space-y-2">
+                                    <Skeleton className="w-full h-4" />
+                                    <Skeleton className="w-3/6 h-4" />
+
+                                </CardContent>
+                                <CardFooter>
+                                    <Skeleton className="w-full h-11" />
+                                </CardFooter>
+                            </Card>
+                        ))}
+                    </div>
+                )}
+
+                {!isLoading && cursos.length > 0 && (
+                    <PaginationComponent
+                        route={"/"}
+                        currentPage={pagina}
+                        totalPages={totalPaginas}
+                        querys={searchParams}
+                        data-test="pagination-component"
+                    />)}
+            </div>
+        </>
+    )
 }
