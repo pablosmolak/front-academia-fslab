@@ -8,22 +8,37 @@ const authOptions = {
       clientSecret: process.env.GITHUB_SECRET
     })
   ],
-  pages:{
+  pages: {
     signIn: '/'
   },
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
-      console.log("SignIn Callback Response:", { user, account, profile, email });
-      return true; // Permite o login
+    async jwt({ token, account }) {
+      
+      let link
+      if (account) {
+        token.provider = account.provider;
+
+        if (account.provider === "github") {
+          token.githubAccessToken = account.access_token;
+          link = "/login/github"
+        }
+
+
+        const response = await fetch(`${process.env.API_URL}${link}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            token
+          }),
+        });
+
+
+
+      }
+      return token;
+
     },
-    async session({ session, token, user }) {
-      console.log("Session Callback Response:", { session, token, user });
-      return session; // Retorna a sessão
-    },
-    async jwt({ token, user, account, profile, isNewUser }) {
-      console.log("JWT Callback Response:", { token, user, account, profile, isNewUser });
-      return token; // Retorna o token
-    },
+
   },
 }
 
