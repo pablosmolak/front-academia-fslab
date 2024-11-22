@@ -1,0 +1,70 @@
+import NextAuth from "next-auth"
+import GitHubProvider from "next-auth/providers/github";
+
+const authOptions = {
+  providers: [
+    GitHubProvider({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET
+    },
+    )
+  ],
+  pages: {
+    signIn: '/'
+  },
+  callbacks: {
+    async jwt({ token, account }) {
+      if (account) {
+        let link;
+        if (account.provider === "github") {
+          token.githubAccessToken = account.access_token;
+          link = "/login/github";
+        }
+    
+        const response = await fetch(`${process.env.API_URL}${link}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            access_token: account.access_token,
+          }),
+        });
+    
+        const data = await response.json();
+    
+        if (response.ok && data.token) {
+          return {
+            token: data.token, // Adiciona o token ao objeto
+          };
+        } else {
+          // Define um erro no token para impedir a criação da sessão
+          token.error = data.message || "Erro inesperado ao realizar login.";
+          return token;
+        }
+      }
+    
+      return token;
+    },
+    
+    async session({ session, token }) {
+      
+      if (token?.error) {
+        console.error("Erro na autenticação:", token.error);
+        return null; // Impede a criação da sessão
+      }
+    
+      if (token) {
+        session = {
+          ...session,
+          token: token.token,
+          expires: new Date(token.exp * 1000).toISOString(),
+        };
+      }
+    
+      return session;
+    }
+  },
+}
+
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST, authOptions };

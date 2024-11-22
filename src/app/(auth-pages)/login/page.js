@@ -22,7 +22,9 @@ import { useState } from "react";
 import Image from "next/image";
 import logoFslab from "../../../../public/assets/logo_fslab.jpeg";
 import { authSchema } from "@/src/schemas/authSchema";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { toast } from "react-toastify";
+import ReactToastContainer from "@/components/app/ReactToastContainer";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -43,13 +45,13 @@ export default function LoginPage() {
         await new Promise(resolve => setTimeout(resolve, 1000));
 
         const response = await signIn("credentials", { // Pablo precisa fazer os metodos da autenticação aqui no caso o SignIn !
-            credencial: data.email,
+            email: data.email,
             senha: data.senha,
             redirect: false
         })
 
         if (response.ok && !response.error) {
-            router.replace("/inicio");
+            router.replace("/");
         } else {
 
             switch (response.error) {
@@ -64,7 +66,6 @@ export default function LoginPage() {
             }
         }
     }
-
 
     const logo = logoFslab;
 
@@ -131,7 +132,6 @@ export default function LoginPage() {
                                     </CardFooter>
                                 </form>
                             </Form>
-                            <Button onClick={() => signIn('github',{callbackUrl: "/"})} >Login com Github</Button>
                         </Card>
                     </TabsContent>
                 </Tabs>
