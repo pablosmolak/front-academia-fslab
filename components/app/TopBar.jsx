@@ -1,10 +1,38 @@
 "use client"
+import { ApplicationContext } from "@/src/context/applicationContext";
+import { handleImagePath } from "@/src/utils/handleImagePath";
 import { GraduationCap } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import { usePathname } from "next/navigation"; // Usando o hook correto
+import { usePathname, useRouter } from "next/navigation"; // Usando o hook correto
+import { useContext, useEffect } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button } from "@/components/ui/button"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Label } from "../ui/label";
+
 
 export default function TopBar() {
     const pathname = usePathname(); // Obtendo o caminho atual
+
+    const { data: session, status } = useSession({
+        required: false,
+        refetchInterval: 60,
+    });
+
 
     return (
         <header className="bg-slate-950">
@@ -15,10 +43,35 @@ export default function TopBar() {
                 </Link>
 
                 {/* Verifica se a rota atual é diferente de /login */}
-                {pathname !== '/login' && (
+                {pathname !== '/login' && status === "unauthenticated" && (
                     <Link className="content-center" href="/login">
                         <p className="text-white">Logar/Cadastrar</p>
                     </Link>
+                )}
+                {pathname !== '/login' && status === "authenticated" && (
+                    <DropdownMenu className="">
+                        <DropdownMenuTrigger asChild>
+                            <div className="flex flex-row items-center">
+                                <Avatar >
+                                    <AvatarImage src={handleImagePath(`/usuarios/${session.user.id}/image`)} />
+                                    <AvatarFallback>{session.user.name.trim().slice(0, 2).toUpperCase()}</AvatarFallback>
+                                </Avatar>
+                                <Label className="text-white">{session.user.name}</Label>
+                            </div>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56">
+                            <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuGroup>
+                                <DropdownMenuItem>
+                                    Perfil
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => { signOut() }}>
+                                    Sair
+                                </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 )}
             </div>
         </header>

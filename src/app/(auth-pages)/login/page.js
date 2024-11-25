@@ -24,7 +24,7 @@ import logoFslab from "../../../../public/assets/logo_fslab.jpeg";
 import { authSchema } from "@/src/schemas/authSchema";
 import { signIn, useSession } from "next-auth/react";
 import { toast } from "react-toastify";
-import ReactToastContainer from "@/components/app/ReactToastContainer";
+
 
 export default function LoginPage() {
     const router = useRouter();
@@ -36,8 +36,8 @@ export default function LoginPage() {
     const form = useForm({
         resolver: zodResolver(schema),
         defaultValues: {
-            email: "",
-            senha: ""
+            email: "dev@gmail.com",
+            senha: "Dev@1234"
         }
     });
 
@@ -53,6 +53,8 @@ export default function LoginPage() {
         if (response.ok && !response.error) {
             router.replace("/");
         } else {
+
+            console.log(response.error)
 
             switch (response.error) {
                 case "fetch failed":

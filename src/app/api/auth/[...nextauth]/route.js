@@ -1,6 +1,7 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 
+
 const authOptions = {
   providers: [
     CredentialsProvider({
@@ -24,12 +25,10 @@ const authOptions = {
 
         const data = await response.json();
 
-        console.log(data)
-
-        if (data.token) {
-
+        if (data?.data[0]?.token) {
           return {
-            token: data.token
+            ...data?.data[0].payload,
+            token: data.data[0].token
           }
         }
 
@@ -38,31 +37,36 @@ const authOptions = {
     })
   ],
   pages: {
-    signIn: '/'
+    signIn: '/',
+    signOut: "/"
+  },
+  session: {
+    strategy: "jwt"
   },
   callbacks: {
     async jwt({ token, user }) {
-
-      console.log(user)
-
-      if (token) {
-       
+      if (user) {
+        user.tokenExpiration = user.exp
+        token = user
       }
-
       return token;
     },
 
     async session({ session, token }) {
       if (token) {
-        console.log(token)
-        session = {
-          token: token.token,
-          expires: new Date(token.exp * 1000).toISOString()
-        }
-      }
-      return session;
-    }
+        const isTokenExpired = token?.tokenExpiration && Date.now() > token.tokenExpiration * 1000;
 
+        if (isTokenExpired) {
+          return {}
+        }
+
+        session.token = token.token
+        session.expires = new Date(token.tokenExpiration * 1000).toISOString()
+        session.user.id = token.id
+      }
+      
+      return session
+    }
   },
 }
 
