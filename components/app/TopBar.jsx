@@ -36,7 +36,7 @@ export default function TopBar() {
 
     return (
         <header className="bg-slate-950">
-            <div className="flex mx-24 justify-between">
+            <div className="flex mx-28 justify-between">
                 <Link href="/" className="flex items-center justify-start h-16">
                     <GraduationCap className="text-white mr-3 " />
                     <h1 className="text-white text-xl">Academia FSLab</h1>
@@ -51,21 +51,26 @@ export default function TopBar() {
                 {pathname !== '/login' && status === "authenticated" && (
                     <DropdownMenu className="">
                         <DropdownMenuTrigger asChild>
-                            <div className="flex flex-row items-center">
+                            <div className="flex flex-row items-center gap-x-2">
                                 <Avatar >
                                     <AvatarImage src={handleImagePath(`/usuarios/${session.user.id}/image`)} />
                                     <AvatarFallback>{session.user.name.trim().slice(0, 2).toUpperCase()}</AvatarFallback>
                                 </Avatar>
-                                <Label className="text-white">{session.user.name}</Label>
+                                <Label className="text-white">{
+                                    session.user.name.split(" ")
+                                        .filter(word => !["da", "de", "do", "das", "dos"].includes(word.toLowerCase()))
+                                        .slice(0, 2)
+                                        .join(" ")
+                                }</Label>
                             </div>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56">
                             <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuGroup>
-                                <DropdownMenuItem>
+                               { /*<DropdownMenuItem>
                                     Perfil
-                                </DropdownMenuItem>
+                                </DropdownMenuItem>*/}
                                 <DropdownMenuItem onClick={() => { signOut() }}>
                                     Sair
                                 </DropdownMenuItem>

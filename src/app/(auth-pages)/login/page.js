@@ -26,9 +26,13 @@ import { signIn, useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 import { fetchApi } from "@/src/utils/fetchApi";
 import { handleFormErrors } from "@/src/errors/handleFormErrors";
+import ButtonLoading from "@/components/buttonLoading";
 
 
 export default function LoginPage() {
+
+    const [LoadingCadastrar, setLoadingCadastrar] = useState(false)
+
     const router = useRouter();
 
     const schemaLogar = authSchema.logar
@@ -55,7 +59,7 @@ export default function LoginPage() {
     async function login(data) {
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        const response = await signIn("credentials", { // Pablo precisa fazer os metodos da autenticação aqui no caso o SignIn !
+        const response = await signIn("credentials", {
             email: data.email,
             senha: data.senha,
             redirect: false
@@ -74,10 +78,13 @@ export default function LoginPage() {
                 default:
                     toast.error("Erro ao capturar mensagem do servidor, contate o Administrador do sistema!");
             }
+
+            setLoadingCadastrar(false)
         }
     }
 
     async function cadastrar(data) {
+        setLoadingCadastrar(true)
 
         const response = await fetchApi("/usuarios", "POST", {
             nome: data.nome,
@@ -85,18 +92,22 @@ export default function LoginPage() {
             senha: data.senha
         });
 
-        console.log(response)
-
         if (response.error) {
+
+            if(response.code === 422){
+                toast.error("Erro ao cadastrar o usuário, verifique o formulário!")
+            }
+
             handleFormErrors(response.errors, formCadastrar);
-            toast.error("erro ao cadastrar essa bosta")
+
+            setLoadingCadastrar(false)
         } else {
             toast.success("Cadastro realizado com sucesso!");
 
             login({
-                email: data.email, 
+                email: data.email,
                 senha: data.senha
-            }) 
+            })
         }
     }
 
@@ -157,7 +168,12 @@ export default function LoginPage() {
                                         />
                                     </CardContent>
                                     <CardFooter className="flex flex-col">
-                                        <Button type="submit" className="w-full" form="formLogin">Entrar</Button>
+                                        <ButtonLoading
+                                            className="w-full"
+                                            isLoading={formLogar.formState.isSubmitting}
+                                            form="formLogin">
+                                            Entrar
+                                        </ButtonLoading>
                                         <Link className="text-sm mt-2 hover:underline" href={"/recuperarsenha"}>
                                             Esqueceu a senha?
                                         </Link>
@@ -175,7 +191,7 @@ export default function LoginPage() {
                             </CardHeader>
                             <Form {...formCadastrar}>
                                 <form
-                                    className="space-y-4" id="formLogin"
+                                    className="space-y-4" id="formCadastrar"
                                     onSubmit={formCadastrar.handleSubmit(cadastrar)}
                                 >
                                     <CardContent>
@@ -249,7 +265,12 @@ export default function LoginPage() {
                                         />
                                     </CardContent>
                                     <CardFooter className="flex flex-col">
-                                        <Button type="submit" className="w-full" form="formLogin">Cadastrar</Button>
+                                        <ButtonLoading
+                                            className="w-full"
+                                            isLoading={LoadingCadastrar}
+                                            form="formCadastrar">
+                                            Cadastrar
+                                        </ButtonLoading>
                                     </CardFooter>
                                 </form>
                             </Form>

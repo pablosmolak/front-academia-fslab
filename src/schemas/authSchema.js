@@ -18,7 +18,7 @@ export class authSchema{
         if (data.senha !== data.confirmarSenha) {
             ctx.addIssue({
                 code: "custom",
-                message: "As senhas devem coincidir",
+                message: "As senhas devem coincidir!",
                 path: ["confirmarSenha"], 
             });
         }

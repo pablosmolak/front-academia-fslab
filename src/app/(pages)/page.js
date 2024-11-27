@@ -1,4 +1,5 @@
 "use client";
+import ButtonLoading from "@/components/buttonLoading";
 import PaginationComponent from "@/components/paginationComponent";
 import { Button } from "@/components/ui/button";
 import {
@@ -44,8 +45,6 @@ export default function paginaInicial({ searchParams }) {
                 if (response.error) {
                     throw response.errors;
                 } else {
-
-
                     return [response.data, response.pagina, response.totalPaginas];
                 }
             }
@@ -57,8 +56,7 @@ export default function paginaInicial({ searchParams }) {
             filtro: ""
         }
     })
-    // console.log(form.formState.errors)
-
+   
     const filtrar = async (data) => {
         data.pagina = 1
         const url = createURLSearch("/", data);
@@ -90,7 +88,7 @@ export default function paginaInicial({ searchParams }) {
     return (
         <>
             <Form {...form} className="flex justify-center items-center h-screen ">
-                <form onSubmit={form.handleSubmit(filtrar)} className="flex flex-row justify-center space-x-2 pt-4">
+                <form id="formFiltrar" onSubmit={form.handleSubmit(filtrar)} className="flex flex-row justify-center space-x-2 pt-4">
                     <FormField
                         control={form.control}
                         name="filtro"
@@ -102,7 +100,7 @@ export default function paginaInicial({ searchParams }) {
                                         type="text"
                                         id="filtro"
                                         placeholder="Pesquisar"
-                                        className="w-full p-2 border rounded-md"
+                                        className="w-full h-full border rounded-md"
                                         {...field}
                                     />
                                 </FormControl>
@@ -110,7 +108,12 @@ export default function paginaInicial({ searchParams }) {
                             </FormItem>
                         )}
                     />
-                    <Button className="w-32">Filtrar</Button>
+                    <ButtonLoading
+                        className="w-32"
+                        isLoading={isLoading}
+                        form="formFiltrar">
+                        Filtrar
+                    </ButtonLoading>
                 </form>
             </Form>
 
@@ -127,7 +130,7 @@ export default function paginaInicial({ searchParams }) {
                                     alt="Capa do curso"
                                     className="w-full h-40 object-cover rounded-sm"
                                     onError={(event) => {
-                                        event.target.parentNode.innerHTML =`
+                                        event.target.parentNode.innerHTML = `
                                             <span class="w-full h-40 flex items-center justify-center text-gray-500 bg-gray-100 rounded-sm">
                                                 Imagem indisponível
                                             </span>

@@ -75,6 +75,7 @@ export const fetchApi = async (route, method, data, ...props) => {
     if (responseData?.error) {
       return {
         data: [],
+        code: responseData?.code,
         error: true,
         errors: responseData?.errors ?? [{ message: "Não foi possível identificar o erro, contate o Administrador" }]
       };
