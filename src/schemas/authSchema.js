@@ -9,6 +9,10 @@ export class authSchema{
         senha: myZ.senha()
     })
 
+    static recuperarSenha = z.object({
+        email: myZ.email(),   
+    });
+
     static cadastrar = z.object({
         email: myZ.email(),
         senha: myZ.senha(),

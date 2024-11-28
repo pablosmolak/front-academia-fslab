@@ -114,8 +114,7 @@ export default function LoginPage() {
     const logo = logoFslab;
 
     return (
-        <div className="flex flex-col justify-center ">
-            <main className="flex-grow flex items-center justify-center p-4">
+            <main className="flex-grow flex items-center justify-center">
                 <Tabs defaultValue="login" className="w-full max-w-md">
                     <TabsList className="grid w-full grid-cols-2">
                         <TabsTrigger value="login">Login</TabsTrigger>
@@ -278,6 +277,5 @@ export default function LoginPage() {
                     </TabsContent>
                 </Tabs>
             </main>
-        </div>
     );
 }

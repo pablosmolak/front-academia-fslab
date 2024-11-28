@@ -14,6 +14,8 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
+import { authSchema } from "@/src/schemas/authSchema";
+import { fetchApi } from "@/src/utils/fetchApi";
 
 
 
@@ -21,12 +23,7 @@ export default function RecuperarSenhaPage() {
     const router = useRouter();
     const [enviouEmail, setEnviouEmail] = useState(false);
 
-    const schema = z.object({
-        email: z.string({ required_error: "Campo obrigatório" })
-            .min(1, "Campo obrigatório")
-            .email({ message: "E-mail inválido" })
-            
-    });
+    const schema = authSchema.recuperarSenha
 
     const form = useForm({
         resolver: zodResolver(schema),
@@ -36,16 +33,20 @@ export default function RecuperarSenhaPage() {
     });
 
     async function recuperarSenha(data) {
-        const response = await fetchApi("/", "POST", {
+        const response = await fetchApi("/recuperarsenha", "POST", {
             email: data.email
         }, null, true);
 
+        
+
         if (response.error) {
             response.errors.forEach(error => {
+                console.log(error.message)
+                toast.error(error);
+
                 if (error.path) {
                     form.setError(error.path, { type: "custom", message: error.message });
                 } else {
-                    toast.error(error.message);
                 }
             });
         } else {

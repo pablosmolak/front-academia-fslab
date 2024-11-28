@@ -9,7 +9,7 @@ export default async function LayoutNoAuth({ children }) {
   return (
       <div className="flex flex-col min-h-screen">
         <TopBar />
-        <main className="flex-grow mx-24 my-4">
+        <main className="flex-grow mx-28 my-4">
           {children}
         </main>
         <Footer />
