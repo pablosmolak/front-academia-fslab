@@ -3,42 +3,41 @@
 import ButtonLoading from "@/components/buttonLoading";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { handleFormErrors } from "@/src/errors/handleFormErrors";
-import { recuperarSenhaSchema } from "@/src/schemas/recuperaSenhaSchema";
-import { fetchApi } from "@/src/utils/fetchApi";
+import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp";
+import { Separator } from "@/components/ui/separator";
+import { verificaEmailSchema } from "@/src/schemas/verificaEmailSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import LogoFslab from "../../../../public/assets/logo_fslab.jpeg";
-import { Separator } from "@/components/ui/separator";
-import Image from "next/image";
+import LogoFslab from "@/public/assets/logo_fslab.jpeg";
+import { fetchApi } from "@/src/utils/fetchApi";
 import { toast } from "react-toastify";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { handleFormErrors } from "@/src/errors/handleFormErrors";
 
 export default function RecuperarSenhaPage() {
     const router = useRouter();
 
     const [LoadingRecuperar, setLoadingRecuperar] = useState(false)
 
-    const schema = recuperarSenhaSchema.recuperar
+    const schema = verificaEmailSchema.verificarEmail
 
     const form = useForm({
         resolver: zodResolver(schema),
         defaultValues: {
-            email: ""
+            codigoVerificacaoEmail: ""
         }
     })
 
     const recuperarSenha = async (data) => {
         setLoadingRecuperar(true)
 
-        const response = await fetchApi("/recuperarsenha", "POST", {
-            email: data.email,
-            urlFront: `${process.env.NEXT_PUBLIC_FRONT_URL}/alterarsenha`
+        const response = await fetchApi("/verificaremail", "POST", {
+            codigoVerificacaoEmail: data.codigoVerificacaoEmail
         })
+
+        console.log(response)
 
         if (response.error) {
             handleFormErrors(response.errors, form);
@@ -65,7 +64,7 @@ export default function RecuperarSenhaPage() {
                     {/* Container do Formulário */}
                     <div className="w-full md:w-1/2">
                         <div className="flex items-center justify-center mb-8">
-                            <h1 className="text-2xl font-bold">Recuperar senha</h1>
+                            <h1 className="text-2xl font-bold">Verificar Email</h1>
                         </div>
 
                         <Card>
@@ -74,16 +73,28 @@ export default function RecuperarSenhaPage() {
                                     <CardContent>
                                         <FormField
                                             control={form.control}
-                                            name="email"
+                                            name="codigoVerificacaoEmail"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Email</FormLabel>
+                                                    <FormLabel>Codigo Verificação</FormLabel>
                                                     <FormControl>
-                                                        <Input
-                                                            type="text"
-                                                            id="email"
+                                                        <InputOTP
+                                                            maxLength={6}
+                                                            id="codigoVerificacaoEmail"
                                                             {...field}
-                                                        />
+                                                        >
+                                                            <InputOTPGroup>
+                                                                <InputOTPSlot index={0} />
+                                                                <InputOTPSlot index={1} />
+                                                                <InputOTPSlot index={2} />
+                                                            </InputOTPGroup>
+                                                            <InputOTPSeparator />
+                                                            <InputOTPGroup>
+                                                                <InputOTPSlot index={3} />
+                                                                <InputOTPSlot index={4} />
+                                                                <InputOTPSlot index={5} />
+                                                            </InputOTPGroup>
+                                                        </InputOTP>
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -91,16 +102,6 @@ export default function RecuperarSenhaPage() {
                                         />
                                     </CardContent>
                                     <CardFooter className="flex justify-between">
-                                        <Button
-                                            type="button"
-                                            className="space-x-2 mr-10 w-32"
-                                            onClick={() => router.push("/login")}
-                                            variant="secondary"
-                                        >
-                                            <ArrowLeft size={24} />
-                                            <span>Voltar</span>
-                                        </Button>
-
                                         <ButtonLoading
                                             type="submit"
                                             className="flex items-center space-x-2 w-36"
@@ -119,4 +120,3 @@ export default function RecuperarSenhaPage() {
 
     )
 }
-

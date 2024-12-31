@@ -6,11 +6,10 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 
 export default async function LayoutNoAuth({ children }) {
-
     const session = await getServerSession(authOptions);
 
-    if (session?.token) {
-        redirect("/")
+    if(!session){
+        redirect("/login")
     }
 
     return (

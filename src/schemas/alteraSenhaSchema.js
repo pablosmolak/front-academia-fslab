@@ -3,16 +3,12 @@ import { z } from "zod"
 
 applyZodInitialConfig()
 
-export class authSchema{
-    static logar = z.object({
-        email: myZ.email(),
-        senha: myZ.senha()
-    })
-    static cadastrar = z.object({
-        email: myZ.email(),
+export class alteraSenhaSchema{
+    static alterar = z.object({
         senha: myZ.senha(),
         confirmarSenha: z.string(),
-        nome: z.string().min(3).max(200)
+        email: myZ.email(),
+        token: z.string()
     }).superRefine((data, ctx) => {
         if (data.senha !== data.confirmarSenha) {
             ctx.addIssue({

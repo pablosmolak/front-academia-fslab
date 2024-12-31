@@ -63,6 +63,7 @@ const authOptions = {
         session.token = token.token
         session.expires = new Date(token.tokenExpiration * 1000).toISOString()
         session.user.id = token.id
+        session.user.emailVerificado = token.emailVerificado
       }
       
       return session
