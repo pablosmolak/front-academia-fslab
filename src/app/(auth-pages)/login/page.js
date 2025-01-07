@@ -182,7 +182,6 @@ export default function LoginPage() {
                             </Form>
                         </Card>
                     </TabsContent>
-
                     <TabsContent value="cadastrar">
                         <Card>
                             <CardHeader className="items-center">

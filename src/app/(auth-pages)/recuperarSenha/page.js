@@ -45,7 +45,7 @@ export default function RecuperarSenhaPage() {
         }
         else {
             toast.success("Email enviado com sucesso!")
-            form.reset({ email: "" })
+           // form.reset({ email: "" })
         }
 
         setLoadingRecuperar(false)
@@ -102,7 +102,6 @@ export default function RecuperarSenhaPage() {
                                         </Button>
 
                                         <ButtonLoading
-                                            type="submit"
                                             className="flex items-center space-x-2 w-36"
                                             isLoading={LoadingRecuperar}
                                             form="formRecuperarSenha">

@@ -8,7 +8,7 @@ export class verificaEmailSchema{
         codigoVerificacaoEmail: z
             .string()
             .refine(value => value.toString().length === 6, {
-                message: "O código de verificação deve ter exatamente 6 dígitos.",
+                message: "O código deve ter 6 dígitos.",
             }),
     });
 }

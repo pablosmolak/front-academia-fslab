@@ -15,6 +15,7 @@ import LogoFslab from "@/public/assets/logo_fslab.jpeg";
 import { fetchApi } from "@/src/utils/fetchApi";
 import { toast } from "react-toastify";
 import { handleFormErrors } from "@/src/errors/handleFormErrors";
+import { Button } from "@/components/ui/button";
 
 export default function RecuperarSenhaPage() {
     const router = useRouter();
@@ -70,45 +71,44 @@ export default function RecuperarSenhaPage() {
                         <Card>
                             <Form {...form}>
                                 <form id="formRecuperarSenha" onSubmit={form.handleSubmit(recuperarSenha)} className="flex flex-col pt-4">
-                                    <CardContent>
+                                    <CardContent className="flex justify-center">
                                         <FormField
                                             control={form.control}
                                             name="codigoVerificacaoEmail"
                                             render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>Codigo Verificação</FormLabel>
-                                                    <FormControl>
+                                                <FormItem >
+                                                    <FormLabel className="flex justify-center">Código Verificação</FormLabel>
+                                                    <FormControl >
                                                         <InputOTP
                                                             maxLength={6}
                                                             id="codigoVerificacaoEmail"
                                                             {...field}
+                                                            
                                                         >
-                                                            <InputOTPGroup>
+                                                            <InputOTPGroup className="flex justify-center">
                                                                 <InputOTPSlot index={0} />
                                                                 <InputOTPSlot index={1} />
                                                                 <InputOTPSlot index={2} />
-                                                            </InputOTPGroup>
-                                                            <InputOTPSeparator />
-                                                            <InputOTPGroup>
                                                                 <InputOTPSlot index={3} />
                                                                 <InputOTPSlot index={4} />
                                                                 <InputOTPSlot index={5} />
                                                             </InputOTPGroup>
                                                         </InputOTP>
                                                     </FormControl>
-                                                    <FormMessage />
+                                                    <FormMessage className="flex justify-center"/>
                                                 </FormItem>
                                             )}
                                         />
                                     </CardContent>
-                                    <CardFooter className="flex justify-between">
+                                    <CardFooter className="flex justify-center flex-col gap-1">
                                         <ButtonLoading
                                             type="submit"
-                                            className="flex items-center space-x-2 w-36"
+                                            className="flex items-center space-x-2 w-56"
                                             isLoading={LoadingRecuperar}
                                             form="formRecuperarSenha">
-                                            Recuperar senha
+                                            Verificar email
                                         </ButtonLoading>
+                                        <Button type="button"className="text-black"variant="link">Solicitar novo código</Button>
                                     </CardFooter>
                                 </form>
                             </Form>

@@ -63,8 +63,8 @@ export default function AlterarSenhaPage({ searchParams }) {
             });
         }
         else {
-            toast.success("Email enviado com sucesso!")
-            form.reset({ email: "" })
+            toast.success("Senha alterada com sucesso!")
+            router.replace("/login");
         }
 
         setLoadingAlterar(false)
