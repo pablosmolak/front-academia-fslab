@@ -1,5 +1,13 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+"use client"
 
+import { useState } from "react";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import {
     Sidebar,
     SidebarContent,
@@ -7,55 +15,96 @@ import {
     SidebarGroup,
     SidebarGroupContent,
     SidebarGroupLabel,
+    SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { Progress } from "./ui/progress"
+} from "@/components/ui/sidebar";
+import { Progress } from "./ui/progress";
+import { MonitorPlay } from "lucide-react";
+import { Badge } from "@/components/ui/badge"
 
-// Menu items.
-const items = [
-    {
-        title: "Home",
-        url: "#",
-        icon: Home,
-    },
-    {
-        title: "Inbox",
-        url: "#",
-        icon: Inbox,
-    },
-    {
-        title: "Calendar",
-        url: "#",
-        icon: Calendar,
-    },
-    {
-        title: "Search",
-        url: "#",
-        icon: Search,
-    },
-    {
-        title: "Settings",
-        url: "#",
-        icon: Settings,
-    },
-]
+const porcentagemConcluida = 100;
 
-export function AppSidebar() {
+const topicos = [
+    {
+        nome: "Python",
+        select: false,
+        conteudos: [
+            { title: "Introdução ao Python", url: "https://www.youtube.com/embed/1Lfv5tUGsn8", icon: MonitorPlay },
+            { title: "Estruturas de Controle em Python", url: "https://www.youtube.com/embed/2Lh1ag2lkKw", icon: MonitorPlay },
+            { title: "Trabalhando com Listas e Dicionários", url: "https://www.youtube.com/embed/3Lh4w9QdsXy", icon: MonitorPlay },
+            // Outros conteúdos...
+        ],
+    },
+    {
+        nome: "JavaScript",
+        select: true,
+        conteudos: [
+            { title: "Fundamentos do JavaScript", url: "https://www.youtube.com/embed/4JsLh5FySlY", icon: MonitorPlay },
+            { title: "Manipulação do DOM", url: "https://www.youtube.com/embed/5JsDwf4kFnY", icon: MonitorPlay },
+            // Outros conteúdos...
+        ],
+    },
+    // Outros tópicos...
+];
+
+export function AppSidebar({ onVideoChange }) {
+    const [topicoSelecionado, setTopicoSelecionado] = useState(
+        topicos.find((topico) => topico.select)?.nome || topicos[0].nome
+    );
+
+    const conteudosFiltrados = topicos.find(
+        (topico) => topico.nome === topicoSelecionado
+    )?.conteudos;
+
+    const handleContentClick = (conteudo) => {
+        if (onVideoChange) {
+            onVideoChange(conteudo.url);
+        }
+    };
+
     return (
         <Sidebar>
+            <SidebarHeader className='flex flex-row items-center'>
+                <Badge>{`${porcentagemConcluida}%`}</Badge>
+                <Progress value={porcentagemConcluida} />
+            </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>Application</SidebarGroupLabel>
                     <SidebarGroupContent>
+                        <SidebarGroupLabel>Tópico Atual</SidebarGroupLabel>
+                        <Select
+                            value={topicoSelecionado}
+                            onValueChange={(value) => setTopicoSelecionado(value)}
+                        >
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Selecione um tópico" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {topicos.map((item) => (
+                                    <SelectItem key={item.nome} value={item.nome}>
+                                        {item.nome}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+                <SidebarGroup>
+                    <SidebarGroupContent>
+                        <SidebarGroupLabel>Conteúdos</SidebarGroupLabel>
                         <SidebarMenu>
-                            {items.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
-                                        <a href={item.url}>
-                                            <item.icon />
-                                            <span>{item.title}</span>
+                            {conteudosFiltrados?.map((conteudo) => (
+                                <SidebarMenuItem key={conteudo.title}>
+                                    <SidebarMenuButton
+                                        asChild
+                                        onClick={() => handleContentClick(conteudo)}
+
+                                    >
+                                        <a href="#!">
+                                            <conteudo.icon />
+                                            <span>{conteudo.title}</span>
                                         </a>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
@@ -64,9 +113,7 @@ export function AppSidebar() {
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
-            <SidebarFooter>
-                <Progress value={66} />
-            </SidebarFooter>
+            <SidebarFooter></SidebarFooter>
         </Sidebar>
-    )
+    );
 }
