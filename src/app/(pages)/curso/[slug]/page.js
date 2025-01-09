@@ -50,7 +50,7 @@ export default function cursoPage({ params }) {
                     "
                     >
                         <Link
-                            href={`/cursos/${curso.id}`}
+                            href={`/curso/${curso.id}/player`}
                             className="
                             w-52
                             flex 
@@ -61,7 +61,7 @@ export default function cursoPage({ params }) {
                             bg-primary
                             "
                         >
-                            <p>Em breve...</p>
+                            <p>Assistir</p>
                         </Link>
                     </div>
 

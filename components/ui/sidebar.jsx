@@ -231,7 +231,7 @@ const SidebarTrigger = React.forwardRef(({ className, onClick, ...props }, ref) 
         toggleSidebar()
       }}
       {...props}>
-      <ViewVerticalIcon />
+      <ViewVerticalIcon className="text-white"/>
       <span className="sr-only">Toggle Sidebar</span>
     </Button>)
   );
