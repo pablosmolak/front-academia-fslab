@@ -6,7 +6,7 @@ import { useState } from "react";
 
 
 export default function playerPage() {
-    const [videoUrl, setVideoUrl] = useState("https://www.youtube.com/embed/dQw4w9WgXcQ");
+    const [videoUrl, setVideoUrl] = useState();
 
     return (
         <SidebarProvider>
