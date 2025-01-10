@@ -8,9 +8,11 @@ import { YouTubePlayer } from "@/components/player/youtube-player";
 import { getSessionClient } from "@/src/utils/getSessionClient";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { fetchApi } from "@/src/utils/fetchApi";
 
 
-export default function playerPage() {
+export default function playerPage({ params }) {
     const { data: session, status } = useSession({
         required: false,
         refetchInterval: 60,
@@ -20,12 +22,31 @@ export default function playerPage() {
         redirect("/login")
     }
 
+    const cursoId = params.slug
+
     const [conteudo, setConteudo] = useState();
+
+    const {
+        data: curso,
+        isLoading,
+        isError,
+        error } = useQuery({
+            queryKey: ["getCursosPlayer"],
+            queryFn: async () => {
+                const response = await fetchApi(`/cursos/${cursoId}`, "GET");
+
+                if (response.error) {
+                    throw response.errors;
+                } else {
+                    return response.data[0]
+                }
+            }
+        })
 
     return (
         <div>
             <SidebarProvider>
-                <AppSidebar onVideoChange={(url) => setConteudo(url)} />
+                <AppSidebar onVideoChange={(url) => setConteudo(url)}  cursoId={cursoId}/>
                 <main className="w-full bg-black">
                     <div className="bg-zinc-800 h-20 flex items-center justify-center relative ">
                         <SidebarTrigger className="absolute left-1" />
