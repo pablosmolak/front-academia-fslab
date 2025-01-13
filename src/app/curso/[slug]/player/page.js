@@ -1,28 +1,33 @@
 "use client"
 import { AppSidebar } from "@/components/player/app-sidebar";
-import TopBar from "@/components/app/TopBar";
-import { Badge } from "@/components/ui/badge";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { useState } from "react";
+import { SemInscricaoAlert } from "@/components/player/sem-inscricao-alert";
 import { YouTubePlayer } from "@/components/player/youtube-player";
-import { getSessionClient } from "@/src/utils/getSessionClient";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { fetchApi } from "@/src/utils/fetchApi";
+import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import { fetchApi } from "@/src/utils/fetchApi";
-import { SemInscricaoAlert } from "@/components/player/sem-inscricao-alert";
-import { data } from "autoprefixer";
+import { useState } from "react";
 
 
 export default function playerPage({ params }) {
-    // const { data: session, status } = useSession({
-    //     required: false,
-    //     refetchInterval: 60,
-    // });
 
-    // if (!session) {
-    //     redirect("/login")
-    // }
+    const { data: session, status } = useSession({
+        required: false,
+        refetchInterval: 60,
+    });
+
+    if (status === 'unauthenticated') {
+        sessionStorage.setItem('redirectPath', window.location.pathname);
+        redirect("/login");
+    }
+
+    if(session){
+        if(!session.user.emailVerificado){
+            sessionStorage.setItem('redirectPath', window.location.pathname);
+            redirect("/verificaremail");
+        }
+    }
 
     const cursoId = params.slug
 
@@ -62,11 +67,6 @@ export default function playerPage({ params }) {
             }
         })
 
-
-
-
-
-
     return (
         <div>
             <SidebarProvider>
@@ -77,7 +77,7 @@ export default function playerPage({ params }) {
                     )}
                     <div className="bg-zinc-800 h-20 flex items-center justify-center relative ">
                         <SidebarTrigger className="absolute left-1" />
-                        <p className="text-white">{conteudo?.titulo}</p>
+                        <p className="text-white">{`${conteudo?.titulo} - ${conteudo?.id}`}</p>
                     </div>
                     <YouTubePlayer videoUrl={conteudo?.conteudo} />
                 </main>

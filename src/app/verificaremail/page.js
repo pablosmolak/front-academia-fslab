@@ -16,11 +16,15 @@ import { fetchApi } from "@/src/utils/fetchApi";
 import { toast } from "react-toastify";
 import { handleFormErrors } from "@/src/errors/handleFormErrors";
 import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
 
-export default function RecuperarSenhaPage() {
+export default function VerificarEmailPage() {
     const router = useRouter();
 
-    const [LoadingRecuperar, setLoadingRecuperar] = useState(false)
+    
+    const { data: session, update } = useSession();
+
+    const [LoadingVerificar, setLoadingVerificar] = useState(false)
 
     const schema = verificaEmailSchema.verificarEmail
 
@@ -32,23 +36,29 @@ export default function RecuperarSenhaPage() {
     })
 
     const recuperarSenha = async (data) => {
-        setLoadingRecuperar(true)
+        setLoadingVerificar(true)
 
         const response = await fetchApi("/verificaremail", "POST", {
             codigoVerificacaoEmail: data.codigoVerificacaoEmail
         })
 
-        console.log(response)
-
         if (response.error) {
             handleFormErrors(response.errors, form);
         }
         else {
-            toast.success("Email enviado com sucesso!")
-            form.reset({ email: "" })
+            toast.success("Email verificado com sucesso!")
+
+            await update({user:{ emailVerificado: true}} );
+
+            console.log("Sessão atualizada:", session);
+
+            const redirectPath = sessionStorage.getItem('redirectPath') || '/';
+            sessionStorage.removeItem('redirectPath');
+      
+            router.replace(redirectPath);
         }
 
-        setLoadingRecuperar(false)
+        setLoadingVerificar(false)
     }
 
     return (
@@ -104,7 +114,7 @@ export default function RecuperarSenhaPage() {
                                         <ButtonLoading
                                             type="submit"
                                             className="flex items-center space-x-2 w-56"
-                                            isLoading={LoadingRecuperar}
+                                            isLoading={LoadingVerificar}
                                             form="formRecuperarSenha">
                                             Verificar email
                                         </ButtonLoading>

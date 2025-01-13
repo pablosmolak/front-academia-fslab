@@ -30,11 +30,17 @@ import { Progress } from "../ui/progress";
 import { Separator } from "../ui/separator";
 import { NavUser } from "./nav-user";
 
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
+
+
 
 export function AppSidebar({ onVideoChange, cursoId, progresso }) {
     const router = useRouter();
-
-    console.log(progresso)
 
     const {
         data: curso,
@@ -53,17 +59,27 @@ export function AppSidebar({ onVideoChange, cursoId, progresso }) {
             }
         })
 
-    const [topicoSelecionado, setTopicoSelecionado] = useState(
-        curso?.topicos?.find((topico) => topico.select)?.nome || curso?.topicos[0]?.titulo
-    );
+    const [topicoSelecionado, setTopicoSelecionado] = useState(null);
+
+    useEffect(() => {
+        if (curso?.topicos && progresso?.atividadeAtual) {
+            const topicoEncontrado = curso.topicos.find((topico) =>
+                topico.conteudos?.some((conteudo) => conteudo.id === progresso.atividadeAtual)
+            );
+            setTopicoSelecionado(topicoEncontrado?.titulo || null); // ou topicoEncontrado?.nome
+        }
+    }, [curso, progresso]);
 
     const conteudosFiltrados = curso?.topicos?.find(
         (topico) => topico.titulo === topicoSelecionado
     )?.conteudos;
 
 
+    const [activeContentId, setActiveContentId] = useState(null);
+
     const handleContentClick = (conteudo) => {
         if (onVideoChange) {
+            setActiveContentId(conteudo.id);
             onVideoChange(conteudo);
         }
     };
@@ -79,7 +95,7 @@ export function AppSidebar({ onVideoChange, cursoId, progresso }) {
     }, [atividadeAtual]);
 
     return (
-        <Sidebar>
+        <Sidebar className="border-none">
             <SidebarHeader className='flex flex-col items-center'>
                 <SidebarGroup className='flex flex-row items-center gap-2'>
                     <Button
@@ -134,20 +150,32 @@ export function AppSidebar({ onVideoChange, cursoId, progresso }) {
                         <SidebarGroupLabel>Conteúdos</SidebarGroupLabel>
                         <SidebarMenu>
                             {conteudosFiltrados?.map((conteudo) => (
-                                <SidebarMenuItem key={conteudo.id}>
-                                    <SidebarMenuButton
-                                        asChild
-                                        onClick={() => handleContentClick(conteudo)}
-                                    >
-                                        <div>
-                                            <MonitorPlay
-                                                className={progresso?.atividadesConcluidas?.includes(conteudo.id)
-                                                    ? "text-lime-400" : ""}
-                                            />
-                                            <span>{conteudo.titulo}</span>
-                                        </div>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger>
+                                            <SidebarMenuItem key={conteudo.id}>
+                                                <SidebarMenuButton
+                                                    asChild
+                                                    onClick={() => handleContentClick(conteudo)}
+                                                    isActive={activeContentId === conteudo.id}
+                                                >
+                                                    <div>
+                                                        <MonitorPlay
+                                                            className={progresso?.atividadesConcluidas?.includes(conteudo.id)
+                                                                ? "text-lime-400" : ""}
+                                                        />
+                                                        <span>
+                                                            {conteudo.titulo}
+                                                        </span>
+                                                    </div>
+                                                </SidebarMenuButton>
+                                            </SidebarMenuItem>
+                                        </TooltipTrigger>
+                                        <TooltipContent className>
+                                            {conteudo.titulo}
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
                             ))}
                         </SidebarMenu>
                     </SidebarGroupContent>

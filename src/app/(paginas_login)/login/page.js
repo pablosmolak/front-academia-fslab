@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import ButtonLoading from "@/components/buttonLoading";
 import {
     Card,
     CardContent,
@@ -8,25 +8,24 @@ import {
 } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
 import {
     Tabs,
     TabsContent,
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import Image from "next/image";
-import logoFslab from "../../../../public/assets/logo_fslab.jpeg";
-import { authSchema } from "@/src/schemas/authSchema";
-import { signIn, useSession } from "next-auth/react";
-import { toast } from "react-toastify";
-import { fetchApi } from "@/src/utils/fetchApi";
 import { handleFormErrors } from "@/src/errors/handleFormErrors";
-import ButtonLoading from "@/components/buttonLoading";
+import { authSchema } from "@/src/schemas/authSchema";
+import { fetchApi } from "@/src/utils/fetchApi";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import logoFslab from "../../../../public/assets/logo_fslab.jpeg";
 
 
 export default function LoginPage() {
@@ -66,7 +65,10 @@ export default function LoginPage() {
         })
 
         if (response.ok && !response.error) {
-            router.replace("/");
+            const redirectPath = sessionStorage.getItem('redirectPath') || '/';
+            sessionStorage.removeItem('redirectPath');
+      
+            router.replace(redirectPath);
         } else {
             switch (response.error) {
                 case "fetch failed":
