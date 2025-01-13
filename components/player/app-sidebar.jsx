@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { Badge } from "@/components/ui/badge";
 import {
     Select,
     SelectContent,
@@ -20,33 +20,21 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Progress } from "../ui/progress";
-import { ArrowLeft, MonitorPlay } from "lucide-react";
-import { Badge } from "@/components/ui/badge"
-import { NavUser } from "./nav-user";
-import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
-import { Separator } from "../ui/separator";
-import { useSession } from "next-auth/react";
-import { useQuery } from "@tanstack/react-query";
 import { fetchApi } from "@/src/utils/fetchApi";
+import { useQuery } from "@tanstack/react-query";
+import { ArrowLeft, MonitorPlay } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Button } from "../ui/button";
+import { Progress } from "../ui/progress";
+import { Separator } from "../ui/separator";
+import { NavUser } from "./nav-user";
 
 
-const progresso = {
-    "userId": "28c57d8e-5712-41fe-9c9b-f74c26298f13",
-    "cursoId": "022dbbfa-8e29-469a-a478-6e7d3caf8801",
-    "porcentagem": 33.33333333333333,
-    "atividadeAtual": "4e00cd71-f105-4889-9030-a4856cc20994",
-    "atividadesConcluidas": [
-        "c776b8ec-34d5-47ff-9c61-5b84fab3f889",
-        "3b2532a1-6b7e-41df-941e-39845630e933"
-    ],
-    "created_at": "2025-01-09T12:58:17.832Z",
-    "updated_at": "2025-01-09T13:09:12.704Z"
-}
-
-export function AppSidebar({ onVideoChange, cursoId }) {
+export function AppSidebar({ onVideoChange, cursoId, progresso }) {
     const router = useRouter();
+
+    console.log(progresso)
 
     const {
         data: curso,
@@ -55,7 +43,7 @@ export function AppSidebar({ onVideoChange, cursoId }) {
         error } = useQuery({
             queryKey: ["getCursosPlayer"],
             queryFn: async () => {
-                const response = await fetchApi(`/cursos/${cursoId}`, "GET");
+                const response = await fetchApi(`/cursos/publicados/${cursoId}`, "GET");
 
                 if (response.error) {
                     throw response.errors;
@@ -82,13 +70,13 @@ export function AppSidebar({ onVideoChange, cursoId }) {
 
     const atividadeAtual = curso?.topicos
         .flatMap((topico) => topico.conteudos)
-        .find((conteudo) => conteudo.id === progresso.atividadeAtual);
+        .find((conteudo) => conteudo.id === progresso?.atividadeAtual);
 
     useEffect(() => {
         if (atividadeAtual) {
             handleContentClick(atividadeAtual);
         }
-    }, []);
+    }, [atividadeAtual]);
 
     return (
         <Sidebar>
@@ -113,8 +101,8 @@ export function AppSidebar({ onVideoChange, cursoId }) {
 
                 </SidebarGroup>
                 <SidebarGroup className='flex flex-row items-center gap-2'>
-                    <Badge>{`${progresso?.porcentagem.toFixed(0)}%`}</Badge>
-                    <Progress value={progresso.porcentagem} />
+                    <Badge>{`${progresso?.porcentagem?.toFixed(0) || 0}%`}</Badge>
+                    <Progress value={(progresso?.porcentagem || 0)} />
                 </SidebarGroup>
             </SidebarHeader>
             <Separator
@@ -153,7 +141,7 @@ export function AppSidebar({ onVideoChange, cursoId }) {
                                     >
                                         <div>
                                             <MonitorPlay
-                                                className={progresso?.atividadesConcluidas.includes(conteudo.id)
+                                                className={progresso?.atividadesConcluidas?.includes(conteudo.id)
                                                     ? "text-lime-400" : ""}
                                             />
                                             <span>{conteudo.titulo}</span>

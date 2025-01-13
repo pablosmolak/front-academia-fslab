@@ -19,7 +19,9 @@ export default function cursoPage({ params }) {
         error } = useQuery({
             queryKey: ["getCursos"],
             queryFn: async () => {
-                const response = await fetchApi(`/cursos/informacoes/${params.slug}`, "GET");
+                const response = await fetchApi(`/cursos/publicados/informacoes/${params.slug}`, "GET");
+
+                console.log(response)
 
                 if (response.error) {
                     throw response.errors;

@@ -33,7 +33,7 @@ export default function paginaInicial({ searchParams }) {
         error } = useQuery({
             queryKey: ["getCursos", searchParams],
             queryFn: async () => {
-                const response = await fetchApi("/cursos", "GET", {
+                const response = await fetchApi("/cursos/publicados", "GET", {
                     querys: searchParams,
                     schema: schema,
                     hiddenQuerys: { limite: 12 }
@@ -46,6 +46,7 @@ export default function paginaInicial({ searchParams }) {
                 }
             }
         })
+
 
     const form = useForm({
         resolver: zodResolver(schema),
