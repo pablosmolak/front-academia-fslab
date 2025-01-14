@@ -22,8 +22,8 @@ export default function playerPage({ params }) {
         redirect("/login");
     }
 
-    if(session){
-        if(!session.user.emailVerificado){
+    if (session) {
+        if (!session.user.emailVerificado) {
             sessionStorage.setItem('redirectPath', window.location.pathname);
             redirect("/verificaremail");
         }
@@ -38,7 +38,7 @@ export default function playerPage({ params }) {
         isLoading: isLoadingInscricao,
         isError: isErrorInscricao,
         error: errorInscricao } = useQuery({
-            queryKey: ["getInscricao"],
+            queryKey: [`getInscricao${cursoId}`],
             queryFn: async () => {
                 const response = await fetchApi(`/inscricoes/usuario/curso/${cursoId}`, "GET");
 
@@ -70,16 +70,22 @@ export default function playerPage({ params }) {
     return (
         <div>
             <SidebarProvider>
-                <AppSidebar onVideoChange={(url) => setConteudo(url)} cursoId={cursoId} progresso={progresso} />
-                <main className="w-full bg-black">
+                <AppSidebar
+                    onVideoChange={(url) => setConteudo(url)}
+                    cursoId={cursoId}
+                    progresso={progresso}
+                />
+                <main className="w-full bg-black flex flex-col items-center">
                     {!isLoadingInscricao && inscricao.length === 0 && (
                         <SemInscricaoAlert cursoId={cursoId} />
                     )}
-                    <div className="bg-zinc-800 h-20 flex items-center justify-center relative ">
+                    <div className="bg-zinc-800 h-20 flex items-center justify-center relative w-full">
                         <SidebarTrigger className="absolute left-1" />
                         <p className="text-white">{`${conteudo?.titulo} - ${conteudo?.id}`}</p>
                     </div>
-                    <YouTubePlayer videoUrl={conteudo?.conteudo} />
+                    <div className="flex-grow flex items-center justify-center w-full">
+                        <YouTubePlayer videoUrl={conteudo?.conteudo} />
+                    </div>
                 </main>
             </SidebarProvider>
         </div>

@@ -40,33 +40,93 @@ import {
 
 
 export function AppSidebar({ onVideoChange, cursoId, progresso }) {
-    const router = useRouter();
+    // const router = useRouter();
 
+    // const {
+    //     data: curso,
+    //     isLoading,
+    //     isError,
+    //     error } = useQuery({
+    //         queryKey: ["getCursosPlayer"],
+    //         queryFn: async () => {
+    //             const response = await fetchApi(`/cursos/publicados/${cursoId}`, "GET");
+
+    //             if (response.error) {
+    //                 throw response.errors;
+    //             } else {
+    //                 return response.data[0]
+    //             }
+    //         }
+    //     })
+
+
+    // const [topicoSelecionado, setTopicoSelecionado] = useState(null);
+    // useEffect(() => {
+    //     if (curso?.topicos && progresso?.atividadeAtual) {
+    //         const topicoEncontrado = curso.topicos.find((topico) =>
+    //             topico.conteudos?.some((conteudo) => conteudo.id === progresso.atividadeAtual)
+    //         );
+    //         setTopicoSelecionado(topicoEncontrado?.titulo || null)
+    //     } else if (curso?.topicos) {
+    //         setTopicoSelecionado(curso?.topicos[0]?.conteudos[0]?.titulo)
+    //     }
+
+    // }, [curso, progresso]);
+
+    // const conteudosFiltrados = curso?.topicos?.find(
+    //     (topico) => topico.titulo === topicoSelecionado
+    // )?.conteudos;
+
+
+    // const [activeContentId, setActiveContentId] = useState(null);
+
+    // const handleContentClick = (conteudo) => {
+    //     if (onVideoChange) {
+    //         setActiveContentId(conteudo.id);
+    //         onVideoChange(conteudo);
+    //     }
+    // };
+
+    // const atividadeAtual = curso?.topicos
+    //     .flatMap((topico) => topico.conteudos)
+    //     .find((conteudo) => conteudo.id === progresso?.atividadeAtual);
+
+    // useEffect(() => {
+    //     if (atividadeAtual) {
+    //         handleContentClick(atividadeAtual);
+    //     }
+    // }, [atividadeAtual]);
+
+
+    const router = useRouter();
+    const [topicoSelecionado, setTopicoSelecionado] = useState(null);
+    const [activeContentId, setActiveContentId] = useState(null);
+
+    // Query para buscar o curso
     const {
         data: curso,
         isLoading,
         isError,
         error } = useQuery({
-            queryKey: ["getCursosPlayer"],
+            queryKey: ["getCursosPlayer", cursoId],
             queryFn: async () => {
                 const response = await fetchApi(`/cursos/publicados/${cursoId}`, "GET");
-
                 if (response.error) {
                     throw response.errors;
-                } else {
-                    return response.data[0]
                 }
+                return response.data[0];
             }
-        })
-
-    const [topicoSelecionado, setTopicoSelecionado] = useState(null);
+        });
 
     useEffect(() => {
-        if (curso?.topicos && progresso?.atividadeAtual) {
-            const topicoEncontrado = curso.topicos.find((topico) =>
-                topico.conteudos?.some((conteudo) => conteudo.id === progresso.atividadeAtual)
-            );
-            setTopicoSelecionado(topicoEncontrado?.titulo || null); // ou topicoEncontrado?.nome
+        if (curso?.topicos) {
+            const topicoAtual = progresso?.atividadeAtual
+                ? curso.topicos.find((topico) =>
+                    topico.conteudos?.some((conteudo) => conteudo.id === progresso.atividadeAtual)
+                )
+                : curso.topicos[0];
+
+            setTopicoSelecionado(topicoAtual?.titulo || null);
         }
     }, [curso, progresso]);
 
@@ -74,25 +134,25 @@ export function AppSidebar({ onVideoChange, cursoId, progresso }) {
         (topico) => topico.titulo === topicoSelecionado
     )?.conteudos;
 
-
-    const [activeContentId, setActiveContentId] = useState(null);
-
     const handleContentClick = (conteudo) => {
-        if (onVideoChange) {
-            setActiveContentId(conteudo.id);
-            onVideoChange(conteudo);
-        }
+        setActiveContentId(conteudo.id);
+        if (onVideoChange) onVideoChange(conteudo);
     };
 
-    const atividadeAtual = curso?.topicos
-        .flatMap((topico) => topico.conteudos)
-        .find((conteudo) => conteudo.id === progresso?.atividadeAtual);
-
+    // Identifica a atividade atual e seleciona automaticamente
     useEffect(() => {
-        if (atividadeAtual) {
-            handleContentClick(atividadeAtual);
+        if (curso?.topicos && progresso?.atividadeAtual) {
+            const atividadeAtual = curso.topicos
+                .flatMap((topico) => topico.conteudos)
+                .find((conteudo) => conteudo.id === progresso.atividadeAtual);
+
+            if (atividadeAtual) {
+                handleContentClick(atividadeAtual);
+            }
+        }else if(curso?.topicos){
+            handleContentClick(curso?.topicos[0]?.conteudos[0])
         }
-    }, [atividadeAtual]);
+    }, [curso, progresso]);
 
     return (
         <Sidebar className="border-none">
