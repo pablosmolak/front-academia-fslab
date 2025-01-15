@@ -149,7 +149,7 @@ export function AppSidebar({ onVideoChange, cursoId, progresso }) {
             if (atividadeAtual) {
                 handleContentClick(atividadeAtual);
             }
-        }else if(curso?.topicos){
+        } else if (curso?.topicos) {
             handleContentClick(curso?.topicos[0]?.conteudos[0])
         }
     }, [curso, progresso]);
@@ -195,9 +195,15 @@ export function AppSidebar({ onVideoChange, cursoId, progresso }) {
                             <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Selecione um tópico" />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent
+                                className="bg-zinc-800 text-gray-100 border-zinc-500 "
+                            >
                                 {curso?.topicos?.map((item) => (
-                                    <SelectItem key={item.id} value={item.titulo}>
+                                    <SelectItem
+                                        key={item.id}
+                                        value={item.titulo}
+                                        className="focus:bg-zinc-700 focus:text-gray-100"
+                                    >
                                         {item.titulo}
                                     </SelectItem>
                                 ))}
@@ -210,7 +216,7 @@ export function AppSidebar({ onVideoChange, cursoId, progresso }) {
                         <SidebarGroupLabel>Conteúdos</SidebarGroupLabel>
                         <SidebarMenu>
                             {conteudosFiltrados?.map((conteudo) => (
-                                <TooltipProvider>
+                                <TooltipProvider key={conteudo.id}>
                                     <Tooltip>
                                         <TooltipTrigger>
                                             <SidebarMenuItem key={conteudo.id}>

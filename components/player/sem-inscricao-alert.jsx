@@ -1,56 +1,3 @@
-// import {
-//     AlertDialog,
-//     AlertDialogAction,
-//     AlertDialogCancel,
-//     AlertDialogContent,
-//     AlertDialogDescription,
-//     AlertDialogFooter,
-//     AlertDialogHeader,
-//     AlertDialogTitle,
-//     AlertDialogTrigger,
-// } from "@/components/ui/alert-dialog"
-// import { Button } from "@/components/ui/button"
-// import { useRouter } from "next/navigation";
-
-// export function SemInscricaoAlert({cursoId}) {
-//     const router = useRouter();
-
-//     console.log(cursoId)
-
-//     const CriarInscricao = async () =>{
-
-//     }
-
-//     return (
-//         <AlertDialog open>
-//             <AlertDialogContent>
-//                 <AlertDialogHeader>
-//                     <AlertDialogTitle>Inscrição não encontrada</AlertDialogTitle>
-//                     <AlertDialogDescription>
-//                         Deseja realizar sua inscrição neste curso?
-//                     </AlertDialogDescription>
-//                 </AlertDialogHeader>
-//                 <AlertDialogFooter>
-//                     <AlertDialogCancel
-//                         onClick={() => {
-//                             router.push(`/curso/${cursoId}`)
-//                         }}
-//                     >
-//                         Cancelar
-//                     </AlertDialogCancel>
-//                     <AlertDialogAction
-//                         onClick={() => {
-
-//                         }}
-//                     >Confirmar
-//                     </AlertDialogAction>
-//                 </AlertDialogFooter>
-//             </AlertDialogContent>
-//         </AlertDialog>
-//     )
-// }
-
-
 import {
     AlertDialog,
     AlertDialogAction,
@@ -87,14 +34,22 @@ export function SemInscricaoAlert({ cursoId }) {
 
     return (
         <AlertDialog open>
-            <AlertDialogContent>
+            <AlertDialogContent className="bg-zinc-800 border border-zinc-700">
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Inscrição não encontrada</AlertDialogTitle>
-                    <AlertDialogDescription>
+                    <AlertDialogTitle
+                        className="text-gray-100"
+                    >
+                        Inscrição não encontrada
+                    </AlertDialogTitle>
+                    <AlertDialogDescription
+                        className="text-gray-300"
+                    >
                         Deseja realizar sua inscrição neste curso?
                     </AlertDialogDescription>
                 </AlertDialogHeader>
-                <AlertDialogFooter>
+                <AlertDialogFooter
+                className="flex gap-2"
+                >
                     <AlertDialogCancel
                         onClick={() => {
                             router.push(`/curso/${cursoId}`);
@@ -103,6 +58,7 @@ export function SemInscricaoAlert({ cursoId }) {
                         Cancelar
                     </AlertDialogCancel>
                     <AlertDialogAction
+                    className="bg-green-700 hover:bg-green-600 text-white"
                         disabled={isLoading}
                         onClick={() => criarInscricao()}
                     >

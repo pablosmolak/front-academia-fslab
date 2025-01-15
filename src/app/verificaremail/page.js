@@ -21,7 +21,6 @@ import { useSession } from "next-auth/react";
 export default function VerificarEmailPage() {
     const router = useRouter();
 
-    
     const { data: session, update } = useSession();
 
     const [LoadingVerificar, setLoadingVerificar] = useState(false)
