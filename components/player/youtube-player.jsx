@@ -29,7 +29,7 @@ export function YouTubePlayer({ videoUrl, onReady }) {
                     onReady,
                 },
             });
-        } else if (playerRef.current && videoId) {
+        } else if (videoId && window.YT && playerRef.current && typeof playerRef.current.cueVideoById === 'function') {
             // Se o player já existe, apenas troca o vídeo
             playerRef.current.cueVideoById(videoId);
         }

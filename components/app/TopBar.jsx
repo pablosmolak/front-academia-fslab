@@ -17,7 +17,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Label } from "../ui/label";
 
 
-export default function TopBar() {
+export default function TopBar({className}) {
     const pathname = usePathname(); // Obtendo o caminho atual
 
     const { data: session, status } = useSession({
@@ -27,7 +27,7 @@ export default function TopBar() {
 
 
     return (
-        <header className="bg-slate-950">
+        <header className={`bg-slate-950 ${className}`}>
             <div className="flex mx-28 justify-between">
                 <Link href="/" className="flex items-center justify-start h-16">
                     <GraduationCap className="text-white mr-3 " />

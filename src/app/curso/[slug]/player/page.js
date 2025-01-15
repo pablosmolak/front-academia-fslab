@@ -1,4 +1,5 @@
 "use client"
+import TopBar from "@/components/app/TopBar";
 import ButtonLoading from "@/components/buttonLoading";
 import { AppSidebar } from "@/components/player/app-sidebar";
 import { SemInscricaoAlert } from "@/components/player/sem-inscricao-alert";
@@ -92,6 +93,7 @@ export default function playerPage({ params }) {
 
     return (
         <div>
+            <TopBar className="fixed top-0 left-0  w-full h-16 z-10"/>
             <SidebarProvider>
                 <AppSidebar
                     onVideoChange={(url) => setConteudo(url)}
@@ -102,9 +104,9 @@ export default function playerPage({ params }) {
                     {!isLoadingInscricao && conteudo && inscricao.length === 0 && (
                         <SemInscricaoAlert cursoId={cursoId} />
                     )}
-                    <div className="bg-zinc-800 h-20 flex items-center justify-center relative w-full">
+                    <div className="bg-zinc-800 h-20 flex items-center justify-center relative w-full mt-16">
                         <SidebarTrigger className="absolute left-1 hover:bg-zinc-700" />
-                        <p className="text-white">{`${conteudo?.titulo} - ${conteudo?.id}`}</p>
+                        <p className="text-white">{conteudo?.titulo || ""}</p>
                     </div>
                     <div className="flex-grow flex items-center justify-center w-full">
                         <YouTubePlayer videoUrl={conteudo?.conteudo} />

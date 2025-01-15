@@ -11,14 +11,13 @@ import {
 import {
     Sidebar,
     SidebarContent,
-    SidebarFooter,
     SidebarGroup,
     SidebarGroupContent,
     SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
-    SidebarMenuItem,
+    SidebarMenuItem
 } from "@/components/ui/sidebar";
 import { fetchApi } from "@/src/utils/fetchApi";
 import { useQuery } from "@tanstack/react-query";
@@ -28,75 +27,17 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Progress } from "../ui/progress";
 import { Separator } from "../ui/separator";
-import { NavUser } from "./nav-user";
 
 import {
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
 
 
 
 export function AppSidebar({ onVideoChange, cursoId, progresso }) {
-    // const router = useRouter();
-
-    // const {
-    //     data: curso,
-    //     isLoading,
-    //     isError,
-    //     error } = useQuery({
-    //         queryKey: ["getCursosPlayer"],
-    //         queryFn: async () => {
-    //             const response = await fetchApi(`/cursos/publicados/${cursoId}`, "GET");
-
-    //             if (response.error) {
-    //                 throw response.errors;
-    //             } else {
-    //                 return response.data[0]
-    //             }
-    //         }
-    //     })
-
-
-    // const [topicoSelecionado, setTopicoSelecionado] = useState(null);
-    // useEffect(() => {
-    //     if (curso?.topicos && progresso?.atividadeAtual) {
-    //         const topicoEncontrado = curso.topicos.find((topico) =>
-    //             topico.conteudos?.some((conteudo) => conteudo.id === progresso.atividadeAtual)
-    //         );
-    //         setTopicoSelecionado(topicoEncontrado?.titulo || null)
-    //     } else if (curso?.topicos) {
-    //         setTopicoSelecionado(curso?.topicos[0]?.conteudos[0]?.titulo)
-    //     }
-
-    // }, [curso, progresso]);
-
-    // const conteudosFiltrados = curso?.topicos?.find(
-    //     (topico) => topico.titulo === topicoSelecionado
-    // )?.conteudos;
-
-
-    // const [activeContentId, setActiveContentId] = useState(null);
-
-    // const handleContentClick = (conteudo) => {
-    //     if (onVideoChange) {
-    //         setActiveContentId(conteudo.id);
-    //         onVideoChange(conteudo);
-    //     }
-    // };
-
-    // const atividadeAtual = curso?.topicos
-    //     .flatMap((topico) => topico.conteudos)
-    //     .find((conteudo) => conteudo.id === progresso?.atividadeAtual);
-
-    // useEffect(() => {
-    //     if (atividadeAtual) {
-    //         handleContentClick(atividadeAtual);
-    //     }
-    // }, [atividadeAtual]);
-
 
     const router = useRouter();
     const [topicoSelecionado, setTopicoSelecionado] = useState(null);
@@ -154,8 +95,25 @@ export function AppSidebar({ onVideoChange, cursoId, progresso }) {
         }
     }, [curso, progresso]);
 
+    const formatarCargaHoraria = (cargaHoraria) => {
+        const [horas, minutos, segundos] = cargaHoraria.split(":").map(Number);
+    
+        const partes = [];
+        if (horas > 0) {
+            partes.push(`${horas}h`);
+        }
+        if (minutos > 0) {
+            partes.push(`${minutos}m`);
+        }
+        if (horas === 0 && minutos === 0 && segundos > 0) {
+            partes.push(`${segundos}s`);
+        }
+    
+        return partes.join(":");
+    }
+
     return (
-        <Sidebar className="border-none">
+        <Sidebar className="border-none mt-16 h-[calc(100vh-4rem)]" >
             <SidebarHeader className='flex flex-col items-center'>
                 <SidebarGroup className='flex flex-row items-center gap-2'>
                     <Button
@@ -230,9 +188,13 @@ export function AppSidebar({ onVideoChange, cursoId, progresso }) {
                                                             className={progresso?.atividadesConcluidas?.includes(conteudo.id)
                                                                 ? "text-lime-400" : ""}
                                                         />
-                                                        <span>
+                                                        <p className="flex-grow text-sm">
+                                                            <span className="text-gray-400 mr-2">{conteudo.ordem}</span>
                                                             {conteudo.titulo}
-                                                        </span>
+                                                        </p>
+                                                        <div className="bg-gray-700 px-3 py-1 rounded text-xs">
+                                                           {formatarCargaHoraria(conteudo.cargaHoraria)}
+                                                        </div>
                                                     </div>
                                                 </SidebarMenuButton>
                                             </SidebarMenuItem>
@@ -247,9 +209,6 @@ export function AppSidebar({ onVideoChange, cursoId, progresso }) {
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
-            <SidebarFooter>
-                <NavUser />
-            </SidebarFooter>
         </Sidebar>
     );
 }
