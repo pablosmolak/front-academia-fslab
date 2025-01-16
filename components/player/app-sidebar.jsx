@@ -97,7 +97,7 @@ export function AppSidebar({ onVideoChange, cursoId, progresso }) {
 
     const formatarCargaHoraria = (cargaHoraria) => {
         const [horas, minutos, segundos] = cargaHoraria.split(":").map(Number);
-    
+
         const partes = [];
         if (horas > 0) {
             partes.push(`${horas}h`);
@@ -108,7 +108,7 @@ export function AppSidebar({ onVideoChange, cursoId, progresso }) {
         if (horas === 0 && minutos === 0 && segundos > 0) {
             partes.push(`${segundos}s`);
         }
-    
+
         return partes.join(":");
     }
 
@@ -162,7 +162,7 @@ export function AppSidebar({ onVideoChange, cursoId, progresso }) {
                                         value={item.titulo}
                                         className="focus:bg-zinc-700 focus:text-gray-100"
                                     >
-                                        {item.titulo}
+                                        {`${String(item.ordem).padStart(2, "0")} - ${item.titulo}`}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
@@ -174,36 +174,34 @@ export function AppSidebar({ onVideoChange, cursoId, progresso }) {
                         <SidebarGroupLabel>Conteúdos</SidebarGroupLabel>
                         <SidebarMenu>
                             {conteudosFiltrados?.map((conteudo) => (
-                                <TooltipProvider key={conteudo.id}>
-                                    <Tooltip>
-                                        <TooltipTrigger>
-                                            <SidebarMenuItem key={conteudo.id}>
-                                                <SidebarMenuButton
-                                                    asChild
-                                                    onClick={() => handleContentClick(conteudo)}
-                                                    isActive={activeContentId === conteudo.id}
-                                                >
-                                                    <div>
-                                                        <MonitorPlay
-                                                            className={progresso?.atividadesConcluidas?.includes(conteudo.id)
-                                                                ? "text-lime-400" : ""}
-                                                        />
-                                                        <p className="flex-grow text-sm">
-                                                            <span className="text-gray-400 mr-2">{conteudo.ordem}</span>
-                                                            {conteudo.titulo}
-                                                        </p>
-                                                        <div className="bg-gray-700 px-3 py-1 rounded text-xs">
-                                                           {formatarCargaHoraria(conteudo.cargaHoraria)}
-                                                        </div>
-                                                    </div>
-                                                </SidebarMenuButton>
-                                            </SidebarMenuItem>
-                                        </TooltipTrigger>
-                                        <TooltipContent className>
-                                            {conteudo.titulo}
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
+                                <SidebarMenuItem key={conteudo.id}>
+                                    <SidebarMenuButton
+                                        size="Slg"
+                                        asChild
+                                        onClick={() => handleContentClick(conteudo)}
+                                        isActive={activeContentId === conteudo.id}
+                                    >
+
+
+                                        <div className="flex items-center justify-between gap-2">
+                                            <div className="flex items-center gap-2">
+                                                <div>
+                                                    <MonitorPlay
+                                                        className={`${progresso?.atividadesConcluidas?.includes(conteudo.id) ? "text-lime-400" : ""
+                                                            } size-6`}
+                                                    />
+                                                </div>
+                                                <div className="flex items-center justify-between gap-3">
+                                                    <span className="text-gray-400 ml-1 text-xs"> {String(conteudo.ordem).padStart(2, "0")}</span>
+                                                    <span> {conteudo.titulo}</span>
+                                                </div>
+                                            </div>
+                                            <div className="bg-zinc-700 px-2 py-1 rounded text-xs">
+                                                {formatarCargaHoraria(conteudo.cargaHoraria)}
+                                            </div>
+                                        </div>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
                             ))}
                         </SidebarMenu>
                     </SidebarGroupContent>
