@@ -35,30 +35,12 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-
-
-export function AppSidebar({ onVideoChange, cursoId, progresso }) {
+export function AppSidebar({ onVideoChange, curso, progresso, conteudoSelecionado }) {
 
     const router = useRouter();
     const [topicoSelecionado, setTopicoSelecionado] = useState(null);
-    const [activeContentId, setActiveContentId] = useState(null);
 
-    // Query para buscar o curso
-    const {
-        data: curso,
-        isLoading,
-        isError,
-        error } = useQuery({
-            queryKey: ["getCursosPlayer", cursoId],
-            queryFn: async () => {
-                const response = await fetchApi(`/cursos/publicados/${cursoId}`, "GET");
-                if (response.error) {
-                    throw response.errors;
-                }
-                return response.data[0];
-            }
-        });
-
+    
     useEffect(() => {
         if (curso?.topicos) {
             const topicoAtual = progresso?.atividadeAtual
@@ -67,33 +49,35 @@ export function AppSidebar({ onVideoChange, cursoId, progresso }) {
                 )
                 : curso.topicos[0];
 
+                console.log(topicoAtual)
+
+            const conteudoAtual = progresso?.atividadeAtual
+                ? curso.topicos
+                    .flatMap((topico) => topico.conteudos)
+                    .find((conteudo) => conteudo.id === progresso.atividadeAtual)
+                : curso.topicos[0]?.conteudos[0];
+
             setTopicoSelecionado(topicoAtual?.titulo || null);
+            handleContentClick(conteudoAtual);
         }
-    }, [curso, progresso]);
+
+    }, [curso]);
+
+    useEffect(() => {
+        const topicoAtual = curso?.topicos?.find((topico) =>
+            topico.conteudos?.some((conteudo) => conteudo.id === conteudoSelecionado?.id)
+        )
+
+        setTopicoSelecionado(topicoAtual?.titulo || null);
+    }, [conteudoSelecionado])
 
     const conteudosFiltrados = curso?.topicos?.find(
         (topico) => topico.titulo === topicoSelecionado
     )?.conteudos;
 
     const handleContentClick = (conteudo) => {
-        setActiveContentId(conteudo.id);
         if (onVideoChange) onVideoChange(conteudo);
     };
-
-    // Identifica a atividade atual e seleciona automaticamente
-    useEffect(() => {
-        if (curso?.topicos && progresso?.atividadeAtual) {
-            const atividadeAtual = curso.topicos
-                .flatMap((topico) => topico.conteudos)
-                .find((conteudo) => conteudo.id === progresso.atividadeAtual);
-
-            if (atividadeAtual) {
-                handleContentClick(atividadeAtual);
-            }
-        } else if (curso?.topicos) {
-            handleContentClick(curso?.topicos[0]?.conteudos[0])
-        }
-    }, [curso, progresso]);
 
     const formatarCargaHoraria = (cargaHoraria) => {
         const [horas, minutos, segundos] = cargaHoraria.split(":").map(Number);
@@ -179,7 +163,7 @@ export function AppSidebar({ onVideoChange, cursoId, progresso }) {
                                         size="Slg"
                                         asChild
                                         onClick={() => handleContentClick(conteudo)}
-                                        isActive={activeContentId === conteudo.id}
+                                        isActive={conteudoSelecionado.id === conteudo.id}
                                     >
 
 
@@ -196,7 +180,7 @@ export function AppSidebar({ onVideoChange, cursoId, progresso }) {
                                                     <span> {conteudo.titulo}</span>
                                                 </div>
                                             </div>
-                                            <div className="bg-zinc-700 px-2 py-1 rounded text-xs">
+                                            <div className="bg-gray-600 px-2 py-1 rounded text-xs">
                                                 {formatarCargaHoraria(conteudo.cargaHoraria)}
                                             </div>
                                         </div>

@@ -1,13 +1,12 @@
 "use client"
 import TopBar from "@/components/app/TopBar";
-import ButtonLoading from "@/components/buttonLoading";
 import { AppSidebar } from "@/components/player/app-sidebar";
+import { ProximoConteudoButton } from "@/components/player/proximo-conteudo-button";
 import { SemInscricaoAlert } from "@/components/player/sem-inscricao-alert";
 import { YouTubePlayer } from "@/components/player/youtube-player";
-import { Button } from "@/components/ui/button";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { fetchApi } from "@/src/utils/fetchApi";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useState } from "react";
@@ -33,25 +32,8 @@ export default function playerPage({ params }) {
     }
 
     const cursoId = params.slug
-
     const [conteudo, setConteudo] = useState();
-
-    const {
-        data: inscricao = [],
-        isLoading: isLoadingInscricao,
-        isError: isErrorInscricao,
-        error: errorInscricao } = useQuery({
-            queryKey: ["getInscricao", cursoId],
-            queryFn: async () => {
-                const response = await fetchApi(`/inscricoes/usuario/curso/${cursoId}`, "GET");
-
-                if (response.error) {
-                    throw response.errors;
-                } else {
-                    return response.data
-                }
-            }
-        })
+    const [videoNofim, setVideoNofim] = useState(false)
 
     const {
         data: progresso,
@@ -73,52 +55,65 @@ export default function playerPage({ params }) {
         }
     })
 
-    const queryClient = useQueryClient();
-
-    const { mutate: finalizarAtividade, isPending: isLoadingFinalizarAtividade } = useMutation({
-        mutationFn: async () => {
-            const response = await fetchApi(`/progressos/finalizaratividade/${conteudo.id}`, "POST")
-            if (response.error) {
-                throw new Error(response.message);
+    const {
+        data: curso,
+        isLoading,
+        isError,
+        error } = useQuery({
+            queryKey: ["getCursosPlayer", cursoId],
+            queryFn: async () => {
+                const response = await fetchApi(`/cursos/publicados/${cursoId}`, "GET");
+                if (response.error) {
+                    throw response.errors;
+                }
+                return response.data[0];
             }
-            return response.data;
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries(["getProgresso", cursoId]);
-        },
-        onError: (error) => {
-            console.error(`Erro ao criar inscrição: ${error}`);
-        },
-    });
+        });
+
+    const {
+        data: inscricao = [],
+        isLoading: isLoadingInscricao,
+        isError: isErrorInscricao,
+        error: errorInscricao } = useQuery({
+            queryKey: ["getInscricao", cursoId],
+            queryFn: async () => {
+                const response = await fetchApi(`/inscricoes/usuario/curso/${cursoId}`, "GET");
+
+                if (response.error) {
+                    throw response.errors;
+                } else {
+                    return response.data
+                }
+            }
+        })
+
 
     return (
         <div>
-            <TopBar className="fixed top-0 left-0  w-full h-16 z-10"/>
+            <TopBar className="fixed top-0 left-0  w-full h-16 z-10" />
             <SidebarProvider>
                 <AppSidebar
                     onVideoChange={(url) => setConteudo(url)}
-                    cursoId={cursoId}
+                    curso={curso}
                     progresso={progresso}
+                    conteudoSelecionado={conteudo}
+                    inscricao={inscricao}
                 />
                 <main className="w-full bg-black flex flex-col items-center">
-                    {!isLoadingInscricao && conteudo && inscricao.length === 0 && (
+                    {!isLoadingInscricao && inscricao.length === 0 && (
                         <SemInscricaoAlert cursoId={cursoId} />
                     )}
                     <div className="bg-zinc-800 h-20 flex items-center justify-center relative w-full mt-16">
                         <SidebarTrigger className="absolute left-1 hover:bg-zinc-700" />
                         <p className="text-white">{conteudo?.titulo || ""}</p>
                     </div>
-                    <div className="flex-grow flex items-center justify-center w-full">
-                        <YouTubePlayer videoUrl={conteudo?.conteudo} />
-                    </div>
-                    <div>
-                        <ButtonLoading
-                            isLoading={isLoadingFinalizarAtividade}
-                            type="button"
-                            onClick={() => { finalizarAtividade() }}
-                        >
-                            Finalizar Conteúdo
-                        </ButtonLoading>
+                    <div className="flex-grow flex flex-col items-center justify-center w-full">
+
+                        <YouTubePlayer videoUrl={conteudo?.conteudo} onChangeFinalVideo={(final) => setVideoNofim(final)} />
+
+                        <div className="w-4/5 h-24 flex justify-center md:justify-end md: pt-8">
+                            <ProximoConteudoButton progresso={progresso} videoNofim={videoNofim} conteudo={conteudo} curso={curso} onVideoChange={(url) => setConteudo(url)} />
+                        </div>
                     </div>
                 </main>
             </SidebarProvider>
