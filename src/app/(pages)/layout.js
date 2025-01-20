@@ -18,7 +18,7 @@ export default function LayoutNoAuth({ children }) {
 
     if (session) {
         if (!session.user?.emailVerificado) {
-           // redirect("/verificaremail")
+            redirect("/verificaremail")
         }
     }
 

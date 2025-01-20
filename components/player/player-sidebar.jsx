@@ -11,6 +11,7 @@ import {
 import {
     Sidebar,
     SidebarContent,
+    SidebarFooter,
     SidebarGroup,
     SidebarGroupContent,
     SidebarGroupLabel,
@@ -19,28 +20,21 @@ import {
     SidebarMenuButton,
     SidebarMenuItem
 } from "@/components/ui/sidebar";
-import { fetchApi } from "@/src/utils/fetchApi";
-import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, MonitorPlay } from "lucide-react";
+import { ArrowLeft, FileBadge, MonitorPlay } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Button } from "../ui/button";
 import { Progress } from "../ui/progress";
 import { Separator } from "../ui/separator";
-
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { PlayerCertificadoAlert } from "./player-certificado";
 
 export function AppSidebar({ onVideoChange, curso, progresso, conteudoSelecionado }) {
 
     const router = useRouter();
     const [topicoSelecionado, setTopicoSelecionado] = useState(null);
 
-    
     useEffect(() => {
         if (curso?.topicos) {
             const topicoAtual = progresso?.atividadeAtual
@@ -48,8 +42,6 @@ export function AppSidebar({ onVideoChange, curso, progresso, conteudoSelecionad
                     topico.conteudos?.some((conteudo) => conteudo.id === progresso.atividadeAtual)
                 )
                 : curso.topicos[0];
-
-                console.log(topicoAtual)
 
             const conteudoAtual = progresso?.atividadeAtual
                 ? curso.topicos
@@ -163,7 +155,7 @@ export function AppSidebar({ onVideoChange, curso, progresso, conteudoSelecionad
                                         size="Slg"
                                         asChild
                                         onClick={() => handleContentClick(conteudo)}
-                                        isActive={conteudoSelecionado.id === conteudo.id}
+                                        isActive={conteudoSelecionado?.id === conteudo?.id}
                                     >
 
 
@@ -191,6 +183,9 @@ export function AppSidebar({ onVideoChange, curso, progresso, conteudoSelecionad
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
+            <SidebarFooter>
+               <PlayerCertificadoAlert/>
+            </SidebarFooter>
         </Sidebar>
     );
 }

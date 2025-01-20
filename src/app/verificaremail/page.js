@@ -16,7 +16,7 @@ import { fetchApi } from "@/src/utils/fetchApi";
 import { toast } from "react-toastify";
 import { handleFormErrors } from "@/src/errors/handleFormErrors";
 import { Button } from "@/components/ui/button";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 export default function VerificarEmailPage() {
     const router = useRouter();
@@ -47,9 +47,7 @@ export default function VerificarEmailPage() {
         else {
             toast.success("Email verificado com sucesso!")
 
-            await update({user:{ emailVerificado: true}} );
-
-            console.log("Sessão atualizada:", session);
+            await signIn("credentials", { redirect: false });
 
             const redirectPath = sessionStorage.getItem('redirectPath') || '/';
             sessionStorage.removeItem('redirectPath');

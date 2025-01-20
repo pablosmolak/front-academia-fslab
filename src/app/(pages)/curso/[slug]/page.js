@@ -1,25 +1,35 @@
 "use client"
 
+import ButtonLoading from "@/components/buttonLoading";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { fetchApi } from "@/src/utils/fetchApi";
-import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { handleImagePath } from "@/src/utils/handleImagePath";
-import { Card, CardHeader, CardFooter } from "@/components/ui/card";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 export default function cursoPage({ params }) {
 
+    const { data: session, status } = useSession({
+        required: false,
+        refetchInterval: 60,
+    });
+
     const router = useRouter();
+
+    const cursoId = params.slug
 
     const {
         data: curso,
-        isLoading,
-        isError,
-        error } = useQuery({
-            queryKey: ["getCursos"],
+        isLoading: isLoadingCurso,
+        isError: isErrorCurso,
+        error: errorCurso } = useQuery({
+            queryKey: ["cursos", cursoId],
             queryFn: async () => {
-                const response = await fetchApi(`/cursos/publicados/informacoes/${params.slug}`, "GET");
+                const response = await fetchApi(`/cursos/publicados/informacoes/${cursoId}`, "GET");
 
                 console.log(response)
 
@@ -31,9 +41,70 @@ export default function cursoPage({ params }) {
             }
         })
 
+    const {
+        data: inscricao,
+        isLoading: isLoadingInscricao,
+        isError: isErrorInscricao,
+        error: errorInscricao } = useQuery({
+            queryKey: ["inscricao", cursoId],
+            queryFn: async () => {
+                const response = await fetchApi(`/inscricoes/usuario/curso/${cursoId}`, "GET");
+
+                if (response.error) {
+                    throw response
+                } else {
+                    return response.data[0] || null
+                }
+            },
+            retry: (failureCount, error) => {
+                if (error?.code === 498) {
+                    return false;
+                }
+
+                return failureCount < 3;
+            }
+        })
+
+    const { mutate: criarInscricao, isLoading } = useMutation({
+        mutationFn: async () => {
+            const response = await fetchApi(`/inscricoes`, "POST", { cursoId });
+
+            console.log(response)
+
+            if (response.error) {
+                throw response.errors;
+            }
+            return response.data;
+        },
+        onSuccess: () => {
+            router.push(`/curso/${cursoId}/player`)
+        },
+        onError: (error) => {
+            toast.error("Erro ao tentar efetuar a inscrição!");
+        },
+    });
+
+
+    const inscreverNoCurso = () => {
+        if (status === 'unauthenticated') {
+            sessionStorage.setItem('redirectPath', `${window.location.pathname}/player`);
+            sessionStorage.setItem('inscreverNoCurso', true);
+            router.push('/login')
+            return
+        }
+
+        if (inscricao) {
+            router.push(`/curso/${cursoId}/player`)
+            return
+        }else{
+            criarInscricao()
+        }
+
+    }
+
     return (
         <>
-            {!isLoading && (
+            {!isLoadingCurso && !isLoadingInscricao && (
                 <div>
                     <div>
                         <h1 className="text-2xl font-bold">
@@ -48,23 +119,15 @@ export default function cursoPage({ params }) {
                     <div className="
                         flex
                         justify-center 
-                        my-3
+                        my-5
                     "
                     >
-                        <Link
-                            href={`/curso/${curso.id}/player`}
-                            className="
-                            w-52
-                            flex 
-                            justify-center 
-                            items-center 
-                            py-2 
-                            rounded-sm
-                            bg-primary
-                            "
+                        <ButtonLoading
+                            onClick={() => { inscreverNoCurso() }}
+                            className="w-52 h-12"
                         >
-                            <p>Assistir</p>
-                        </Link>
+                            {inscricao ? <p className="text-base">Acessar curso</p> : <p className="text-base">Inscreva-se no curso</p>}
+                        </ButtonLoading>
                     </div>
 
                     {/* Container para tópicos e instrutores */}

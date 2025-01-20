@@ -11,26 +11,10 @@ import {
 import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchApi } from "@/src/utils/fetchApi";
+import { toast } from "react-toastify";
 
-export function SemInscricaoAlert({ cursoId }) {
+export function SemInscricaoAlert({ cursoId,criarInscricao,isLoadingCriarInscricao }) {
     const router = useRouter();
-    const queryClient = useQueryClient();
-
-    const { mutate: criarInscricao, isLoading } = useMutation({
-        mutationFn: async () => {
-            const response = await fetchApi(`/inscricoes`, "POST", { cursoId });
-            if (response.error) {
-                throw new Error(response.message);
-            }
-            return response.data;
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries(["getInscricao", cursoId]); // Recarrega a consulta de inscrição
-        },
-        onError: (error) => {
-            console.error("Erro ao criar inscrição:", error);
-        },
-    });
 
     return (
         <AlertDialog open>
@@ -48,7 +32,7 @@ export function SemInscricaoAlert({ cursoId }) {
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter
-                className="flex gap-2"
+                    className="flex gap-2"
                 >
                     <AlertDialogCancel
                         onClick={() => {
@@ -58,8 +42,8 @@ export function SemInscricaoAlert({ cursoId }) {
                         Cancelar
                     </AlertDialogCancel>
                     <AlertDialogAction
-                    className="bg-green-700 hover:bg-green-600 text-white"
-                        disabled={isLoading}
+                        className="bg-green-700 hover:bg-green-600 text-white"
+                        disabled={isLoadingCriarInscricao}
                         onClick={() => criarInscricao()}
                     >
                         Confirmar

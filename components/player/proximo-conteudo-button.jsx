@@ -1,26 +1,33 @@
 import { fetchApi } from "@/src/utils/fetchApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import ButtonLoading from "../buttonLoading";
-import { array } from "zod";
+import { toast } from "react-toastify";
 
-export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, onVideoChange }) {
+export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, onVideoChange, onRecemFinalizadoChange }) {
 
     const queryClient = useQueryClient();
 
     const { mutate: finalizarConteudo, isPending: isLoadingFinalizarAtividade } = useMutation({
         mutationFn: async () => {
             const response = await fetchApi(`/progressos/finalizaratividade/${conteudo.id}`, "POST")
+
             if (response.error) {
-                throw new Error(response.message);
+                throw response.errors
             }
-            return response.data;
+
+            return response.data[0];
         },
-        onSuccess: () => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries(["getProgresso", progresso.cursoId]);
-            proximoConteudo()
+
+            if (!data.certificado) {
+                proximoConteudo()
+            } else {
+                onRecemFinalizadoChange(true)
+            }
         },
-        onError: (error) => {
-            console.error(`Erro ao criar inscrição: ${error}`);
+        onError: (errors) => {
+            toast.error("Não foi possível finalizar este conteúdo!");
         },
     });
 
@@ -39,7 +46,6 @@ export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, 
         if (proximo) {
             onVideoChange(proximo);
         } else {
-
             if (progresso.atividadeAtual) {
                 const indiceConteudo = ArrayDeConteudos.findIndex(
                     (conteudo) => conteudo.id === progresso.atividadeAtual
@@ -51,10 +57,9 @@ export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, 
         }
     };
 
-
     const ConteudoAtualConcluido = progresso?.atividadesConcluidas?.includes(conteudo?.id)
 
-    if (videoNofim) {
+    if (!ConteudoAtualConcluido) {
         return (
             <>
                 <ButtonLoading
