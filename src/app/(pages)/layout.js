@@ -5,8 +5,11 @@ import ReactToastContainer from "@/components/app/ReactToastContainer";
 import TopBar from "@/components/app/TopBar";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useContext } from "react";
+import { ApplicationContext } from "@/src/context/applicationContext";
+
 
 export default function LayoutNoAuth({ children }) {
     const { data: session, status } = useSession({
@@ -14,11 +17,18 @@ export default function LayoutNoAuth({ children }) {
         refetchInterval: 60,
     });
 
-    console.log(session)
+    const router = useRouter();
 
     if (session) {
-        if (!session.user?.emailVerificado) {
-            redirect("/verificaremail")
+        "use client"
+        const { user, setUser } = useContext(ApplicationContext);
+
+        if (!user?.emailVerificado) {
+
+            // const redirectPath = sessionStorage.getItem('redirectPath') || '/';
+            sessionStorage.removeItem('redirectPath');
+
+            router.replace('/verificaremail');
         }
     }
 
