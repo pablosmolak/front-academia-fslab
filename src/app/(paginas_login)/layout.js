@@ -9,9 +9,6 @@ export default async function LayoutNoAuth({ children }) {
 
     const session = await getServerSession(authOptions);
 
-    if (session?.token) {
-        redirect("/")
-    }
 
     return (
         <div className="flex flex-col min-h-screen">

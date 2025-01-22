@@ -69,8 +69,6 @@ export default function cursoPage({ params }) {
         mutationFn: async () => {
             const response = await fetchApi(`/inscricoes`, "POST", { cursoId });
 
-            console.log(response)
-
             if (response.error) {
                 throw response.errors;
             }

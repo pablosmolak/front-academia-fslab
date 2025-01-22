@@ -26,6 +26,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import logoFslab from "../../../../public/assets/logo_fslab.jpeg";
+import actionRevalidateTag from "@/src/actions/actionRevalidateTag";
 
 
 export default function LoginPage() {
@@ -65,10 +66,11 @@ export default function LoginPage() {
         })
 
         if (response.ok && !response.error) {
-            const redirectPath = sessionStorage.getItem('redirectPath') || '/';
-            sessionStorage.removeItem('redirectPath');
+
+            // const redirectPath = sessionStorage.getItem('redirectPath') || '/';
+            // sessionStorage.removeItem('redirectPath');
       
-            router.replace(redirectPath);
+            router.replace("/");
         } else {
             switch (response.error) {
                 case "fetch failed":

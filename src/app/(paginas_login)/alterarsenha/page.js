@@ -46,13 +46,9 @@ export default function AlterarSenhaPage({ searchParams }) {
     const alterarSenha = async (data) => {
         setLoadingAlterar(true)
 
-        console.log(data)
-
         const response = await fetchApi(`/alterarsenha?token=${data.token}&email=${data.email}`, "POST", {
             senha: data.senha,
         })
-
-        console.log(response)
 
         if (response.error) {
             handleFormErrors(response.errors, form);

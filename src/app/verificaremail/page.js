@@ -21,15 +21,9 @@ import { toast } from "react-toastify";
 export default function VerificarEmailPage() {
     const router = useRouter();
 
-    const { user, setUser } = useContext(ApplicationContext);
+    const { user } = useContext(ApplicationContext);
 
-    console.log(user)
-    
     if (user?.emailVerificado) {
-
-       // const redirectPath = sessionStorage.getItem('redirectPath') || '/';
-        sessionStorage.removeItem('redirectPath');
-
         router.replace('/');
     }
 
@@ -68,8 +62,8 @@ export default function VerificarEmailPage() {
             router.replace(redirectPath);
         }
     }
-    if (!user.emailVerificado) {
 
+    if (!user?.emailVerificado) {
         return (
             <>
                 <div className="flex justify-center">
@@ -139,5 +133,4 @@ export default function VerificarEmailPage() {
 
         )
     }
-
 }

@@ -8,8 +8,8 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 export default async function LayoutNoAuth({ children }) {
     const session = await getServerSession(authOptions);
 
-    if(!session){
-        redirect("/login")
+    if(!session) {
+        redirect("/login");
     }
 
     return (

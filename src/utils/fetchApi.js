@@ -86,7 +86,6 @@ export const fetchApi = async (route, method, data, ...props) => {
 
   } catch (error) {
     // se erro retorna o array de dados vazio
-    console.log(error);
 
     return {
       data: [],

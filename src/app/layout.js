@@ -1,10 +1,11 @@
-import { Inter } from "next/font/google";
-import "./globals.css";
-import NextAuthSessionProvider from "../providers/sessionProvider";
-import ReactQueryProvider from "../providers/ReactQueryProvider";
 import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]/route";
+import { Inter } from "next/font/google";
+import { getUserInfos } from "../actions/authAction";
 import { ApplicationProvider } from "../context/applicationContext";
+import ReactQueryProvider from "../providers/ReactQueryProvider";
+import NextAuthSessionProvider from "../providers/sessionProvider";
+import { authOptions } from "./api/auth/[...nextauth]/route";
+import "./globals.css";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -17,17 +18,17 @@ export const metadata = {
 export default async function RootLayout({ children }) {
     const session = await getServerSession(authOptions);
 
-    //const token = await getCookie("accessToken");
-
     let resUser
     let token
 
+    console.log(session)
+
     if (session) {
-        resUser = session.user
-        token = session.token
+        token = session.token;
+        resUser = await getUserInfos()
+
+        console.log(resUser)
     }
-
-
 
     return (
         <html lang="pt-BR">

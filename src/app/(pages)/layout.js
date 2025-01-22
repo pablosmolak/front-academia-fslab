@@ -3,35 +3,30 @@
 import Footer from "@/components/app/Footer";
 import ReactToastContainer from "@/components/app/ReactToastContainer";
 import TopBar from "@/components/app/TopBar";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
-import { redirect, useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { useContext } from "react";
 import { ApplicationContext } from "@/src/context/applicationContext";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { useContext } from "react";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+import { useSession } from "next-auth/react";
 
 
 export default function LayoutNoAuth({ children }) {
-    const { data: session, status } = useSession({
+    const { data: session } = useSession({
         required: false,
-        refetchInterval: 60,
+        refetchInterval: 30,
     });
 
-    const router = useRouter();
-
     if (session) {
-        "use client"
-        const { user, setUser } = useContext(ApplicationContext);
+
+        const { user } = useContext(ApplicationContext);
+
+        console.log(user);
 
         if (!user?.emailVerificado) {
-
-            // const redirectPath = sessionStorage.getItem('redirectPath') || '/';
-            sessionStorage.removeItem('redirectPath');
-
-            router.replace('/verificaremail');
+            redirect('/verificaremail');
         }
     }
-
 
     return (
         <div className="flex flex-col min-h-screen">
