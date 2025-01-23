@@ -6,40 +6,35 @@ import ReactQueryProvider from "../providers/ReactQueryProvider";
 import NextAuthSessionProvider from "../providers/sessionProvider";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import "./globals.css";
-
+import ReactToastContainer from "@/components/app/ReactToastContainer";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
     title: "Academia FSLab",
-    description: "Projeto Fabrica de Software",
+    description: "Projeto Fabrica de Software"
 };
 
 export default async function RootLayout({ children }) {
     const session = await getServerSession(authOptions);
 
-    let resUser
-    let token
-
-    console.log(session)
+    let resUser;
+    let token;
 
     if (session) {
         token = session.token;
-        resUser = await getUserInfos()
-
-        console.log(resUser)
+        resUser = await getUserInfos();
     }
 
     return (
         <html lang="pt-BR">
             <NextAuthSessionProvider>
                 <ReactQueryProvider>
-                    <ApplicationProvider
-                        user={resUser}
-                        token={token}
-                    >
-
-                        <body className={inter.className}>{children}</body>
+                    <ApplicationProvider user={resUser} token={token}>
+                        <body className={inter.className}>
+                            <ReactToastContainer />
+                            {children}
+                        </body>
                     </ApplicationProvider>
                 </ReactQueryProvider>
             </NextAuthSessionProvider>

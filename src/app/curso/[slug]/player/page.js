@@ -1,17 +1,18 @@
 "use client"
-import ReactToastContainer from "@/components/app/ReactToastContainer";
 import TopBar from "@/components/app/TopBar";
 import { AppSidebar } from "@/components/player/Player-sidebar";
-import CourseCompletion, { PlayerCertificadoPage } from "@/components/player/player-certificado";
+import { PlayerCertificadoPage } from "@/components/player/player-certificado";
 import { ProximoConteudoButton } from "@/components/player/proximo-conteudo-button";
 import { SemInscricaoAlert } from "@/components/player/sem-inscricao-alert";
 import { YouTubePlayer } from "@/components/player/youtube-player";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { ApplicationContext } from "@/src/context/applicationContext";
 import { fetchApi } from "@/src/utils/fetchApi";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 
 export default function playerPage({ params }) {
@@ -27,11 +28,14 @@ export default function playerPage({ params }) {
     }
 
     if (session) {
-        if (!session.user.emailVerificado) {
+        const { user } = useContext(ApplicationContext);
+
+        if (!user?.emailVerificado) {
             sessionStorage.setItem('redirectPath', window.location.pathname);
             redirect("/verificaremail");
         }
     }
+
 
     const cursoId = params.slug
     const [conteudo, setConteudo] = useState();
@@ -52,17 +56,13 @@ export default function playerPage({ params }) {
         onSuccess: () => {
             queryClient.invalidateQueries(["getInscricao", cursoId]);
             queryClient.invalidateQueries(["getProgresso", cursoId]);
+
+            setInscreverAlert(false);
         },
         onError: (error) => {
             toast.error("Erro ao tentar efetuar a inscrição!");
         },
     });
-
-    const inscrever = sessionStorage.getItem('inscreverNoCurso')
-    sessionStorage.removeItem('inscreverNoCurso');
-    if (inscrever) {
-        criarInscricao()
-    }
 
     const {
         data: progresso,
@@ -114,6 +114,27 @@ export default function playerPage({ params }) {
             }
         })
 
+
+    const [inscreverAlert, setInscreverAlert] = useState(false);
+
+    useEffect(() => {
+        const inscrever = sessionStorage.getItem('inscreverNoCurso');
+
+        if (inscrever && inscricao.length === 0 && !isLoadingInscricao) {
+            criarInscricao();
+            sessionStorage.removeItem('inscreverNoCurso');
+        }
+
+        if (inscrever && inscricao.length > 0 && !isLoadingInscricao) {
+            sessionStorage.removeItem('inscreverNoCurso');
+        }
+
+        if (!inscrever && inscricao.length === 0 && !isLoadingInscricao) {
+            setInscreverAlert(true);
+        }
+
+    }, [isLoadingInscricao]);
+
     if (status === "authenticated") {
         return (
             <div>
@@ -126,11 +147,12 @@ export default function playerPage({ params }) {
                         conteudoSelecionado={conteudo}
                     />
                     <main className="w-full bg-black flex flex-col items-center">
-                        {!isLoadingInscricao && inscricao.length === 0 && (
+                        {inscreverAlert && (
                             <SemInscricaoAlert
                                 cursoId={cursoId}
                                 criarInscricao={() => criarInscricao()}
-                                sLoadingCriarInscricao={isLoadingCriarInscricao} />
+                                LoadingCriarInscricao={isLoadingCriarInscricao}
+                            />
                         )}
                         <div className="bg-zinc-800 h-20 flex items-center justify-center relative w-full mt-16">
                             <SidebarTrigger className="absolute left-1 hover:bg-zinc-700" />
@@ -167,7 +189,6 @@ export default function playerPage({ params }) {
                         </div>
                     </main>
                 </SidebarProvider>
-                <ReactToastContainer />
             </div>
         );
     }

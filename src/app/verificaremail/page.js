@@ -12,6 +12,7 @@ import { handleFormErrors } from "@/src/errors/handleFormErrors";
 import { verificaEmailSchema } from "@/src/schemas/verificaEmailSchema";
 import { fetchApi } from "@/src/utils/fetchApi";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { User } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
@@ -21,7 +22,7 @@ import { toast } from "react-toastify";
 export default function VerificarEmailPage() {
     const router = useRouter();
 
-    const { user } = useContext(ApplicationContext);
+    const { user, setUser } = useContext(ApplicationContext);
 
     if (user?.emailVerificado) {
         router.replace('/');

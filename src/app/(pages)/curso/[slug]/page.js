@@ -31,8 +31,6 @@ export default function cursoPage({ params }) {
             queryFn: async () => {
                 const response = await fetchApi(`/cursos/publicados/informacoes/${cursoId}`, "GET");
 
-                console.log(response)
-
                 if (response.error) {
                     throw response.errors;
                 } else {

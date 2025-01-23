@@ -1,14 +1,11 @@
 "use client"
 
 import Footer from "@/components/app/Footer";
-import ReactToastContainer from "@/components/app/ReactToastContainer";
 import TopBar from "@/components/app/TopBar";
 import { ApplicationContext } from "@/src/context/applicationContext";
-import { getServerSession } from "next-auth";
+import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useContext } from "react";
-import { authOptions } from "../api/auth/[...nextauth]/route";
-import { useSession } from "next-auth/react";
 
 
 export default function LayoutNoAuth({ children }) {
@@ -18,10 +15,7 @@ export default function LayoutNoAuth({ children }) {
     });
 
     if (session) {
-
         const { user } = useContext(ApplicationContext);
-
-        console.log(user);
 
         if (!user?.emailVerificado) {
             redirect('/verificaremail');
@@ -35,7 +29,6 @@ export default function LayoutNoAuth({ children }) {
                 {children}
             </main>
             <Footer />
-            <ReactToastContainer />
         </div>
     );
 }
