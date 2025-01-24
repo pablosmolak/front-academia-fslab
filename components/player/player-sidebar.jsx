@@ -20,17 +20,15 @@ import {
     SidebarMenuButton,
     SidebarMenuItem
 } from "@/components/ui/sidebar";
-import { ArrowLeft, FileBadge, MonitorPlay } from "lucide-react";
-import Link from "next/link";
+import { ArrowLeft, MonitorPlay } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Button } from "../ui/button";
 import { Progress } from "../ui/progress";
 import { Separator } from "../ui/separator";
 import { PlayerCertificadoAlert } from "./player-certificado";
 
-export function AppSidebar({ onVideoChange, curso, progresso, conteudoSelecionado }) {
+export function AppSidebar({ onVideoChange, curso, progresso, conteudoSelecionado, certificado }) {
 
     const router = useRouter();
     const [topicoSelecionado, setTopicoSelecionado] = useState(null);
@@ -184,7 +182,11 @@ export function AppSidebar({ onVideoChange, curso, progresso, conteudoSelecionad
                 </SidebarGroup>
             </SidebarContent>
             <SidebarFooter>
-               <PlayerCertificadoAlert/>
+              {
+                (certificado) && 
+                <PlayerCertificadoAlert certificadoValidador={certificado.validador} />
+                }
+               
             </SidebarFooter>
         </Sidebar>
     );

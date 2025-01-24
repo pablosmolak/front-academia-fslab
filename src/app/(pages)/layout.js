@@ -14,8 +14,8 @@ export default function LayoutNoAuth({ children }) {
         refetchInterval: 30,
     });
 
+    const { user } = useContext(ApplicationContext);
     if (session) {
-        const { user } = useContext(ApplicationContext);
 
         if (!user?.emailVerificado) {
             redirect('/verificaremail');

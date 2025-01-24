@@ -2,7 +2,7 @@ import { FileBadge, Trophy } from "lucide-react";
 import Link from "next/link";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
-const PlayerCertificadoPage = () => {
+const PlayerCertificadoPage = ({certificadoValidador}) => {
     return (
         <div className="flex items-center justify-center bg-black text-white">
             <div className="text-center space-y-6">
@@ -22,7 +22,7 @@ const PlayerCertificadoPage = () => {
                 {/* Botão */}
                 <div className="flex justify-center">
                     <Link
-                        href={`/certificado`}
+                        href={`/usuario/certificado/${certificadoValidador}`}
                         className="bg-primary hover:bg-yellow-500 text-black font-bold py-3 px-12 rounded-lg flex items-center space-x-2"
                     >
                         <FileBadge />
@@ -35,9 +35,9 @@ const PlayerCertificadoPage = () => {
     );
 }
 
-const PlayerCertificadoAlert = () => {
+const PlayerCertificadoAlert = ({certificadoValidador}) => {
     return (
-        <Link href="/certificado">
+        <Link href={`/usuario/certificado/${certificadoValidador}`}>
             <Alert className="bg-zinc-700 border-none hover:bg-zinc-600 transition-colors duration-200">
                 <div className="flex items-center gap-2 ">
                     <FileBadge className="text-gray-200" />

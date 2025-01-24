@@ -5,6 +5,7 @@ import { PlayerCertificadoPage } from "@/components/player/player-certificado";
 import { ProximoConteudoButton } from "@/components/player/proximo-conteudo-button";
 import { SemInscricaoAlert } from "@/components/player/sem-inscricao-alert";
 import { YouTubePlayer } from "@/components/player/youtube-player";
+import { Button } from "@/components/ui/button";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { ApplicationContext } from "@/src/context/applicationContext";
 import { fetchApi } from "@/src/utils/fetchApi";
@@ -27,8 +28,8 @@ export default function playerPage({ params }) {
         redirect("/login");
     }
 
+    const { user } = useContext(ApplicationContext);
     if (session) {
-        const { user } = useContext(ApplicationContext);
 
         if (!user?.emailVerificado) {
             sessionStorage.setItem('redirectPath', window.location.pathname);
@@ -82,6 +83,7 @@ export default function playerPage({ params }) {
         }
     })
 
+
     const {
         data: curso,
         isLoading,
@@ -96,6 +98,8 @@ export default function playerPage({ params }) {
                 return response.data[0];
             }
         });
+
+    console.log(curso)
 
     const {
         data: inscricao = [],
@@ -114,6 +118,25 @@ export default function playerPage({ params }) {
             }
         })
 
+    const {
+        data: certificado,
+        isLoading: isLoadingCertificado,
+        isError: isErrorCertificado,
+        error: errorCertificado
+    } = useQuery({
+        queryKey: ["getCertificado", cursoId],
+        queryFn: async () => {
+            const response = await fetchApi(`/certificados/usuario/curso/${cursoId}`, "GET");
+
+            if (response.error) {
+                throw response.errors;
+            } else {
+                return response.data[0]
+            }
+        }
+    })
+
+    console.log(certificado)
 
     const [inscreverAlert, setInscreverAlert] = useState(false);
 
@@ -145,6 +168,7 @@ export default function playerPage({ params }) {
                         curso={curso}
                         progresso={progresso}
                         conteudoSelecionado={conteudo}
+                        certificado={certificado}
                     />
                     <main className="w-full bg-black flex flex-col items-center">
                         {inscreverAlert && (
@@ -158,34 +182,40 @@ export default function playerPage({ params }) {
                             <SidebarTrigger className="absolute left-1 hover:bg-zinc-700" />
                             <p className="text-white">{conteudo?.titulo || ""}</p>
                         </div>
-                        <div className="flex-grow flex flex-col items-center justify-center w-full">
-                            {
+                        <div className="relative flex-grow flex flex-col items-center justify-center w-full">
+                            <div
+                                className={`absolute inset-0 flex flex-col 
+                                    items-center justify-center w-full  
+                                    ease-in-out ${cursoRecemFinalizado ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                                    }`}
+                            >
+                                <PlayerCertificadoPage certificadoValidador={certificado?.validador} />
+                            </div>
 
-                                cursoRecemFinalizado && (
-                                    <PlayerCertificadoPage />
-                                )
-                                ||
+                            {/* YouTubePlayer e ProximoConteudoButton */}
+                            <div
+                                className={`absolute inset-0 flex flex-col items-center justify-center w-full
+                                     ease-in-out ${cursoRecemFinalizado ? 'opacity-0 z-0' : 'opacity-100 z-10'
+                                    }`}
+                            >
+                                <>
+                                    <YouTubePlayer
+                                        videoUrl={conteudo?.conteudo}
+                                        onChangeFinalVideo={(final) => setVideoNofim(final)}
+                                    />
 
-                                (
-                                    <>
-                                        <YouTubePlayer
-                                            videoUrl={conteudo?.conteudo}
-                                            onChangeFinalVideo={(final) => setVideoNofim(final)}
+                                    <div className="w-4/5 h-14 flex justify-center md:justify-end pt-4">
+                                        <ProximoConteudoButton
+                                            progresso={progresso}
+                                            videoNofim={videoNofim}
+                                            conteudo={conteudo}
+                                            curso={curso}
+                                            onVideoChange={(url) => setConteudo(url)}
+                                            onRecemFinalizadoChange={(recemFinalizado) => setCursoRecemFinalizado(recemFinalizado)}
                                         />
-
-                                        <div className="w-4/5 h-14 flex justify-center md:justify-end md: pt-4">
-                                            <ProximoConteudoButton
-                                                progresso={progresso}
-                                                videoNofim={videoNofim}
-                                                conteudo={conteudo}
-                                                curso={curso}
-                                                onVideoChange={(url) => setConteudo(url)}
-                                                onRecemFinalizadoChange={(recemFinalizado) => setCursoRecemFinalizado(recemFinalizado)}
-                                            />
-                                        </div>
-                                    </>
-                                )
-                            }
+                                    </div>
+                                </>
+                            </div>
                         </div>
                     </main>
                 </SidebarProvider>

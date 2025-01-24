@@ -19,6 +19,7 @@ export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, 
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries(["getProgresso", progresso.cursoId]);
+            queryClient.invalidateQueries( ["getCertificado", progresso.cursoId]);
 
             if (!data.certificado) {
                 proximoConteudo()
@@ -59,7 +60,7 @@ export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, 
 
     const ConteudoAtualConcluido = progresso?.atividadesConcluidas?.includes(conteudo?.id)
 
-    if (!ConteudoAtualConcluido) {
+    if (!ConteudoAtualConcluido && videoNofim) {
         return (
             <>
                 <ButtonLoading
