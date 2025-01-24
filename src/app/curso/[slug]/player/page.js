@@ -1,11 +1,11 @@
 "use client"
+
 import TopBar from "@/components/app/TopBar";
-import { AppSidebar } from "@/components/player/Player-sidebar";
 import { PlayerCertificadoPage } from "@/components/player/player-certificado";
+import { AppSidebar } from "@/components/player/player-sidebar";
 import { ProximoConteudoButton } from "@/components/player/proximo-conteudo-button";
 import { SemInscricaoAlert } from "@/components/player/sem-inscricao-alert";
 import { YouTubePlayer } from "@/components/player/youtube-player";
-import { Button } from "@/components/ui/button";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { ApplicationContext } from "@/src/context/applicationContext";
 import { fetchApi } from "@/src/utils/fetchApi";
