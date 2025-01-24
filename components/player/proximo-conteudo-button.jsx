@@ -19,11 +19,16 @@ export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, 
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries(["getProgresso", progresso.cursoId]);
-            queryClient.invalidateQueries( ["getCertificado", progresso.cursoId]);
+            queryClient.invalidateQueries(["getCertificado", progresso.cursoId]);
 
             if (!data.certificado) {
                 proximoConteudo()
             } else {
+                onVideoChange({
+                    ...conteudo,
+                    titulo:"Certificado",
+                    conteudo: "https://youtu.be/Ptbkjjf68ee"
+                })
                 onRecemFinalizadoChange(true)
             }
         },
@@ -44,6 +49,9 @@ export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, 
 
         const proximo = ArrayDeConteudos[indiceConteudoAtual + 1];
 
+        console.log("proximo")
+        console.log(proximo)
+
         if (proximo) {
             onVideoChange(proximo);
         } else {
@@ -51,6 +59,7 @@ export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, 
                 const indiceConteudo = ArrayDeConteudos.findIndex(
                     (conteudo) => conteudo.id === progresso.atividadeAtual
                 );
+
                 onVideoChange(ArrayDeConteudos[indiceConteudo])
             } else {
                 onVideoChange(ArrayDeConteudos[0])
@@ -60,7 +69,7 @@ export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, 
 
     const ConteudoAtualConcluido = progresso?.atividadesConcluidas?.includes(conteudo?.id)
 
-    if (!ConteudoAtualConcluido && videoNofim) {
+    if (!ConteudoAtualConcluido /*&& videoNofim*/) {
         return (
             <>
                 <ButtonLoading

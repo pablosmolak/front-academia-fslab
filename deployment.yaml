@@ -1,0 +1,44 @@
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: unidex-env
+# data:
+#   NEXT_PUBLIC_URL_API : 'https://api-unidex.app.fslab.dev'
+# ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: academiafslab
+spec:
+  selector:
+    matchLabels:
+      app: academiafslab
+  template:
+    metadata:
+      labels:
+        app: academiafslab
+    spec:
+      imagePullSecrets:
+      - name: regcred
+      containers:
+      - name: academiafslab
+        image: registry.fslab.dev/pablosmolak/academiafslab:latest
+        # envFrom:
+        # - configMapRef:
+        #     name: unidex-env
+        resources: {}
+        ports:
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: academia
+spec:
+  type: ClusterIP
+  selector:
+    app: academia
+  ports:
+  - port: 80
+    targetPort: 3000
+
