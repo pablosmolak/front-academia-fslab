@@ -46,7 +46,7 @@ export default function Certificado({ certificado }) {
 
                     </div>
                     <div className="mt-5 text-center">
-                        <Image src="/assets/logoifro.png" width={100} height={100} className="w-24 mx-auto" />
+                        <Image src="/assets/logoIfro.png" width={100} height={100} className="w-24 mx-auto" />
                     </div>
                 </div>
             </div>
