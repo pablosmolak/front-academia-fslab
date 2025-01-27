@@ -1,6 +1,6 @@
 variables:
   KUBECTL_CONFIG: $KUBECTL_CONFIG
-  IMAGEM_DOCKER: registry.fslab.dev/pablosmolak/academiafslab
+  IMAGEM_DOCKER: registry.fslab.dev/pablosmolak/academia
   ENV_CONFIG: $ENV_CONFIG
 
 stages:
