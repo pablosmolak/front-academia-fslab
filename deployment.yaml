@@ -8,21 +8,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: academiafslab
+  name: academia
 spec:
   selector:
     matchLabels:
-      app: academiafslab
+      app: academia
   template:
     metadata:
       labels:
-        app: academiafslab
+        app: academia
     spec:
       imagePullSecrets:
       - name: regcred
       containers:
-      - name: academiafslab
-        image: registry.fslab.dev/pablosmolak/academiafslab:latest
+      - name: academia
+        image: registry.fslab.dev/pablosmolak/academia:latest
         # envFrom:
         # - configMapRef:
         #     name: unidex-env

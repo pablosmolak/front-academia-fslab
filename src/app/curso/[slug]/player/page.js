@@ -136,8 +136,6 @@ export default function playerPage({ params }) {
         }
     })
 
-    console.log(certificado)
-
     const [inscreverAlert, setInscreverAlert] = useState(false);
 
     useEffect(() => {
