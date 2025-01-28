@@ -1,13 +1,17 @@
 "use client"
 
+import ButtonLoading from "@/components/buttonLoading";
 import Certificado from "@/components/certificado/certificado";
 import { useQuery } from "@tanstack/react-query";
 import { toPng } from "html-to-image";
 import jsPDF from "jspdf";
+import { useState } from "react";
 
 export default function certificadoPage({ params }) {
 
     const certificadoid = params.slug
+
+    const [loadindBaixarCertificado, setLoadindBaixarCertificado] = useState(false);
 
     const {
         data: certificado,
@@ -28,10 +32,11 @@ export default function certificadoPage({ params }) {
     })
 
     const handlePrint = () => {
+        setLoadindBaixarCertificado(true);
         const certificado = document.getElementById("certificado");
 
         // Aumentar a escala para melhorar a qualidade da imagem
-        const scale = 4; // Aumentar o valor se necessário
+        const scale = 6; // Aumentar o valor se necessário
         const options = {
             quality: 1, // Qualidade máxima
             pixelRatio: scale, // Escala maior para melhor qualidade
@@ -45,16 +50,19 @@ export default function certificadoPage({ params }) {
 
             pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, pdfHeight);
             pdf.save("certificado.pdf");
+
+            setLoadindBaixarCertificado(false);
         });
     };
         return (
-            <div style={{ textAlign: "center", padding: "20px" }}>
+            <div  class="text-center ">
                 <h1>Certificado de conclusão</h1>
-                <div>
+                <div id="teste" className="flex justify-center">
                     <Certificado certificado={certificado} />
                 </div>
-                <button
+                <ButtonLoading
                     onClick={() => { handlePrint() }}
+                    isLoading={loadindBaixarCertificado}
                     style={{
                         marginTop: "20px",
                         padding: "10px 20px",
@@ -66,7 +74,7 @@ export default function certificadoPage({ params }) {
                     }}
                 >
                     Baixar certificado
-                </button>
+                </ButtonLoading>
             </div>
         );
 }
