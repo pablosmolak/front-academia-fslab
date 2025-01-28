@@ -3,20 +3,19 @@ import React from "react";
 
 export default function Certificado({ certificado }) {
     return (
-        <section className="w-[800px] h-[800px]">
-
+        <section className="w-[800px] h-[566px]">
             <div
                 id="certificado"
                 className="
             bg-[linear-gradient(180deg,#FAFBF6,#EAEDDC)]
             text-center 
-            font-sans relative 
+            font-sans relative
             p-4
             "
             >
-                <div className="border-4 border-green-700 border-dashed p-2">
-
-                    <div className="mb-5">
+                <div className="border-4 border-green-700 border-dashed p-2 h-[534px]">
+                    
+                    {/* <div className="mb-5">
                         <h3 className="font-normal m-0">
                             GOVERNO FEDERAL
                             <br />
@@ -47,7 +46,7 @@ export default function Certificado({ certificado }) {
                     </div>
                     <div className="mt-5 text-center">
                         <Image src="/assets/logoIfro.png" width={100} height={100} className="w-24 mx-auto" />
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </section>
