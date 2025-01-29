@@ -67,7 +67,7 @@ export default function certificadoPage({ params }) {
         });
     };
     return (
-        <div class="text-center ">
+        <div className="text-center ">
             <h1>Certificado de conclusão</h1>
             <div id="teste" className="flex justify-center">
                 <Certificado certificado={certificado} />
@@ -90,6 +90,7 @@ export default function certificadoPage({ params }) {
 
             <a href="https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=Curso%20de%20JavaScript&organizationName=Academia%20FSLab&issueYear=2025&issueMonth=1&certId=12345&certUrl=https://www.example.com/certificates/12345" 
             target="_blank" 
+            className="bg-[#0073b1] text-white "
             // style="background-color: #0073b1; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 16px;"
             >
                 Incluir certificado no LinkedIn

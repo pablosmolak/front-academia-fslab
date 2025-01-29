@@ -13,10 +13,18 @@ export default function Certificado({ certificado }) {
             p-[6.4px] sm:p-[8px] lg:p-[16px]
             "
             >
-                <div className="border-[1.6px] sm:border-[2px] lg:border-[4px] border-green-700 border-dashed h-[213.2px] sm:h-[267px] lg:h-[534px]">
+                <div className="
+                border-[1.6px] sm:border-[2px] lg:border-[4px] 
+                border-green-700 border-dashed 
+                h-[213.2px] sm:h-[267px] lg:h-[534px]">
 
-                    <div className="flex justify-between mb-5">
-                        <img src="/assets/governo.png" className="w-[30px] h-[30px] sm:w-[37px] sm:h-[38px] lg:w-[59px] lg:h-[60px]"/>
+                    <div
+                        className="flex justify-between 
+                    px-[12px] pt-[4px] sm:px-[15px] sm:pt-[5px] lg:px-[30px] lg:pt-[10px]
+                    ">
+                        <img src="/assets/governo.png"
+                            className="w-[30px] h-[30px] sm:w-[37px] sm:h-[38px] lg:w-[59px] lg:h-[60px]"
+                        />
                         <h3 className="text-[5.6px] sm:text-[7px] lg:text-[14px] m-0">
                             GOVERNO FEDERAL
                             <br />
@@ -26,13 +34,17 @@ export default function Certificado({ certificado }) {
                             <br />
                             CAMPUS VILHENA
                         </h3>
-                        <img src="/assets/logoIfro.png" className="w-[24px] sm:w-[30px] lg:w-[60px]"/>
+                        <img src="/assets/logoIfro.png" className="w-[24px] sm:w-[30px] lg:w-[60px]" />
                     </div>
-                     
-                    <h1 className="font-bold text-[8px] sm:text-[10px] lg:text-[20px] my-5">CERTIFICADO DE CONCLUSÃO</h1>
-                    <p className="text-[5.6px] sm:text-[7px] lg:text-[14px]
-                    p-[6.4px] sm:p-[8px] lg:px-[64px]
 
+                    <h1 className="font-bold 
+                    text-[9.6px] sm:text-[12px] lg:text-[24px] 
+                    mt-[22px] mb-[14px] sm:mt-[27,5px] sm:mb-[17,5px] lg:mt-[55px] lg:mb-[35px]">
+                        CERTIFICADO DE CONCLUSÃO
+                    </h1>
+
+                    <p className="text-[6.4px] sm:text-[8px] lg:text-[16px] 
+                    px-[25.6px] sm:px-[32px] lg:px-[64px]
                     text-justify
                     ">
                         Certificamos para os devidos fins que{" "}
@@ -42,18 +54,32 @@ export default function Certificado({ certificado }) {
                         DE RONDÔNIA - CAMPUS VILHENA, com carga horária de{" "}
                         <strong>{certificado?.curso.cargaHoraria}</strong>.
                     </p>
-                    {/* <div className="flex justify-end mt-10">
+                    <section className="flex justify-between 
+                    pt-[32px] px-[25.6px] sm:pt-[40px] sm:px-[32px] lg:pt-[80px] lg:px-[64px]
+                    h-[67.2px] sm:h-[84px] lg:h-[168px]"
+                    >
                         <div className="text-center">
-                            <p>Instrutor</p>
-                            <p>
-                                <strong>Marco Antonio</strong>
-                            </p>
-                        </div> *
-
-                    </div>
-                    {/* <div className="mt-5 text-center">
-                        <Image src="/assets/logo_fslab.jpeg" width={100} height={100} className="w-24 mx-auto" />
-                    </div> */}
+                            <img src="/assets/logo_fslab_colorido.svg" className="w-[60.8px] h-[29.6px] sm:w-[76px] sm:h-[37px] lg:w-[152px] lg:h-[74px]" />
+                        </div>
+                        <div className="flex flex-col items-center w-[100px] sm:w-[125px] lg:w-[250px]">
+                            <img src="/assets/assinaturaExemplo.png"
+                                className="w-[60.8px] h-[18px] sm:w-[76px] sm:h-[22.5px] lg:w-[152px] lg:h-[45px]"
+                            />
+                            <div className="flex flex-col content-between border-t-2 border-black 
+                            w-[100px] sm:w-[125px] lg:w-[250px]
+                            h-[17.2px] sm:h-[21.5px] lg:h-[43px]
+                            ">
+                                <strong
+                                    className="text-[5.6px] sm:text-[7px] lg:text-[14px]">
+                                    Marco Antonio
+                                </strong>
+                                <p
+                                    className="text-[4.8px] sm:text-[6px] lg:text-[12px]">
+                                    Coordenador do FSLab
+                                </p>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </div>
         </section>
