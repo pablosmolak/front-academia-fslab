@@ -13,23 +13,33 @@ export default function certificadoPage({ params }) {
 
     const [loadindBaixarCertificado, setLoadindBaixarCertificado] = useState(false);
 
-    const {
-        data: certificado,
-        isLoading: isLoadingCertificado,
-        isError: isErrorCertificado,
-        error: errorCertificado
-    } = useQuery({
-        queryKey: ["getCertificado", certificadoid],
-        queryFn: async () => {
-            const response = await fetchApi(`/certificados/validar/${certificadoid}`, "GET");
+    // const {
+    //     data: certificado,
+    //     isLoading: isLoadingCertificado,
+    //     isError: isErrorCertificado,
+    //     error: errorCertificado
+    // } = useQuery({
+    //     queryKey: ["getCertificado", certificadoid],
+    //     queryFn: async () => {
+    //         const response = await fetchApi(`/certificados/validar/${certificadoid}`, "GET");
 
-            if (response.error) {
-                throw response.errors;
-            } else {
-                return response.data[0]
-            }
+    //         if (response.error) {
+    //             throw response.errors;
+    //         } else {
+    //             return response.data[0]
+    //         }
+    //     }
+    // })
+
+    const certificado = {
+        usuario: {
+            nome: "Pablo Smolak"
+        },
+        curso: {
+            nome: "Introdução a docker",
+            cargaHoraria: "1h30m"
         }
-    })
+    }
 
     const handlePrint = () => {
         setLoadindBaixarCertificado(true);
@@ -54,27 +64,35 @@ export default function certificadoPage({ params }) {
             setLoadindBaixarCertificado(false);
         });
     };
-        return (
-            <div  class="text-center ">
-                <h1>Certificado de conclusão</h1>
-                <div id="teste" className="flex justify-center">
-                    <Certificado certificado={certificado} />
-                </div>
-                <ButtonLoading
-                    onClick={() => { handlePrint() }}
-                    isLoading={loadindBaixarCertificado}
-                    style={{
-                        marginTop: "20px",
-                        padding: "10px 20px",
-                        backgroundColor: "#FFC107",
-                        color: "#000",
-                        border: "none",
-                        borderRadius: "5px",
-                        cursor: "pointer",
-                    }}
-                >
-                    Baixar certificado
-                </ButtonLoading>
+    return (
+        <div class="text-center ">
+            <h1>Certificado de conclusão</h1>
+            <div id="teste" className="flex justify-center">
+                <Certificado certificado={certificado} />
             </div>
-        );
+            <ButtonLoading
+                onClick={() => { handlePrint() }}
+                isLoading={loadindBaixarCertificado}
+                style={{
+                    marginTop: "20px",
+                    padding: "10px 20px",
+                    backgroundColor: "#FFC107",
+                    color: "#000",
+                    border: "none",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                }}
+            >
+                Baixar certificado
+            </ButtonLoading>
+
+            <a href="https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=Curso%20de%20JavaScript&organizationName=Academia%20FSLab&issueYear=2025&issueMonth=1&certId=12345&certUrl=https://www.example.com/certificates/12345" 
+            target="_blank" 
+            // style="background-color: #0073b1; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 16px;"
+            >
+                Incluir certificado no LinkedIn
+            </a>
+
+        </div>
+    );
 }

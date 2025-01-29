@@ -39,8 +39,8 @@ export default function Certificado({ certificado }) {
                         <strong>{certificado?.usuario.nome}</strong> concluiu o curso{" "}
                         <strong>{certificado?.curso.nome}</strong>, ofertado pelo Laboratório de Fábricas de
                         Software (FSLab) - INSTITUTO FEDERAL DE EDUCAÇÃO, CIÊNCIA E TECNOLOGIA
-                        DE RONDÔNIA CAMPUS VILHENA, com carga horária de{" "}
-                        <strong>15 horas</strong>.
+                        DE RONDÔNIA - CAMPUS VILHENA, com carga horária de{" "}
+                        <strong>{certificado?.curso.cargaHoraria}</strong>.
                     </p>
                     {/* <div className="flex justify-end mt-10">
                         <div className="text-center">
