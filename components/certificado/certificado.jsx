@@ -54,14 +54,14 @@ export default function Certificado({ certificado }) {
                         DE RONDÔNIA - CAMPUS VILHENA, com carga horária de{" "}
                         <strong>{certificado?.curso.cargaHoraria}</strong>.
                     </p>
-                    <section className="flex justify-between 
-                    pt-[32px] px-[25.6px] sm:pt-[40px] sm:px-[32px] lg:pt-[80px] lg:px-[64px]
+                    <section className="flex justify-center
+                    pt-[40px] px-[25.6px] sm:pt-[50px] sm:px-[32px] lg:pt-[100px] lg:px-[64px]
                     h-[67.2px] sm:h-[84px] lg:h-[168px]"
                     >
                         <div className="text-center">
                             <img src="/assets/logo_fslab_colorido.svg" className="w-[60.8px] h-[29.6px] sm:w-[76px] sm:h-[37px] lg:w-[152px] lg:h-[74px]" />
                         </div>
-                        <div className="flex flex-col items-center w-[100px] sm:w-[125px] lg:w-[250px]">
+                        {/* <div className="flex flex-col items-center w-[100px] sm:w-[125px] lg:w-[250px]">
                             <img src="/assets/assinaturaExemplo.png"
                                 className="w-[60.8px] h-[18px] sm:w-[76px] sm:h-[22.5px] lg:w-[152px] lg:h-[45px]"
                             />
@@ -78,7 +78,7 @@ export default function Certificado({ certificado }) {
                                     Coordenador do FSLab
                                 </p>
                             </div>
-                        </div>
+                        </div> */}
                     </section>
                 </div>
             </div>

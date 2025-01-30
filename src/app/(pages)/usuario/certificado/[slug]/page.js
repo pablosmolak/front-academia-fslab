@@ -45,27 +45,58 @@ export default function certificadoPage({ params }) {
         setLoadindBaixarCertificado(true);
         const certificado = document.getElementById("certificado");
 
-        // Aumentar a escala para melhorar a qualidade da imagem
-        const scale = 6; // Aumentar o valor se necessário
+        const width = certificado.offsetWidth;
+        const height = certificado.offsetHeight;
+
+        let scale
+
+        if (width === 800 && height === 566) {
+            scale = 3;
+        }
+        else if (width === 400 && height === 283) {
+            scale = 5;
+        } else {
+            scale = 6;
+        }
         const options = {
             quality: 1, // Qualidade máxima
             pixelRatio: scale, // Escala maior para melhor qualidade
         };
 
         toPng(certificado, options).then((dataUrl) => {
-            const pdf = new jsPDF("landscape", "px", "a2");
+            const pdf = new jsPDF("landscape", "px", "a4");
             const imgProps = pdf.getImageProperties(dataUrl);
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-            // pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, pdfHeight);
-            pdf.addImage(dataUrl, "JPEG", 0, 0, pdfWidth, pdfHeight, undefined, "SLOW");
+
+            // Adicionar a imagem do certificado ao PDF
+            pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, pdfHeight, undefined, "SLOW");
+
+            const linkUrl = "https://academia.app.fslab.dev/usuario/certificado/dcceaded-f3d6-4760-a5e6-723e79c7966e";
+
+            // Configurações do link
+            const fontSize = 8;
+            const marginRight = 13;
+            const marginBotton = 5;
+
+            const textWidth = pdf.getStringUnitWidth(linkUrl) * fontSize / pdf.internal.scaleFactor;
+
+            const positionRight = pdfWidth - textWidth - marginRight;
+            const positionBotton = pdfHeight - marginBotton;
+
+
+            pdf.setFontSize(fontSize);
+            pdf.setTextColor(0, 0, 0);
+            pdf.text(linkUrl, positionRight, positionBotton, { url: linkUrl });
 
             pdf.save("certificado.pdf");
 
             setLoadindBaixarCertificado(false);
         });
     };
+
+
     return (
         <div className="text-center ">
             <h1>Certificado de conclusão</h1>
@@ -88,9 +119,9 @@ export default function certificadoPage({ params }) {
                 Baixar certificado
             </ButtonLoading>
 
-            <a href="https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=Curso%20de%20JavaScript&organizationName=Academia%20FSLab&issueYear=2025&issueMonth=1&certId=12345&certUrl=https://www.example.com/certificates/12345" 
-            target="_blank" 
-            className="bg-[#0073b1] text-white "
+            <a href="https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=Curso%20de%20JavaScript&organizationName=Academia%20FSLab&issueYear=2025&issueMonth=1&certId=12345&certUrl=https://www.example.com/certificates/12345"
+                target="_blank"
+                className="bg-[#0073b1] text-white "
             // style="background-color: #0073b1; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 16px;"
             >
                 Incluir certificado no LinkedIn
