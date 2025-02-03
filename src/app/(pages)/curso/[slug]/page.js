@@ -42,13 +42,13 @@ export default function cursoPage({ params }) {
         })
 
     const {
-        data: inscricao,
-        isLoading: isLoadingInscricao,
-        isError: isErrorInscricao,
-        error: errorInscricao } = useQuery({
-            queryKey: ["inscricao", cursoId],
+        data: progresso,
+        isLoading: isLoadingProgresso,
+        isError: isErrorProgresso,
+        error: errorProgresso } = useQuery({
+            queryKey: ["progresso", cursoId],
             queryFn: async () => {
-                const response = await fetchApi(`/inscricoes/usuario/curso/${cursoId}`, "GET");
+                const response = await fetchApi(`/progressos/curso/${cursoId}`, "GET");
 
                 if (response.error) {
                     throw response
@@ -91,7 +91,7 @@ export default function cursoPage({ params }) {
             return
         }
 
-        if (inscricao) {
+        if (progresso) {
             router.push(`/curso/${cursoId}/player`)
             return
         } else {
@@ -101,7 +101,7 @@ export default function cursoPage({ params }) {
     }
 
     return (
-        !isLoadingCurso && !isLoadingInscricao && (
+        !isLoadingCurso && !isLoadingProgresso && (
             <>
                 <section className="
                     flex flex-col  md:flex-row
@@ -111,6 +111,8 @@ export default function cursoPage({ params }) {
                     py-8 px-4 xl:px-36 
                     gap-4 xl:gap-4"
                 >
+
+                    {console.log(curso)}
                     <h1 className="text-2xl xl:text-3xl 
                         text-center md:text-start
                         font-bold 
@@ -118,7 +120,7 @@ export default function cursoPage({ params }) {
                         whitespace-normal 
                         max-w-[800px]"
                     >
-                        Realidade virtualmente virtual e realidade realmente aumentada
+                        {curso?.nomeCurso}
                     </h1>
 
                     <div className="
@@ -129,10 +131,13 @@ export default function cursoPage({ params }) {
                         rounded-sm 
                         p-5"
                     >
-                        <div className="flex items-center gap-4 mb-2">
-                            <Progress value='55' className="w-[100%]" />
-                            <p>100%</p>
-                        </div>
+                        {progresso &&(
+                            <div className="flex items-center gap-4 mb-2">
+                                <Progress value={progresso.porcentagem} className="w-[100%]" />
+                                <p>{`${progresso?.porcentagem?.toFixed(0) || 0}%`}</p>
+                            </div>
+                        )} 
+                        
                         <div className="grid grid-cols-1 gap-x-8 xl:grid-cols-2 ">
                             <div className="flex items-center gap-2">
                                 <CalendarClock />
@@ -175,15 +180,15 @@ export default function cursoPage({ params }) {
                     w-full md:w-52 
                     h-10"
                     >
-                        {inscricao ? <p className="text-base">Acessar curso</p> : <p className="text-base">Inscreva-se no curso</p>}
+                        {progresso ? <p className="text-base">Acessar curso</p> : <p className="text-base">Inscreva-se no curso</p>}
                     </ButtonLoading>
                 </section >
 
                 <section className="
                     flex flex-col lg:flex-row
                     lg:justify-between 
-                    py-8 px-4 xl:px-36
-                    gap-4
+                    py-8 
+                    px-4 xl:px-36
                     w-full
                 ">
                     <section className="w-full lg:w-[50%]">
@@ -197,7 +202,6 @@ export default function cursoPage({ params }) {
 
                             <p className="
                                 my-3 
-                                lg:pr-8
                                 text-sm lg:text-base
                                 text-justify"
                             >
@@ -208,6 +212,7 @@ export default function cursoPage({ params }) {
 
                         <div>
                             <h4 className="
+                                mt-8
                                 font-bold
                                 text-2xl
                             ">
@@ -234,7 +239,10 @@ export default function cursoPage({ params }) {
                     </section>
 
                     <section className="
-                        w-full lg:w-[50%]"
+                        w-full lg:w-[50%]
+                        mt-8 lg:mt-0
+                        lg:pl-[20%]
+                        "
                         >
 
                         <h4 className="
@@ -244,12 +252,12 @@ export default function cursoPage({ params }) {
                             {curso?.instrutores?.length > 1 ? 'Instrutores' : 'Instrutor(a)'}
                         </h4>
 
-                        <div className="flex-1 mt-4 sm:mt-0">
+                        <div className="flex-1 mt-4">
                             {curso?.instrutores?.map(instrutor => (
                                 <div
                                     key={instrutor.id}
-                                    className="flex">
-                                    <Avatar className="h-28 w-28">
+                                    className="flex items-center gap-2">
+                                    <Avatar className="h-16 w-16">
                                         <AvatarImage src={handleImagePath(`/usuarios/${instrutor.id}/image`)} />
                                         <AvatarFallback>{instrutor.nome.trim().slice(0, 2).toUpperCase()}</AvatarFallback>
                                     </Avatar>
