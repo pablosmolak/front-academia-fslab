@@ -1,15 +1,15 @@
 "use client"
 
 import ButtonLoading from "@/components/buttonLoading";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/Accordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { fetchApi } from "@/src/utils/fetchApi";
 import { handleImagePath } from "@/src/utils/handleImagePath";
+import { formatarData } from "@/src/utils/mascaras";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { CalendarClock, Clock, Users } from "lucide-react";
+import { CalendarClock, Clock, MonitorPlay, Users } from "lucide-react";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
@@ -101,109 +101,150 @@ export default function cursoPage({ params }) {
     }
 
     return (
-        <>
-            <section className="
-            flex flex-col  md:flex-row
-            md:justify-between 
-            items-center 
-            bg-zinc-400  
-            py-8 px-4 xl:px-36 
-            gap-4 xl:gap-4">
-                <h1 className="text-2xl xl:text-3xl 
-                text-center md:text-start
-                font-bold 
-                break-words 
-                whitespace-normal 
-                max-w-[800px]">
-                    Realidade virtualmente virtual e realidade realmente aumentada
-                </h1>
+        !isLoadingCurso && !isLoadingInscricao && (
+            <>
+                <section className="
+                    flex flex-col  md:flex-row
+                    md:justify-between 
+                    items-center 
+                    bg-zinc-400  
+                    py-8 px-4 xl:px-36 
+                    gap-4 xl:gap-4"
+                >
+                    <h1 className="text-2xl xl:text-3xl 
+                        text-center md:text-start
+                        font-bold 
+                        break-words 
+                        whitespace-normal 
+                        max-w-[800px]"
+                    >
+                        Realidade virtualmente virtual e realidade realmente aumentada
+                    </h1>
 
-                <div className="
-                flex flex-col 
-                bg-white 
-                w-[290px] sm:w-[320px] lg:w-[350px]
-                h-full 
-                rounded-sm 
-                p-5">
-                    <div className="flex items-center gap-4 mb-2">
-                        <Progress value='55' className="w-[100%]" />
-                        <p>100%</p>
+                    <div className="
+                        flex flex-col 
+                        bg-white 
+                        w-[290px] sm:w-[320px] lg:w-[350px]
+                        h-full 
+                        rounded-sm 
+                        p-5"
+                    >
+                        <div className="flex items-center gap-4 mb-2">
+                            <Progress value='55' className="w-[100%]" />
+                            <p>100%</p>
+                        </div>
+                        <div className="grid grid-cols-1 gap-x-8 xl:grid-cols-2 ">
+                            <div className="flex items-center gap-2">
+                                <CalendarClock />
+                                <div>
+                                    <p className="text-sm text-gray-500">Carga horária</p>
+                                    <p className="text-lg font-medium">{curso?.cargaHoraria}</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-2 ">
+                                <Users />
+                                <div>
+                                    <p className="text-sm text-gray-500">Alunos(as)</p>
+                                    <p className="text-lg font-medium">{curso?.inscritos}</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-2 xl:col-span-2">
+                                <Clock />
+                                <div>
+                                    <p className="text-sm text-gray-500">Atualizado em</p>
+                                    <p className="text-lg font-medium">{formatarData(curso?.ultimaAtualizacao)}</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div className="grid grid-cols-1 gap-x-8 xl:grid-cols-2 ">
-                        <div className="flex items-center gap-2">
-                            <CalendarClock />
-                            <div>
-                                <p className="text-sm text-gray-500">Carga horária</p>
-                                <p className="text-lg font-medium">8h</p>
-                            </div>
-                        </div>
+                </section>
 
-                        <div className="flex items-center gap-2 ">
-                            <Users />
-                            <div>
-                                <p className="text-sm text-gray-500">Alunos(as)</p>
-                                <p className="text-lg font-medium">234</p>
-                            </div>
-                        </div>
-
-                        <div className="flex items-center gap-2 xl:col-span-2">
-                            <Clock />
-                            <div>
-                                <p className="text-sm text-gray-500">Atualizado em</p>
-                                <p className="text-lg font-medium">21/03/2004</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <section className="
-            flex justify-between 
-            items-center 
-            bg-zinc-300
-            py-8 px-4 xl:px-36
-            gap-4
-            w-full
-            ">
-                <ButtonLoading
-                    onClick={() => { inscreverNoCurso() }}
-                    className="
+                <section className="
+                    flex justify-between 
+                    items-center 
+                    bg-zinc-300
+                    py-8 px-4 xl:px-36
+                    gap-4
+                    w-full
+                ">
+                    <ButtonLoading
+                        onClick={() => { inscreverNoCurso() }}
+                        className="
                     w-full md:w-52 
                     h-10"
-                >
-                    {inscricao ? <p className="text-base">Acessar curso</p> : <p className="text-base">Inscreva-se no curso</p>}
-                </ButtonLoading>
-            </section >
-            <section className="
-            flex flex-col lg:flex-row
-            lg:justify-between 
-            py-8 px-4 xl:px-36
-            gap-4
-            w-full
-            ">
-                <section className="w-full lg:w-[50%]">
-                    <h4 className="
-                    font-bold
-                    text-2xl
-                    ">
-                        Descrição
-                    </h4>
-                    <p className="
-                    my-3 
-                    lg:pr-8
-                    text-sm lg:text-base
-                    text-justify">
-                        {curso?.descricao}
-                    </p>
-                </section>
-                <section className="w-full lg:w-[50%]">
-                    <h4 className="
-                    font-bold
-                    text-2xl
-                    ">
-                        {curso?.instrutores?.length > 1 ? 'Instrutores' : 'Instrutor(a)'}
-                    </h4>
+                    >
+                        {inscricao ? <p className="text-base">Acessar curso</p> : <p className="text-base">Inscreva-se no curso</p>}
+                    </ButtonLoading>
+                </section >
 
-                    <div className="flex-1 mt-4 sm:mt-0">
+                <section className="
+                    flex flex-col lg:flex-row
+                    lg:justify-between 
+                    py-8 px-4 xl:px-36
+                    gap-4
+                    w-full
+                ">
+                    <section className="w-full lg:w-[50%]">
+                        <div>
+                            <h4 className="
+                            font-bold
+                            text-2xl
+                            ">
+                                Descrição
+                            </h4>
+
+                            <p className="
+                                my-3 
+                                lg:pr-8
+                                text-sm lg:text-base
+                                text-justify"
+                            >
+                                {curso?.descricao}
+                            </p>
+
+                        </div>
+
+                        <div>
+                            <h4 className="
+                                font-bold
+                                text-2xl
+                            ">
+                                Tópicos
+                            </h4>
+
+                            <Accordion type="single" collapsible className="w-full">
+                                {curso?.topicos.map((topico) => (
+                                    <AccordionItem value={topico.id} key={topico.id}>
+                                        <AccordionTrigger>{topico.titulo}</AccordionTrigger>
+                                        {topico?.conteudos.map((conteudos) => (
+                                            <AccordionContent className='px-4'>
+                                                <div className="flex gap-4">
+                                                    <MonitorPlay/>
+                                                    {conteudos.titulo}
+                                                </div>
+                                            </AccordionContent>
+                                        ))}
+                                        
+                                    </AccordionItem>
+                                ))}
+                            </Accordion>
+                        </div>
+                    </section>
+
+                    <section className="
+                        w-full lg:w-[50%]"
+                        >
+
+                        <h4 className="
+                            font-bold
+                            text-2xl
+                        ">
+                            {curso?.instrutores?.length > 1 ? 'Instrutores' : 'Instrutor(a)'}
+                        </h4>
+
+                        <div className="flex-1 mt-4 sm:mt-0">
                             {curso?.instrutores?.map(instrutor => (
                                 <div
                                     key={instrutor.id}
@@ -215,17 +256,13 @@ export default function cursoPage({ params }) {
                                     <p>{instrutor.nome}</p>
                                 </div>
                             ))}
-                    </div>
+                        </div>
+                    </section>
                 </section>
-            </section>
-
-
-        </>
-    )
-
-
-
-
+            </>
+        )
+    );
+}
 
     // return (
     //     <>
@@ -299,4 +336,3 @@ export default function cursoPage({ params }) {
     //         )} 
     //     </>
     // )
-}

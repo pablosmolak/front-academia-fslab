@@ -69,7 +69,6 @@ export default function certificadoPage({ params }) {
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-
             // Adicionar a imagem do certificado ao PDF
             pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, pdfHeight, undefined, "SLOW");
 
