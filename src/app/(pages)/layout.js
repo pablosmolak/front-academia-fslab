@@ -25,7 +25,7 @@ export default function LayoutNoAuth({ children }) {
     return (
         <div className="flex flex-col min-h-screen">
             <TopBar />
-            <main className="flex-grow mx-4 lg:mx-28 my-4">
+            <main className="flex-grow">
                 {children}
             </main>
             <Footer />

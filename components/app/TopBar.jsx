@@ -37,7 +37,7 @@ export default function TopBar({className}) {
                 {/* Verifica se a rota atual é diferente de /login */}
                 {pathname !== '/login' && status === "unauthenticated" && (
                     <Link className="content-center" href="/login">
-                        <p className="text-white">Logar/Cadastrar</p>
+                        <p className="text-white">Login</p>
                     </Link>
                 )}
                 {pathname !== '/login' && status === "authenticated" && (
