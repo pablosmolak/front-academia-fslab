@@ -17,7 +17,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Label } from "../ui/label";
 
 
-export default function TopBar({className}) {
+export default function TopBar({ className }) {
     const pathname = usePathname(); // Obtendo o caminho atual
 
     const { data: session, status } = useSession({
@@ -27,8 +27,20 @@ export default function TopBar({className}) {
 
 
     return (
-        <header className={`bg-slate-950 ${className}`}>
-            <div className="flex mx-28 justify-between">
+        <header
+            className={`
+                bg-slate-950 
+                px-4 xl:px-36 
+                gap-4 xl:gap-4
+                ${className}`
+            }
+        >
+            <div
+                className="
+                flex 
+                justify-between
+                "
+            >
                 <Link href="/" className="flex items-center justify-start h-16">
                     <GraduationCap className="text-white mr-3 " />
                     <h1 className="text-white text-xl">Academia FSLab</h1>
@@ -60,7 +72,7 @@ export default function TopBar({className}) {
                             <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuGroup>
-                               { /*<DropdownMenuItem>
+                                { /*<DropdownMenuItem>
                                     Perfil
                                 </DropdownMenuItem>*/}
                                 <DropdownMenuItem onClick={() => { signOut() }}>
