@@ -69,7 +69,7 @@ export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, 
 
     const ConteudoAtualConcluido = progresso?.atividadesConcluidas?.includes(conteudo?.id)
 
-    if (!ConteudoAtualConcluido /*&& videoNofim*/) {
+    if (!ConteudoAtualConcluido && videoNofim) {
         return (
             <>
                 <ButtonLoading
@@ -78,7 +78,7 @@ export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, 
                     onClick={() => { finalizarConteudo() }}
                     className="w-44"
                 >
-                    Finalizar Conteúdo
+                    Próximo conteúdo
                 </ButtonLoading>
             </>
         )
@@ -91,7 +91,7 @@ export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, 
                     onClick={() => { proximoConteudo() }}
                     className="w-44"
                 >
-                    Proximo conteúdo
+                    Próximo conteúdo
                 </ButtonLoading>
             </>
         )

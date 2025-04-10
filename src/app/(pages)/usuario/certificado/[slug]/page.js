@@ -2,6 +2,7 @@
 
 import ButtonLoading from "@/components/buttonLoading";
 import Certificado from "@/components/certificado/certificado";
+import { fetchApi } from "@/src/utils/fetchApi";
 import { useQuery } from "@tanstack/react-query";
 import { toPng } from "html-to-image";
 import jsPDF from "jspdf";
@@ -13,33 +14,25 @@ export default function certificadoPage({ params }) {
 
     const [loadindBaixarCertificado, setLoadindBaixarCertificado] = useState(false);
 
-    // const {
-    //     data: certificado,
-    //     isLoading: isLoadingCertificado,
-    //     isError: isErrorCertificado,
-    //     error: errorCertificado
-    // } = useQuery({
-    //     queryKey: ["getCertificado", certificadoid],
-    //     queryFn: async () => {
-    //         const response = await fetchApi(`/certificados/validar/${certificadoid}`, "GET");
+    const {
+        data: certificado,
+        isLoading: isLoadingCertificado,
+        isError: isErrorCertificado,
+        error: errorCertificado
+    } = useQuery({
+        queryKey: ["getCertificado", certificadoid],
+        queryFn: async () => {
+            const response = await fetchApi(`/certificados/validar/${certificadoid}`, "GET");
 
-    //         if (response.error) {
-    //             throw response.errors;
-    //         } else {
-    //             return response.data[0]
-    //         }
-    //     }
-    // })
+            console.log(response.data)
 
-    const certificado = {
-        usuario: {
-            nome: "Pablo Smolak"
-        },
-        curso: {
-            nome: "Introdução a docker",
-            cargaHoraria: "1h30m"
+            if (response.error) {
+                throw response.errors;
+            } else {
+                return response.data[0]
+            }
         }
-    }
+    })
 
     const handlePrint = () => {
         setLoadindBaixarCertificado(true);
@@ -94,7 +87,6 @@ export default function certificadoPage({ params }) {
             setLoadindBaixarCertificado(false);
         });
     };
-
 
     return (
         <div className="text-center ">

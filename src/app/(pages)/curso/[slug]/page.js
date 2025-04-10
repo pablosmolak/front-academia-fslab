@@ -4,6 +4,7 @@ import ButtonLoading from "@/components/buttonLoading";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/Accordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
+import { Skeleton } from "@/components/ui/skeleton";
 import { fetchApi } from "@/src/utils/fetchApi";
 import { handleImagePath } from "@/src/utils/handleImagePath";
 import { formatarData } from "@/src/utils/mascaras";
@@ -57,7 +58,7 @@ export default function cursoPage({ params }) {
                 }
             },
             retry: (failureCount, error) => {
-                if (error?.code === 498) {
+                if (error?.code === 498 || error?.code === 404) {
                     return false;
                 }
 
@@ -97,11 +98,10 @@ export default function cursoPage({ params }) {
         } else {
             criarInscricao()
         }
-
     }
 
-    return (
-        !isLoadingCurso && !isLoadingProgresso && (
+    if (!isLoadingCurso && !isLoadingProgresso) {
+        return (
             <>
                 <section className="
                     flex flex-col  md:flex-row
@@ -113,7 +113,8 @@ export default function cursoPage({ params }) {
                 >
 
                     {console.log(curso)}
-                    <h1 className="text-2xl xl:text-3xl 
+                    <h1 className="
+                        text-2xl xl:text-3xl 
                         text-center md:text-start
                         font-bold 
                         break-words 
@@ -131,13 +132,13 @@ export default function cursoPage({ params }) {
                         rounded-sm 
                         p-5"
                     >
-                        {progresso &&(
+                        {progresso && (
                             <div className="flex items-center gap-4 mb-2">
                                 <Progress value={progresso.porcentagem} className="w-[100%]" />
                                 <p>{`${progresso?.porcentagem?.toFixed(0) || 0}%`}</p>
                             </div>
-                        )} 
-                        
+                        )}
+
                         <div className="grid grid-cols-1 gap-x-8 xl:grid-cols-2 ">
                             <div className="flex items-center gap-2">
                                 <CalendarClock />
@@ -177,8 +178,8 @@ export default function cursoPage({ params }) {
                     <ButtonLoading
                         onClick={() => { inscreverNoCurso() }}
                         className="
-                    w-full md:w-52 
-                    h-10"
+                        w-full md:w-52 
+                        h-10"
                     >
                         {progresso ? <p className="text-base">Acessar curso</p> : <p className="text-base">Inscreva-se no curso</p>}
                     </ButtonLoading>
@@ -190,12 +191,12 @@ export default function cursoPage({ params }) {
                     py-8 
                     px-4 xl:px-36
                     w-full
-                ">
+    ">
                     <section className="w-full lg:w-[50%]">
                         <div>
                             <h4 className="
-                            font-bold
-                            text-2xl
+                                font-bold
+                                text-2xl
                             ">
                                 Descrição
                             </h4>
@@ -224,14 +225,14 @@ export default function cursoPage({ params }) {
                                     <AccordionItem value={topico.id} key={topico.id}>
                                         <AccordionTrigger>{topico.titulo}</AccordionTrigger>
                                         {topico?.conteudos.map((conteudos) => (
-                                            <AccordionContent className='px-4'>
+                                            <AccordionContent key={conteudos.id} className='px-4'>
                                                 <div className="flex gap-4">
-                                                    <MonitorPlay/>
+                                                    <MonitorPlay />
                                                     {conteudos.titulo}
                                                 </div>
                                             </AccordionContent>
                                         ))}
-                                        
+
                                     </AccordionItem>
                                 ))}
                             </Accordion>
@@ -242,8 +243,8 @@ export default function cursoPage({ params }) {
                         w-full lg:w-[50%]
                         mt-8 lg:mt-0
                         lg:pl-[20%]
-                        "
-                        >
+                    "
+                    >
 
                         <h4 className="
                             font-bold
@@ -269,78 +270,116 @@ export default function cursoPage({ params }) {
                 </section>
             </>
         )
-    );
+    }
+
+    if (isLoadingCurso || isLoadingProgresso) {
+        return (
+            <>
+                {/* Cabeçalho com título e painel de progresso/detalhes */}
+                <section className="
+      flex flex-col md:flex-row
+      md:justify-between 
+      items-center 
+      bg-zinc-400  
+      py-8 px-4 xl:px-36 
+      gap-4 xl:gap-4"
+                >
+                    <Skeleton className="h-8 xl:h-10 w-full md:max-w-[800px]" />
+
+                    <div className="
+        flex flex-col 
+        bg-white 
+        w-[290px] sm:w-[320px] lg:w-[350px]
+        h-full 
+        rounded-sm 
+        p-5 space-y-4"
+                    >
+                        <div className="grid grid-cols-1 gap-x-8 xl:grid-cols-2 ">
+                            <div className="flex items-center gap-2">
+                                <CalendarClock />
+                                <div>
+                                    <p className="text-sm text-gray-500">Carga horária</p>
+                                    {/* <Skeleton className="w-32 h-4" /> */}
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-2 ">
+                                <Users />
+                                <div>
+                                    <p className="text-sm text-gray-500">Alunos(as)</p>
+                                    <Skeleton className="w-32 h-4" />
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-2 xl:col-span-2">
+                                <Clock />
+                                <div>
+                                    <p className="text-sm text-gray-500">Atualizado em</p>
+                                    <Skeleton className="w-32 h-4" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+           
+                <section className="
+                    flex justify-between 
+                    items-center 
+                    bg-zinc-300
+                    py-8 px-4 xl:px-36
+                    gap-4
+                    w-full
+                 ">
+                    <Skeleton className="w-full md:w-52 h-10" />
+                </section>
+
+                <section className="
+                    flex flex-col lg:flex-row
+                    lg:justify-between 
+                    py-8 
+                    px-4 xl:px-36
+                    w-full
+                ">
+                    <section className="w-full lg:w-[50%] space-y-6">
+                        <div>
+                            <h4 className="font-bold text-2xl">Descrição</h4>
+                            <div className="mt-3 space-y-2">
+                                <Skeleton className="h-4 w-full" />
+                                <Skeleton className="h-4 w-5/6" />
+                                <Skeleton className="h-4 w-2/3" />
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 className="mt-8 font-bold text-2xl">Tópicos</h4>
+                            <div className="space-y-4 mt-4">
+                                {[...Array(3)].map((_, i) => (
+                                    <div key={i}>
+                                        <Skeleton className="h-5 w-3/4 mb-2" />
+                                        <div className="space-y-2 pl-4">
+                                            <Skeleton className="h-4 w-2/3" />
+                                            <Skeleton className="h-4 w-1/2" />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Instrutores */}
+                    <section className="w-full lg:w-[50%] mt-8 lg:mt-0 lg:pl-[20%] space-y-4">
+                        <h4 className="font-bold text-2xl">Instrutor(a)</h4>
+                        {[...Array(2)].map((_, i) => (
+                            <div key={i} className="flex items-center gap-2">
+                                <Skeleton className="h-16 w-16 rounded-full" />
+                                <Skeleton className="h-5 w-40" />
+                            </div>
+                        ))}
+                    </section>
+                </section>
+            </>
+
+        )
+    }
 }
-
-    // return (
-    //     <>
-    //         {!isLoadingCurso && !isLoadingInscricao && (
-    //             <div>
-    //                 <div>
-    //                     <h1 className="text-2xl font-bold">
-    //                         {curso.nomeCurso}
-    //                     </h1>
-
-    //                     <p className="my-3 text-justify">
-    //                         {curso.descricao}
-    //                     </p>
-    //                 </div>
-
-    //                 <div className="
-    //                     flex
-    //                     justify-center 
-    //                     my-5
-    //                 "
-    //                 >
-    //                     <ButtonLoading
-    //                         onClick={() => { inscreverNoCurso() }}
-    //                         className="w-52 h-12"
-    //                     >
-    //                         {inscricao ? <p className="text-base">Acessar curso</p> : <p className="text-base">Inscreva-se no curso</p>}
-    //                     </ButtonLoading>
-    //                 </div>
-
-
-    //                 <div className={`flex ${curso.categorias?.length <= 3 && curso.instrutores?.length <= 3 ? 'flex-row items-start' : 'flex-col mt-4'}`}>
-    //                     <div className="flex-1">
-    //                         <h2 className="font-bold text-lg text-start my-2">Tópicos abordados:</h2>
-    //                         <ul
-    //                             className={`list-disc pl-5 grid gap-4 ${curso.categorias?.length > 3 ? 'grid-cols-3' : ''} `}
-    //                         >
-    //                             {curso.categorias?.map(categoria => (
-    //                                 <li key={categoria}>{categoria}</li>
-    //                             ))}
-    //                         </ul>
-    //                     </div>
-
-
-    //     <div className="flex-1 mt-4 sm:mt-0">
-    //         <h2 className="font-bold text-lg text-start my-2">{curso.instrutores?.length > 1 ? 'Instrutores:' : 'Instrutor:'}</h2>
-    //         <div
-    //             className={`grid gap-4 ${curso.instrutores?.length > 3 ? 'grid-cols-3' : 'grid-cols-2'}`}
-    //         >
-    //             {curso.instrutores?.map(instrutor => (
-    //                 <Link
-    //                     key={instrutor.id}
-    //                     href={`http://localhost:3100/usuarios/${instrutor.id}`}
-    //                 >
-    //                     <Card className="w-40 flex-shrink-0">
-    //                         <CardHeader>
-    //                             <Avatar className="h-28 w-28">
-    //                                 <AvatarImage src={handleImagePath(`/usuarios/${instrutor.id}/image`)} />
-    //                                 <AvatarFallback>{instrutor.nome.trim().slice(0, 2).toUpperCase()}</AvatarFallback>
-    //                             </Avatar>
-    //                         </CardHeader>
-    //                         <CardFooter>
-    //                             <p>{instrutor.nome}</p>
-    //                         </CardFooter>
-    //                     </Card>
-    //                 </Link>
-    //             ))}
-    //         </div>
-    //     </div>
-    // </div>
-    //             </div>
-    //         )} 
-    //     </>
-    // )
