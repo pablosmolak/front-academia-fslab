@@ -3,13 +3,14 @@
 import ButtonLoading from "@/components/buttonLoading";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/Accordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fetchApi } from "@/src/utils/fetchApi";
 import { handleImagePath } from "@/src/utils/handleImagePath";
 import { formatarData } from "@/src/utils/mascaras";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { CalendarClock, Clock, MonitorPlay, Users } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { CalendarClock, ChevronDown, Clock, MonitorPlay, Users } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -22,6 +23,7 @@ export default function cursoPage({ params }) {
     });
 
     const router = useRouter();
+    const queryClient = useQueryClient();
 
     const cursoId = params.slug
 
@@ -83,6 +85,30 @@ export default function cursoPage({ params }) {
         },
     });
 
+    const {
+        data: certificado,
+        isLoading: isLoadingCertificado,
+        isError: isErrorCertificado,
+        error: errorCertificado } = useQuery({
+            queryKey: ["certificado", cursoId],
+            queryFn: async () => {
+                const response = await fetchApi(`/certificados/usuario/curso/${cursoId}`, "GET");
+
+                if (response.error) {
+                    throw response
+                } else {
+                    return response.data[0] || null
+                }
+            },
+            retry: (failureCount, error) => {
+                if (error?.code === 498 || error?.code === 404) {
+                    return false;
+                }
+
+                return failureCount < 3;
+            }
+        })
+
 
     const inscreverNoCurso = () => {
         if (status === 'unauthenticated') {
@@ -100,6 +126,52 @@ export default function cursoPage({ params }) {
         }
     }
 
+    const {
+        data: inscricao,
+        isLoading: isLoadingInscricao,
+        isError: isErrorInscricao,
+        error: errorInscricao } = useQuery({
+            queryKey: ["inscricao", cursoId],
+            queryFn: async () => {
+                const response = await fetchApi(`/inscricoes/usuario/curso/${cursoId}`, "GET");
+
+                if (response.error) {
+                    throw response
+                } else {
+                    return response.data[0] || null
+                }
+            },
+            retry: (failureCount, error) => {
+                if (error?.code === 498 || error?.code === 404) {
+                    return false;
+                }
+
+                return failureCount < 3;
+            }
+        })
+
+
+
+    const { mutate: desisncreverDoCurso, isLoadingDesinscrever } = useMutation({
+        mutationFn: async () => {
+            const response = await fetchApi(`/inscricoes/${inscricao?.id}`, "DELETE");
+
+            if (response.error) {
+                throw response.errors;
+            }
+            return response.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries(["inscricao", cursoId]);
+            queryClient.invalidateQueries(["progresso", cursoId]);
+        },
+        onError: (error) => {
+            console.log(error)
+            toast.error("Erro ao tentar efetuar a inscrição!");
+        },
+    });
+
+
     if (!isLoadingCurso && !isLoadingProgresso) {
         return (
             <>
@@ -111,8 +183,6 @@ export default function cursoPage({ params }) {
                     py-8 px-4 xl:px-36 
                     gap-4 xl:gap-4"
                 >
-
-                    {console.log(curso)}
                     <h1 className="
                         text-2xl xl:text-3xl 
                         text-center md:text-start
@@ -168,7 +238,8 @@ export default function cursoPage({ params }) {
                 </section>
 
                 <section className="
-                    flex justify-between 
+                    flex start
+                    flex-col md:flex-row
                     items-center 
                     bg-zinc-300
                     py-8 px-4 xl:px-36
@@ -183,6 +254,45 @@ export default function cursoPage({ params }) {
                     >
                         {progresso ? <p className="text-base">Acessar curso</p> : <p className="text-base">Inscreva-se no curso</p>}
                     </ButtonLoading>
+
+                    <DropdownMenu>
+                        <DropdownMenuTrigger
+                            className="
+                                rounded-md
+                                bg-gray-100 
+                                w-full md:w-52 
+                                h-10
+                                flex
+                                items-center
+                                justify-center
+                                gap-4
+                                "
+                                
+                        >
+                            Outras Ações <ChevronDown />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            <DropdownMenuItem
+                                disabled={progresso?.porcentagem !== 100}
+                                onClick={() => {
+                                    if (progresso?.porcentagem === 100) {
+                                        router.push(`/usuario/certificado/${certificado?.validador}`) // ou use navigate('/certificado') se estiver usando React Router
+                                    }
+                                }}
+                            >
+                                Certificado
+                            </DropdownMenuItem>
+
+                            <DropdownMenuItem
+                                disabled={!progresso || progresso?.porcentagem === 100}
+                                onClick={() => {
+                                    desisncreverDoCurso()
+                                }}
+                            >
+                                Cancelar inscrição
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </section >
 
                 <section className="
@@ -277,22 +387,22 @@ export default function cursoPage({ params }) {
             <>
                 {/* Cabeçalho com título e painel de progresso/detalhes */}
                 <section className="
-      flex flex-col md:flex-row
-      md:justify-between 
-      items-center 
-      bg-zinc-400  
-      py-8 px-4 xl:px-36 
-      gap-4 xl:gap-4"
+                    flex flex-col md:flex-row
+                    md:justify-between 
+                    items-center 
+                    bg-zinc-400  
+                    py-8 px-4 xl:px-36 
+                    gap-4 xl:gap-4"
                 >
                     <Skeleton className="h-8 xl:h-10 w-full md:max-w-[800px]" />
 
                     <div className="
-        flex flex-col 
-        bg-white 
-        w-[290px] sm:w-[320px] lg:w-[350px]
-        h-full 
-        rounded-sm 
-        p-5 space-y-4"
+                        flex flex-col 
+                        bg-white 
+                        w-[290px] sm:w-[320px] lg:w-[350px]
+                        h-full 
+                        rounded-sm 
+                        p-5 space-y-4"
                     >
                         <div className="grid grid-cols-1 gap-x-8 xl:grid-cols-2 ">
                             <div className="flex items-center gap-2">
@@ -322,7 +432,6 @@ export default function cursoPage({ params }) {
                     </div>
                 </section>
 
-           
                 <section className="
                     flex justify-between 
                     items-center 
