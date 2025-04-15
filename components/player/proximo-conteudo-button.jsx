@@ -69,7 +69,7 @@ export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, 
 
     const ConteudoAtualConcluido = progresso?.atividadesConcluidas?.includes(conteudo?.id)
 
-    if (!ConteudoAtualConcluido && videoNofim) {
+    if (!ConteudoAtualConcluido /*&& videoNofim*/) {
         return (
             <>
                 <ButtonLoading

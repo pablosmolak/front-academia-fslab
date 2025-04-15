@@ -118,7 +118,7 @@ export default function cursoPage({ params }) {
             return
         }
 
-        if (progresso) {
+        if (progresso && !isErrorProgresso) {
             router.push(`/curso/${cursoId}/player`)
             return
         } else {
@@ -126,35 +126,9 @@ export default function cursoPage({ params }) {
         }
     }
 
-    const {
-        data: inscricao,
-        isLoading: isLoadingInscricao,
-        isError: isErrorInscricao,
-        error: errorInscricao } = useQuery({
-            queryKey: ["inscricao", cursoId],
-            queryFn: async () => {
-                const response = await fetchApi(`/inscricoes/usuario/curso/${cursoId}`, "GET");
-
-                if (response.error) {
-                    throw response
-                } else {
-                    return response.data[0] || null
-                }
-            },
-            retry: (failureCount, error) => {
-                if (error?.code === 498 || error?.code === 404) {
-                    return false;
-                }
-
-                return failureCount < 3;
-            }
-        })
-
-
-
     const { mutate: desisncreverDoCurso, isLoadingDesinscrever } = useMutation({
         mutationFn: async () => {
-            const response = await fetchApi(`/inscricoes/${inscricao?.id}`, "DELETE");
+            const response = await fetchApi(`/inscricoes/usuario/curso/${cursoId}`, "DELETE");
 
             if (response.error) {
                 throw response.errors;
@@ -162,12 +136,12 @@ export default function cursoPage({ params }) {
             return response.data;
         },
         onSuccess: () => {
+            toast.success("Inscrição cancelada com sucesso!");
             queryClient.invalidateQueries(["inscricao", cursoId]);
             queryClient.invalidateQueries(["progresso", cursoId]);
         },
         onError: (error) => {
-            console.log(error)
-            toast.error("Erro ao tentar efetuar a inscrição!");
+            toast.error("Erro ao tentar cancelar a inscrição!");
         },
     });
 
@@ -202,7 +176,7 @@ export default function cursoPage({ params }) {
                         rounded-sm 
                         p-5"
                     >
-                        {progresso && (
+                        {(progresso && !isErrorProgresso) && (
                             <div className="flex items-center gap-4 mb-2">
                                 <Progress value={progresso.porcentagem} className="w-[100%]" />
                                 <p>{`${progresso?.porcentagem?.toFixed(0) || 0}%`}</p>
@@ -252,7 +226,7 @@ export default function cursoPage({ params }) {
                         w-full md:w-52 
                         h-10"
                     >
-                        {progresso ? <p className="text-base">Acessar curso</p> : <p className="text-base">Inscreva-se no curso</p>}
+                        {(progresso && !isErrorProgresso) ? <p className="text-base">Acessar curso</p> : <p className="text-base">Inscreva-se no curso</p>}
                     </ButtonLoading>
 
                     <DropdownMenu>
@@ -273,10 +247,10 @@ export default function cursoPage({ params }) {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                             <DropdownMenuItem
-                                disabled={progresso?.porcentagem !== 100}
+                                disabled={(progresso?.porcentagem !== 100 || isErrorProgresso)}
                                 onClick={() => {
                                     if (progresso?.porcentagem === 100) {
-                                        router.push(`/usuario/certificado/${certificado?.validador}`) // ou use navigate('/certificado') se estiver usando React Router
+                                        router.push(`/usuario/certificado/${certificado?.validador}`)
                                     }
                                 }}
                             >
@@ -284,7 +258,7 @@ export default function cursoPage({ params }) {
                             </DropdownMenuItem>
 
                             <DropdownMenuItem
-                                disabled={!progresso || progresso?.porcentagem === 100}
+                                disabled={(!progresso || progresso?.porcentagem === 100) || isErrorProgresso}
                                 onClick={() => {
                                     desisncreverDoCurso()
                                 }}

@@ -8,5 +8,5 @@ export async function getUserInfos() {
             tags: ["getUserInfos"],
         }
     });
-    return response?.data[0].payload;
+    return response?.data[0]?.payload;
 }
