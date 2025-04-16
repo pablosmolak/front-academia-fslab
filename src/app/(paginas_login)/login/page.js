@@ -127,7 +127,13 @@ export default function LoginPage() {
     const logo = logoFslab;
 
     return (
-        <main className="flex-grow flex items-center justify-center">
+        <main className="
+        py-8 px-4 xl:px-36
+        flex-grow 
+        flex 
+        items-center 
+        justify-center
+        ">
             <Tabs defaultValue="login" className="w-full max-w-md">
                 <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="login">Login</TabsTrigger>

@@ -55,7 +55,7 @@ export default function PaginationComponent({ maxPageComponent = 3, totalPages, 
 
     return false;
   }
-
+  
   return (
     <Pagination className={"m-4 text-primaryLight"}>
       <PaginationContent >

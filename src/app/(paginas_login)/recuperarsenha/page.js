@@ -53,7 +53,11 @@ export default function RecuperarSenhaPage() {
 
     return (
         <>
-            <div className="flex justify-center">
+            <div className="
+                py-8 px-4 xl:px-36
+                flex 
+                justify-center
+            ">
                 <div className="w-full max-w-4xl flex flex-col md:flex-row">
                     {/* Container da Imagem e do Separador */}
                     <div className="w-full md:w-1/2 flex justify-center hidden md:flex">

@@ -97,13 +97,12 @@ export default function paginaInicial({ searchParams }) {
                     py-8 px-4 xl:px-36 
                     gap-4 xl:gap-4">
                 <Form {...form} className="flex justify-center items-center h-screen ">
-                    <form id="formFiltrar" onSubmit={form.handleSubmit(filtrar)} className="flex flex-row justify-center space-x-2 pt-4">
+                    <form id="formFiltrar" onSubmit={form.handleSubmit(filtrar)} className="flex flex-row justify-center h-14 space-x-2 pt-4">
                         <FormField
                             control={form.control}
                             name="filtro"
                             render={({ field }) => (
                                 <FormItem className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
-                                    { /*<FormLabel htmlFor="filtro" className="">Filtro</FormLabel>*/}
                                     <FormControl>
                                         <Input
                                             type="text"
@@ -118,7 +117,7 @@ export default function paginaInicial({ searchParams }) {
                             )}
                         />
                         <ButtonLoading
-                            className="w-32"
+                            className="w-36 h-full"
                             isLoading={isLoading}
                             form="formFiltrar">
                             Filtrar

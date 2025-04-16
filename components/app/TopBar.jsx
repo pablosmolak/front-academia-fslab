@@ -16,7 +16,6 @@ import { usePathname } from "next/navigation"; // Usando o hook correto
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Label } from "../ui/label";
 
-
 export default function TopBar({ className }) {
     const pathname = usePathname(); // Obtendo o caminho atual
 
@@ -25,19 +24,18 @@ export default function TopBar({ className }) {
         refetchInterval: 60,
     });
 
-
     return (
         <header
             className={`
-                bg-slate-950 
-                px-4 xl:px-36 
+                bg-slate-950
+                px-4 xl:px-36
                 gap-4 xl:gap-4
                 ${className}`
             }
         >
             <div
                 className="
-                flex 
+                flex
                 justify-between
                 "
             >
@@ -60,7 +58,7 @@ export default function TopBar({ className }) {
                                     <AvatarImage src={handleImagePath(`/usuarios/${session.user.id}/image`)} />
                                     <AvatarFallback>{session.user.name.trim().slice(0, 2).toUpperCase()}</AvatarFallback>
                                 </Avatar>
-                                <Label className="text-white">{
+                                <Label className="text-white hidden sm:inline">{
                                     session.user.name.split(" ")
                                         .filter(word => !["da", "de", "do", "das", "dos"].includes(word.toLowerCase()))
                                         .slice(0, 2)
@@ -69,12 +67,10 @@ export default function TopBar({ className }) {
                             </div>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56">
-                            <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
                             <DropdownMenuGroup>
-                                { /*<DropdownMenuItem>
-                                    Perfil
-                                </DropdownMenuItem>*/}
+                                <DropdownMenuItem>
+                                    Meu Perfil
+                                </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => { signOut() }}>
                                     Sair
                                 </DropdownMenuItem>
@@ -86,3 +82,4 @@ export default function TopBar({ className }) {
         </header>
     );
 }
+

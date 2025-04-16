@@ -241,7 +241,7 @@ export default function cursoPage({ params }) {
                                 justify-center
                                 gap-4
                                 "
-                                
+
                         >
                             Outras Ações <ChevronDown />
                         </DropdownMenuTrigger>
@@ -275,7 +275,7 @@ export default function cursoPage({ params }) {
                     py-8 
                     px-4 xl:px-36
                     w-full
-    ">
+                ">
                     <section className="w-full lg:w-[50%]">
                         <div>
                             <h4 className="
@@ -378,42 +378,45 @@ export default function cursoPage({ params }) {
                         rounded-sm 
                         p-5 space-y-4"
                     >
-                        <div className="grid grid-cols-1 gap-x-8 xl:grid-cols-2 ">
-                            <div className="flex items-center gap-2">
-                                <CalendarClock />
+                        <div className="grid grid-cols-1 gap-x-8 xl:grid-cols-2">
+                            <div className="flex items-center gap-2 min-w-0">
+                                <CalendarClock className="w-6 h-6 shrink-0" />
                                 <div>
                                     <p className="text-sm text-gray-500">Carga horária</p>
-                                    {/* <Skeleton className="w-32 h-4" /> */}
+                                    <Skeleton className="w-16 h-5" />
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-2 ">
-                                <Users />
+                            <div className="flex items-center gap-2 min-w-0">
+                                <Users className="w-6 h-6 shrink-0" />
                                 <div>
                                     <p className="text-sm text-gray-500">Alunos(as)</p>
-                                    <Skeleton className="w-32 h-4" />
+                                    <Skeleton className="w-16 h-5" />
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-2 xl:col-span-2">
-                                <Clock />
+                            <div className="flex items-center gap-2 xl:col-span-2 min-w-0">
+                                <Clock className="w-6 h-6 shrink-0" />
                                 <div>
                                     <p className="text-sm text-gray-500">Atualizado em</p>
-                                    <Skeleton className="w-32 h-4" />
+                                    <Skeleton className="w-16 h-5" />
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </section>
 
                 <section className="
-                    flex justify-between 
+                    flex start
+                    flex-col md:flex-row 
                     items-center 
                     bg-zinc-300
                     py-8 px-4 xl:px-36
                     gap-4
                     w-full
                  ">
+                    <Skeleton className="w-full md:w-52 h-10" />
                     <Skeleton className="w-full md:w-52 h-10" />
                 </section>
 
