@@ -6,7 +6,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { Separator } from "@/components/ui/separator";
-import LogoFslab from "@/public/assets/logo_fslab.jpeg";
+import LogoFslab from "@/public/assets/logo_fslab.svg";
 import { ApplicationContext } from "@/src/context/applicationContext";
 import { handleFormErrors } from "@/src/errors/handleFormErrors";
 import { verificaEmailSchema } from "@/src/schemas/verificaEmailSchema";

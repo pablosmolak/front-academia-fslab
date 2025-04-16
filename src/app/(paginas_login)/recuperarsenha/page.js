@@ -10,7 +10,7 @@ import { fetchApi } from "@/src/utils/fetchApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import LogoFslab from "../../../../public/assets/logo_fslab.jpeg";
+import LogoFslab from "@/public/assets/logo_fslab.svg";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import { toast } from "react-toastify";

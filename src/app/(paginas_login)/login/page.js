@@ -1,37 +1,28 @@
-"use client";
-import ButtonLoading from "@/components/buttonLoading";
-import {
-    Card,
-    CardContent,
-    CardFooter,
-    CardHeader,
-} from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-    Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger,
-} from "@/components/ui/tabs";
-import { getUserInfos } from "@/src/actions/authAction";
-import { ApplicationContext } from "@/src/context/applicationContext";
-import { handleFormErrors } from "@/src/errors/handleFormErrors";
-import { authSchema } from "@/src/schemas/authSchema";
-import { fetchApi } from "@/src/utils/fetchApi";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "next-auth/react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import logoFslab from "../../../../public/assets/logo_fslab.jpeg";
+'use client'
 
+import ButtonLoading from "@/components/buttonLoading"
+import { Button } from "@/components/ui/button"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { cn } from "@/lib/utils"
+import logoFslab from "@/public/assets/logo_fslab.svg"
+import { getUserInfos } from "@/src/actions/authAction"
+import { ApplicationContext } from "@/src/context/applicationContext"
+import { handleFormErrors } from "@/src/errors/handleFormErrors"
+import { authSchema } from "@/src/schemas/authSchema"
+import { fetchApi } from "@/src/utils/fetchApi"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { signIn } from "next-auth/react"
+import Image from "next/image"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useContext, useState } from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "react-toastify"
 
-export default function LoginPage() {
-
+export default function AuthPage() {
+    const [isSignUp, setIsSignUp] = useState(false)
     const [LoadingCadastrar, setLoadingCadastrar] = useState(false)
 
     const router = useRouter();
@@ -124,176 +115,189 @@ export default function LoginPage() {
         }
     }
 
-    const logo = logoFslab;
-
     return (
-        <main className="
-        py-8 px-4 xl:px-36
-        flex-grow 
-        flex 
-        items-center 
-        justify-center
-        ">
-            <Tabs defaultValue="login" className="w-full max-w-md">
-                <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="login">Login</TabsTrigger>
-                    <TabsTrigger value="cadastrar">Cadastre-se</TabsTrigger>
-                </TabsList>
-                <TabsContent value="login">
-                    <Card>
-                        <CardHeader className="items-center">
-                            <Image src={logo} alt="Logo FSLab" width={200} height={200} />
-                        </CardHeader>
+
+        <div className="relative w-full max-w-3xl h-[550px] overflow-hidden rounded-xl shadow-lg">
+            <div className="flex w-full h-full">
+
+                <div className={cn(
+                    "w-full md:w-1/2 p-8 flex items-center justify-center",
+                    isSignUp ? "hidden md:block" : "block"
+                )}>
+                    <div className="w-full max-w-sm space-y-4">
+                        <div className="text-center mb-14">
+                            <h1 className="text-2xl font-bold">Bem-vindo de volta</h1>
+                            <p className="text-muted-foreground">Login na conta Academia FLab</p>
+                        </div>
                         <Form {...formLogar}>
                             <form
                                 className="space-y-4" id="formLogin"
                                 onSubmit={formLogar.handleSubmit(login)}
                             >
-                                <CardContent>
-                                    <FormField
-                                        control={formLogar.control}
-                                        name="email"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel htmlFor="email">E-mail</FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        type="text"
-                                                        id="email"
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={formLogar.control}
-                                        name="senha"
-                                        render={({ field }) => (
-                                            <FormItem>
+                                <FormField
+                                    control={formLogar.control}
+                                    name="email"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel htmlFor="email">E-mail</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="text"
+                                                    id="email"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={formLogar.control}
+                                    name="senha"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <div className="flex items-center">
                                                 <FormLabel htmlFor="senha">Senha</FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        type="password"
-                                                        id="senha"
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </CardContent>
-                                <CardFooter className="flex flex-col">
-                                    <ButtonLoading
-                                        className="w-full"
-                                        isLoading={formLogar.formState.isSubmitting}
-                                        form="formLogin">
-                                        Entrar
-                                    </ButtonLoading>
-                                    <Link className="text-sm mt-2 hover:underline" href={"/recuperarsenha"}>
-                                        Esqueceu a senha?
-                                    </Link>
+                                                <Link
+                                                    href="/recuperarsenha"
+                                                    className="ml-auto text-sm underline-offset-2 hover:underline"
+                                                >
+                                                    Esqueceu sua senha?
+                                                </Link>
+                                            </div>
 
-                                </CardFooter>
+
+                                            <FormControl>
+                                                <Input
+                                                    type="password"
+                                                    id="senha"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <ButtonLoading
+                                    className="w-full"
+                                    isLoading={formLogar.formState.isSubmitting}
+                                    form="formLogin">
+                                    Entrar
+                                </ButtonLoading>
                             </form>
                         </Form>
-                    </Card>
-                </TabsContent>
-                <TabsContent value="cadastrar">
-                    <Card>
-                        <CardHeader className="items-center">
-                            <Image src={logo} alt="Logo FSLab" width={200} height={200} />
-                        </CardHeader>
+
+                        <div className="text-center text-sm">
+                            Não tem uma conta?{" "}
+                            <button
+                                className="underline underline-offset-4"
+                                onClick={() => setIsSignUp(true)}
+                            >
+                                Inscreva-se
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div className={cn(
+                    "w-full md:w-1/2 p-8 flex items-center justify-center",
+                    isSignUp ? "block" : "hidden md:block"
+                )}>
+                    <div className="w-full max-w-sm space-y-6">
+                        <div className="text-center">
+                            <h1 className="text-2xl font-bold">Criar Conta</h1>
+                            <p className="text-muted-foreground">Cadastre-se na Academia FLab</p>
+                        </div>
                         <Form {...formCadastrar}>
                             <form
-                                className="space-y-4" id="formCadastrar"
+                                className="space-y-2" id="formCadastrar"
                                 onSubmit={formCadastrar.handleSubmit(cadastrar)}
                             >
-                                <CardContent>
-                                    <FormField
-                                        control={formCadastrar.control}
-                                        name="nome"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel htmlFor="email">Nome</FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        type="text"
-                                                        id="nome"
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={formCadastrar.control}
-                                        name="email"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel htmlFor="email">E-mail</FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        type="text"
-                                                        id="email"
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={formCadastrar.control}
-                                        name="senha"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel htmlFor="senha">Senha</FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        type="password"
-                                                        id="senha"
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={formCadastrar.control}
-                                        name="confirmarSenha"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel htmlFor="senha">Confirmar Senha</FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        type="password"
-                                                        id="confirmarSenha"
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </CardContent>
-                                <CardFooter className="flex flex-col">
-                                    <ButtonLoading
-                                        className="w-full"
-                                        isLoading={LoadingCadastrar}
-                                        form="formCadastrar">
-                                        Cadastrar
-                                    </ButtonLoading>
-                                </CardFooter>
+
+                                <FormField
+                                    control={formCadastrar.control}
+                                    name="nome"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel htmlFor="email">Nome</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="text"
+                                                    id="nome"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={formCadastrar.control}
+                                    name="email"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel htmlFor="email">E-mail</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="text"
+                                                    id="email"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={formCadastrar.control}
+                                    name="senha"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel htmlFor="senha">Senha</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="password"
+                                                    id="senha"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <ButtonLoading
+                                    className="w-full"
+                                    isLoading={LoadingCadastrar}
+                                    form="formCadastrar">
+                                    Cadastrar
+                                </ButtonLoading>
                             </form>
                         </Form>
-                    </Card>
-                </TabsContent>
-            </Tabs>
-        </main>
-    );
+                        <div className="text-center text-sm">
+                            Já tem uma conta?{" "}
+                            <button
+                                className="underline underline-offset-4"
+                                onClick={() => setIsSignUp(false)}
+                            >
+                                Fazer login
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div
+                className={cn(
+                    "hidden md:flex absolute top-0 left-0 h-full w-1/2 bg-muted z-10 transition-transform duration-700 ease-in-out will-change-transform items-center justify-center",
+                    isSignUp ? "translate-x-0" : "translate-x-full"
+                )}
+            >
+                <Image
+                    src={logoFslab}
+                    alt="Logo FSLab"
+                    className="object-contain w-3/4 max-w-xs h-auto dark:brightness-[0.2]"
+                />
+            </div>
+        </div>
+
+    )
 }
