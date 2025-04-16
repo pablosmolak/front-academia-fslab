@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import LogoFslab from "../../../../public/assets/logo_fslab.jpeg";
+import LogoFslab from "@/public/assets/logo_fslab.svg";
 
 export default function AlterarSenhaPage({ searchParams }) {
     const router = useRouter();
