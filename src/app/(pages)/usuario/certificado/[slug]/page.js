@@ -2,6 +2,7 @@
 
 import ButtonLoading from "@/components/buttonLoading";
 import Certificado from "@/components/certificado/certificado";
+import Custom404 from "@/src/app/not-found";
 import { ApplicationContext } from "@/src/context/applicationContext";
 import { fetchApi } from "@/src/utils/fetchApi";
 import { useQuery } from "@tanstack/react-query";
@@ -33,7 +34,7 @@ export default function certificadoPage({ params }) {
             console.log(response.data)
 
             if (response.error) {
-                throw response.errors;
+                throw response;
             } else {
                 return response.data[0]
             }
@@ -117,6 +118,15 @@ export default function certificadoPage({ params }) {
 
     const ehDonoDoCertificado = certificado?.usuario.id === session?.user.id
 
+
+    console.log(errorCertificado)
+
+
+    if (!isLoadingCertificado && isErrorCertificado) {
+        return (
+            <Custom404 showLayout={false}/>
+        )
+      }
 
     if (!isLoadingCertificado && !isErrorCertificado) {
         return (
