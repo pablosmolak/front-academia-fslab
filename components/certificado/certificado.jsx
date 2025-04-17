@@ -1,5 +1,35 @@
 
 export default function Certificado({ certificado }) {
+
+    function dataPorExtenso(data) {
+        const meses = [
+            'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+            'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+        ];
+
+        const dataObj = new Date(data);
+        const dia = dataObj.getDate();
+        const mes = meses[dataObj.getMonth()];
+        const ano = dataObj.getFullYear();
+
+        return `${dia} de ${mes} de ${ano}`;
+    }
+
+    function transformarEmFormatoCompacto(hora) {
+       
+        const regex = /^(\d{2}):(\d{2}):(\d{2})$/;
+      
+        const match = hora.match(regex);
+        
+        if (match) {
+          const horas = parseInt(match[1], 10); 
+          const minutos = parseInt(match[2], 10);
+          
+          return `${horas}h${minutos}m`;
+        }
+      }
+
+
     return (
         <section className=" w-[320px] h-[226px] sm:w-[400px] sm:h-[283px] lg:w-[800px] lg:h-[566px]">
             <div
@@ -47,17 +77,17 @@ export default function Certificado({ certificado }) {
                     ">
                         Certificamos para os devidos fins que{" "}
                         <strong>{certificado?.usuario.nome}</strong> concluiu o curso{" "}
-                        <strong>{certificado?.curso.nome}</strong>, ofertado pelo Laboratório de Fábricas de
+                        <strong>{certificado?.curso.nome}</strong> na data de <strong>{dataPorExtenso(certificado?.created_at)}</strong>, ofertado pelo Laboratório de Fábricas de
                         Software (FSLab) - INSTITUTO FEDERAL DE EDUCAÇÃO, CIÊNCIA E TECNOLOGIA
                         DE RONDÔNIA - CAMPUS VILHENA, com carga horária de{" "}
-                        <strong>{certificado?.curso.cargaHoraria}</strong>.
+                        <strong>{transformarEmFormatoCompacto(certificado?.curso.cargaHoraria)}</strong>.
                     </p>
                     <section className="flex justify-center
                     pt-[40px] px-[25.6px] sm:pt-[50px] sm:px-[32px] lg:pt-[100px] lg:px-[64px]
                     h-[67.2px] sm:h-[84px] lg:h-[168px]"
                     >
                         <div className="text-center">
-                            <img src="/assets/logo_fslab_colorido.svg" className="w-[60.8px] h-[29.6px] sm:w-[76px] sm:h-[37px] lg:w-[152px] lg:h-[74px]" />
+                            <img src="/assets/logo_fslab.svg" className="w-[60.8px] h-[29.6px] sm:w-[76px] sm:h-[37px] lg:w-[152px] lg:h-[74px]" />
                         </div>
                         {/* <div className="flex flex-col items-center w-[100px] sm:w-[125px] lg:w-[250px]">
                             <img src="/assets/assinaturaExemplo.png"

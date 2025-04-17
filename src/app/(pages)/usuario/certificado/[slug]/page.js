@@ -2,17 +2,23 @@
 
 import ButtonLoading from "@/components/buttonLoading";
 import Certificado from "@/components/certificado/certificado";
+import { ApplicationContext } from "@/src/context/applicationContext";
 import { fetchApi } from "@/src/utils/fetchApi";
 import { useQuery } from "@tanstack/react-query";
 import { toPng } from "html-to-image";
 import jsPDF from "jspdf";
-import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useContext, useState } from "react";
 
 export default function certificadoPage({ params }) {
 
+    const [loadindBaixarCertificado, setLoadindBaixarCertificado] = useState(false);
     const certificadoid = params.slug
 
-    const [loadindBaixarCertificado, setLoadindBaixarCertificado] = useState(false);
+    const { data: session } = useSession({
+        required: false,
+        refetchInterval: 30,
+    });
 
     const {
         data: certificado,
@@ -65,7 +71,7 @@ export default function certificadoPage({ params }) {
             // Adicionar a imagem do certificado ao PDF
             pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, pdfHeight, undefined, "SLOW");
 
-            const linkUrl = "https://academia.app.fslab.dev/usuario/certificado/dcceaded-f3d6-4760-a5e6-723e79c7966e";
+            const linkUrl = `${process.env.NEXT_PUBLIC_FRONT_URL}/usuario/certificado/${certificadoid}`;
 
             // Configurações do link
             const fontSize = 8;
@@ -88,36 +94,110 @@ export default function certificadoPage({ params }) {
         });
     };
 
-    return (
-        <div className="text-center ">
-            <h1>Certificado de conclusão</h1>
-            <div id="teste" className="flex justify-center">
-                <Certificado certificado={certificado} />
+    function gerarLinkCertificadoLinkedIn(nomeCurso, data, idDoCertificado, url) {
+        const baseUrl = "https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME";
+
+        const dataObj = new Date(data);
+        const ano = dataObj.getFullYear();
+        const mes = dataObj.getMonth() + 1;
+
+        const params = new URLSearchParams({
+            name: nomeCurso,
+            organizationName: "Academia FSLab",
+            issueYear: ano.toString(),
+            issueMonth: mes.toString(),
+            certId: idDoCertificado.toString(),
+            certUrl: url,
+        });
+
+        return `${baseUrl}&${params.toString()}`;
+    }
+
+
+
+    const ehDonoDoCertificado = certificado?.usuario.id === session?.user.id
+
+
+    if (!isLoadingCertificado && !isErrorCertificado) {
+        return (
+            <div 
+            className="
+                text-center 
+                py-8  xl:px-36 
+            ">
+                <h1 className="
+                     text-lg xl:text-2xl 
+
+                     pb-8
+                ">
+                    Certificado de conclusão
+                </h1>
+
+                <div className="flex justify-center">
+                    <Certificado certificado={certificado} />
+                </div>
+                {ehDonoDoCertificado && (
+                    <div className="
+                    flex
+                    flex-col md:flex-row
+                    items-center
+                    justify-center 
+                    py-8 px-4 xl:px-36
+                    gap-4
+                    w-full
+                    ">
+                        <ButtonLoading
+                            onClick={() => { handlePrint() }}
+                            isLoading={loadindBaixarCertificado}
+                            className="
+                            w-64 
+                            h-10
+                            "
+                        >
+                            Baixar certificado
+                        </ButtonLoading>
+
+                        <a
+                            href={
+                                gerarLinkCertificadoLinkedIn(
+                                    certificado?.curso.nome,
+                                    certificado?.created_at,
+                                    certificadoid,
+                                    `${process.env.NEXT_PUBLIC_FRONT_URL}/usuario/certificado/${certificadoid}`
+                                )
+                            }
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="
+                                flex
+                              items-center
+                              justify-center
+                                w-64 
+                                h-10
+                                gap-2 
+                                bg-[#0077b5] 
+                                hover:bg-[#005983] 
+                                text-white 
+                                rounded-md 
+                            "
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="w-5 h-5"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM.2 8.29h4.63V24H.2zM7.56 8.29h4.43v2.13h.06c.62-1.17 2.13-2.4 4.39-2.4 4.7 0 5.56 3.09 5.56 7.1V24h-4.64v-7.5c0-1.79-.03-4.08-2.49-4.08-2.49 0-2.87 1.94-2.87 3.95V24H7.56z" />
+                            </svg>
+                            Compartilhar no LinkedIn
+                        </a>
+
+
+                    </div>
+                )}
+
+
             </div>
-            <ButtonLoading
-                onClick={() => { handlePrint() }}
-                isLoading={loadindBaixarCertificado}
-                style={{
-                    marginTop: "20px",
-                    padding: "10px 20px",
-                    backgroundColor: "#FFC107",
-                    color: "#000",
-                    border: "none",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                }}
-            >
-                Baixar certificado
-            </ButtonLoading>
-
-            <a href="https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=Curso%20de%20JavaScript&organizationName=Academia%20FSLab&issueYear=2025&issueMonth=1&certId=12345&certUrl=https://www.example.com/certificates/12345"
-                target="_blank"
-                className="bg-[#0073b1] text-white "
-            // style="background-color: #0073b1; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 16px;"
-            >
-                Incluir certificado no LinkedIn
-            </a>
-
-        </div>
-    );
+        );
+    }
 }
