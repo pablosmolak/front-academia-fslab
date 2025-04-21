@@ -12,6 +12,7 @@ import { ApplicationContext } from "@/src/context/applicationContext"
 import { handleFormErrors } from "@/src/errors/handleFormErrors"
 import { authSchema } from "@/src/schemas/authSchema"
 import { fetchApi } from "@/src/utils/fetchApi"
+import { handleImagePath } from "@/src/utils/handleImagePath"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { signIn } from "next-auth/react"
 import Image from "next/image"
@@ -64,7 +65,8 @@ export default function AuthPage() {
 
             const user = await getUserInfos();
             setUser(() => ({
-                ...user
+                ...user,
+                FotoPerfilUrl: handleImagePath(`/usuarios/${user.id}/image?time=${Date.now()}`)
             }));
 
             const redirectPath = sessionStorage.getItem('redirectPath') || '/';

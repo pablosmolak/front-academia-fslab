@@ -37,10 +37,10 @@ export const fetchApi = async (route, method, data, ...props) => {
     let dados = null;
 
     // se for método GET recebe as querys e cria uma URL já com encode
-    
+
     if (method === "GET" && data) {
       let urlSearch = createURLSearch(route, data);
-      
+
       route = urlSearch;
     }
 
@@ -53,7 +53,7 @@ export const fetchApi = async (route, method, data, ...props) => {
       if (data instanceof FormData) {
         // Se os dados forem uma instância de FormData (envio de arquivos)
         headers["accept"] = "multipart/form-data";
-        dados = data;
+        dados = data ;
       } else {
         // Caso contrário, assume-se que são dados JSON
         headers["Content-Type"] = "application/json";

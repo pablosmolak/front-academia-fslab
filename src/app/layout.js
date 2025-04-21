@@ -7,6 +7,7 @@ import NextAuthSessionProvider from "../providers/sessionProvider";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import "./globals.css";
 import ReactToastContainer from "@/components/app/ReactToastContainer";
+import { handleImagePath } from "../utils/handleImagePath";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +24,10 @@ export default async function RootLayout({ children }) {
 
     if (session) {
         token = session.token;
-        resUser = await getUserInfos();
+        resUser ={ 
+            ...await getUserInfos(),
+            FotoPerfilUrl: handleImagePath(`/usuarios/${session.user.id}/image?time=${Date.now()}`)
+        }
     }
 
     return (

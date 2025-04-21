@@ -12,18 +12,23 @@ import { handleImagePath } from "@/src/utils/handleImagePath";
 import { GraduationCap } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import { usePathname } from "next/navigation"; // Usando o hook correto
+import { usePathname, useRouter } from "next/navigation"; // Usando o hook correto
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Label } from "../ui/label";
+import { useContext } from "react";
+import { ApplicationContext } from "@/src/context/applicationContext";
+
 
 export default function TopBar({ className }) {
     const pathname = usePathname(); // Obtendo o caminho atual
+    const router = useRouter();
 
     const { data: session, status } = useSession({
         required: false,
         refetchInterval: 60,
     });
 
+    const { user:userContext } = useContext(ApplicationContext);
     return (
         <header
             className={`
@@ -55,7 +60,7 @@ export default function TopBar({ className }) {
                         <DropdownMenuTrigger asChild>
                             <div className="flex flex-row items-center gap-x-2">
                                 <Avatar >
-                                    <AvatarImage src={handleImagePath(`/usuarios/${session.user.id}/image`)} />
+                                    <AvatarImage src={userContext.FotoPerfilUrl} />
                                     <AvatarFallback>{session.user.name.trim().slice(0, 2).toUpperCase()}</AvatarFallback>
                                 </Avatar>
                                 <Label className="text-white hidden sm:inline">{
@@ -68,7 +73,7 @@ export default function TopBar({ className }) {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56">
                             <DropdownMenuGroup>
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => { router.push("/usuario/meuperfil") }}>
                                     Meu Perfil
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => { signOut() }}>

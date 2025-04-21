@@ -124,20 +124,19 @@ export default function certificadoPage({ params }) {
 
     if (!isLoadingCertificado && isErrorCertificado) {
         return (
-            <Custom404 showLayout={false}/>
+            <Custom404 showLayout={false} />
         )
-      }
+    }
 
     if (!isLoadingCertificado && !isErrorCertificado) {
         return (
-            <div 
-            className="
-                text-center 
-                py-8  xl:px-36 
-            ">
+            <div
+                className="
+                    text-center 
+                    py-8  xl:px-36 
+                ">
                 <h1 className="
                      text-lg xl:text-2xl 
-
                      pb-8
                 ">
                     Certificado de conclusão
