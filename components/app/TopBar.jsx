@@ -60,11 +60,11 @@ export default function TopBar({ className }) {
                         <DropdownMenuTrigger asChild>
                             <div className="flex flex-row items-center gap-x-2">
                                 <Avatar >
-                                    <AvatarImage src={userContext.FotoPerfilUrl} />
-                                    <AvatarFallback>{session.user.name.trim().slice(0, 2).toUpperCase()}</AvatarFallback>
+                                    <AvatarImage src={userContext?.fotoPerfilUrl} />
+                                    <AvatarFallback>{userContext?.name?.trim().slice(0, 2).toUpperCase()}</AvatarFallback>
                                 </Avatar>
                                 <Label className="text-white hidden sm:inline">{
-                                    session.user.name.split(" ")
+                                    userContext?.name?.split(" ")
                                         .filter(word => !["da", "de", "do", "das", "dos"].includes(word.toLowerCase()))
                                         .slice(0, 2)
                                         .join(" ")

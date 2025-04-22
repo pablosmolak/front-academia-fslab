@@ -8,11 +8,12 @@ export default async function LayoutNoAuth({ children }) {
 
     if (!session) {
         redirect("/login");
+    } else {
+        return (
+            <>
+                {children}
+            </>
+        )
     }
 
-    return (
-    <>
-        { children }
-    </>
-    )
 }

@@ -12,11 +12,16 @@ import ButtonLoading from "../buttonLoading";
 import { fetchApi } from "@/src/utils/fetchApi";
 import { handleFormErrors } from "@/src/errors/handleFormErrors";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { ApplicationContext } from "@/src/context/applicationContext";
+import { set } from "zod";
+import { getUserInfos } from "@/src/actions/authAction";
+import { handleImagePath } from "@/src/utils/handleImagePath";
 
 export default function EditarPerfilDialog({ usuario }) {
 
     const [open, setOpen] = useState(false);
+    const { setUser } = useContext(ApplicationContext);
 
     const schemaAtualizarPerfil = usuarioSchema.alterarUsuario
     const formAtualizarPerfil = useForm({
@@ -39,14 +44,19 @@ export default function EditarPerfilDialog({ usuario }) {
 
         if (response.error) {
             if (response.code === 422) {
-                toast.error("Erro ao cadastrar o usuário, verifique o formulário!")
+                toast.error("Erro ao atualizar o usuário, verifique o formulário!")
             }
 
             console.log(response.errors)
             handleFormErrors(response.errors, formAtualizarPerfil);
 
         } else {
-            toast.success("Cadastro realizado com sucesso!");
+            setUser({
+                ... await getUserInfos(),
+                fotoPerfilUrl: handleImagePath(`/usuarios/${usuario?.id}/image?time=${Date.now()}`)
+            })
+
+            toast.success("Usuário atualizado com sucesso!");
             setOpen(false);
         }
     }
@@ -72,7 +82,6 @@ export default function EditarPerfilDialog({ usuario }) {
                         id="form-atualizar-perfil"
                         onSubmit={formAtualizarPerfil.handleSubmit(atualizarPerfil)}
                     >
-
                         <FormField
                             control={formAtualizarPerfil.control}
                             name="foto"
@@ -135,6 +144,8 @@ export default function EditarPerfilDialog({ usuario }) {
                                     <FormControl>
                                         <Input
                                             id="senha"
+                                            type="password"
+                                            autoComplete="new-password"
                                             {...field}
                                         />
                                     </FormControl>
@@ -152,6 +163,7 @@ export default function EditarPerfilDialog({ usuario }) {
                                     <FormControl>
                                         <Input
                                             id="confirmaSenha"
+                                            type="password"
                                             {...field}
                                         />
                                     </FormControl>
@@ -160,10 +172,13 @@ export default function EditarPerfilDialog({ usuario }) {
                             )}
 
                         />
+                        <div className="pt-4">
+                            <ButtonLoading className={"w-full"}>
+                                Atualizar
+                            </ButtonLoading>
 
-                        <ButtonLoading>
-                            Atualizar
-                        </ButtonLoading>
+                        </div>
+
                     </form>
                 </Form>
 

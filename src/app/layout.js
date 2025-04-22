@@ -26,7 +26,7 @@ export default async function RootLayout({ children }) {
         token = session.token;
         resUser ={ 
             ...await getUserInfos(),
-            FotoPerfilUrl: handleImagePath(`/usuarios/${session.user.id}/image?time=${Date.now()}`)
+            fotoPerfilUrl: handleImagePath(`/usuarios/${session.user.id}/image?time=${Date.now()}`)
         }
     }
 

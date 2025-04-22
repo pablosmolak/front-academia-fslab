@@ -3,7 +3,6 @@
 import { ApplicationContext } from "@/src/context/applicationContext";
 import getCroppedImg from "@/src/utils/cropImage";
 import { fetchApi } from "@/src/utils/fetchApi";
-import { handleImagePath } from "@/src/utils/handleImagePath";
 import { useQueryClient } from "@tanstack/react-query";
 import { Loader2, Pen } from "lucide-react";
 import { useContext, useEffect, useRef, useState, useTransition } from "react";
@@ -16,6 +15,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { handleImagePath } from "@/src/utils/handleImagePath";
 
 export default function InputFoto({
     value,
@@ -106,7 +106,7 @@ export default function InputFoto({
 
                     setUser((prevUser) => ({
                         ...prevUser, // Mantém as propriedades existentes
-                        FotoPerfilUrl: handleImagePath(`/usuarios/${usuario?.id}/image?time=${Date.now()}`)
+                        fotoPerfilUrl: handleImagePath(`/usuarios/${usuario?.id}/image?time=${Date.now()}`)
                     }));
 
                     setPhoto({
@@ -121,7 +121,7 @@ export default function InputFoto({
                 .catch((error) => {
                     setPhoto();
                     onChange(null);
-                    
+
                     error.errors.forEach((error) => toast.error(error));
                 });
         });
@@ -134,7 +134,7 @@ export default function InputFoto({
 
             setUser((prevUser) => ({
                 ...prevUser, // Mantém as propriedades existentes
-                FotoPerfilUrl: handleImagePath(`/usuarios/${usuario?.id}/image?time=${Date.now()}`)
+                fotoPerfilUrl: handleImagePath(`/usuarios/${usuario?.id}/image?time=${Date.now()}`)
             }));
 
 
@@ -143,8 +143,6 @@ export default function InputFoto({
         }).catch((error) => {
             console.log(error);
         })
-
-
     }
 
     useEffect(() => {
@@ -152,10 +150,27 @@ export default function InputFoto({
     }, [value]);
 
     return (
-        <div className="relative">
+        <div
+            className="
+                relative flex 
+                justify-center 
+                items-center 
+                flex-col
+                gap-2
+            "
+        >
             <div
-                className={`flex justify-center items-center w-[200px] h-[200px] border rounded-full overflow-hidden relative ${!photo?.url && "hover:cursor-pointer"
-                    }`}
+                className={`
+                    flex 
+                    justify-center 
+                    items-center 
+                    w-[200px] h-[200px] 
+                    border rounded-full 
+                    overflow-hidden 
+                    relative 
+                    ${!photo?.url && "hover:cursor-pointer"}
+                    `
+                }
                 tabIndex={!photo?.url ? 0 : -1}
                 aria-label={!photo?.url ? "Adicionar foto" : "Editar foto"}
                 onClick={() => {
@@ -180,7 +195,7 @@ export default function InputFoto({
                 {(photo?.preview || photo?.url) && (
                     <img
                         className={`object-cover w-full h-full ${!photo?.url ? "opacity-70" : ""}`}
-                        src={photo?.preview || handleImagePath(`/usuarios/${usuario.id}/image`)}
+                        src={photo?.preview || handleImagePath(`/usuarios/${usuario?.id}/image`)}
                     />
                 )}
 
@@ -195,7 +210,11 @@ export default function InputFoto({
                 )}
             </div>
 
-            <div className="absolute left-0 bottom-5">
+            <div
+                className="
+                   
+                "
+            >
                 {photo?.url && (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -208,7 +227,7 @@ export default function InputFoto({
                             >
                                 <span className="sr-only">Editar foto</span>
                                 <Pen className="w-3" />
-                                Editar
+                                Editar imagem
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>

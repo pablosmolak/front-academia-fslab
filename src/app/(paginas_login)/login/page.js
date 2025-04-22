@@ -66,7 +66,7 @@ export default function AuthPage() {
             const user = await getUserInfos();
             setUser(() => ({
                 ...user,
-                FotoPerfilUrl: handleImagePath(`/usuarios/${user.id}/image?time=${Date.now()}`)
+                fotoPerfilUrl: handleImagePath(`/usuarios/${user.id}/image?time=${Date.now()}`)
             }));
 
             const redirectPath = sessionStorage.getItem('redirectPath') || '/';

@@ -19,7 +19,7 @@ export default function LayoutNoAuth({ children }) {
     const { user } = useContext(ApplicationContext);
 
     if (session) {
-        const ignorarVerificacao = pathname === '/usuario/meuperfil';
+        const ignorarVerificacao = (pathname === '/usuario/meuperfil')
 
         if (!user?.emailVerificado && !ignorarVerificacao) {
             redirect('/verificaremail');
