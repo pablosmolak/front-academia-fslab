@@ -102,27 +102,26 @@ export default function InputFoto({
                 .then((response) => {
                     if (response.error) throw response;
 
-                    let url = response?.data?.objectName;
+                    const fotoPerfilUrl = handleImagePath(`/usuarios/${usuario?.id}/image?time=${Date.now()}`)
 
                     setUser((prevUser) => ({
                         ...prevUser, // Mantém as propriedades existentes
-                        fotoPerfilUrl: handleImagePath(`/usuarios/${usuario?.id}/image?time=${Date.now()}`)
+                        fotoPerfilUrl
                     }));
 
                     setPhoto({
                         ...file,
-                        url: "url",
+                        url: fotoPerfilUrl,
                     });
 
                     queryClient.invalidateQueries(["meuperfil", usuario?.id]);
 
-                    onChange(url);
+                    onChange(fotoPerfilUrl);
                 })
                 .catch((error) => {
                     setPhoto();
                     onChange(null);
-
-                    error.errors.forEach((error) => toast.error(error));
+                    error.errors?.forEach((error) => toast.error(error));
                 });
         });
     }
@@ -136,7 +135,6 @@ export default function InputFoto({
                 ...prevUser, // Mantém as propriedades existentes
                 fotoPerfilUrl: handleImagePath(`/usuarios/${usuario?.id}/image?time=${Date.now()}`)
             }));
-
 
             setPhoto();
             onChange(null);

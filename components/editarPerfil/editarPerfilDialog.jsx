@@ -68,7 +68,7 @@ export default function EditarPerfilDialog({ usuario }) {
                     Editar Perfil
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
+            <DialogContent className="sm:max-w-md overflow-y-scroll max-h-screen">
                 <DialogHeader>
                     <DialogTitle>Editar Perfil</DialogTitle>
                     <DialogDescription>
@@ -105,7 +105,7 @@ export default function EditarPerfilDialog({ usuario }) {
                             name="nome"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel htmlFor="nome">Nome</FormLabel>
+                                    <FormLabel htmlFor="nome">Nome <span className="text-red-500">*</span></FormLabel>
                                     <FormControl>
                                         <Input
                                             id="nome"
@@ -122,7 +122,7 @@ export default function EditarPerfilDialog({ usuario }) {
                             name="email"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel htmlFor="email">E-mail</FormLabel>
+                                    <FormLabel htmlFor="email">E-mail <span className="text-red-500">*</span></FormLabel>
                                     <FormControl>
                                         <Input
                                             id="email"
@@ -182,6 +182,19 @@ export default function EditarPerfilDialog({ usuario }) {
                     </form>
                 </Form>
 
+                <div className="pt-2 border-t mt-4">
+                    <div className="pt-4 text-center">
+                        <button
+                            type="button"
+                            onClick={() => {
+                                // Aqui você chama a função de deletar conta
+                            }}
+                            className="text-sm text-red-500 hover:underline transition-all"
+                        >
+                            Deletar conta
+                        </button>
+                    </div>
+                </div>
             </DialogContent>
         </Dialog>
     )

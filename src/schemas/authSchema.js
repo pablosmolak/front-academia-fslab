@@ -9,17 +9,8 @@ export class authSchema{
         senha: myZ.senha()
     })
     static cadastrar = z.object({
-        email: myZ.email(),
-        senha: myZ.senha(),
-        confirmarSenha: z.string(),
-        nome: z.string().min(3).max(200)
-    }).superRefine((data, ctx) => {
-        if (data.senha !== data.confirmarSenha) {
-            ctx.addIssue({
-                code: "custom",
-                message: "As senhas devem coincidir!",
-                path: ["confirmarSenha"], 
-            });
-        }
-    });
+        "nome": z.string().min(3).max(200),
+        "new-email": myZ.email(),
+        "new-senha": myZ.senha()
+    })
 }

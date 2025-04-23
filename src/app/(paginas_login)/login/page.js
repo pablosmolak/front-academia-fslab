@@ -36,18 +36,17 @@ export default function AuthPage() {
     const formLogar = useForm({
         resolver: zodResolver(schemaLogar),
         defaultValues: {
-            email: "dev@gmail.com",
-            senha: "Dev@1234"
+            email: "",
+            senha: ""
         }
     });
 
     const formCadastrar = useForm({
         resolver: zodResolver(schemaCadastrar),
         defaultValues: {
-            nome: "pedrim",
-            email: "dev@gmail.com",
-            senha: "Dev@1234",
-            confirmarSenha: "Dev@1234"
+            nome: "",
+            email: "",
+            senha: "",
         }
     });
 
@@ -93,10 +92,12 @@ export default function AuthPage() {
         setLoadingCadastrar(true)
 
         const response = await fetchApi("/usuarios", "POST", {
-            nome: data.nome,
-            email: data.email,
-            senha: data.senha
+            nome: data["nome"],
+            email: data['new-email'],
+            senha: data['new-senha']
         });
+
+        console.log(response)
 
         if (response.error) {
 
@@ -111,8 +112,8 @@ export default function AuthPage() {
             toast.success("Cadastro realizado com sucesso!");
 
             login({
-                email: data.email,
-                senha: data.senha
+                email: data['new-email'],
+                senha: data['new-senha']
             })
         }
     }
@@ -220,12 +221,14 @@ export default function AuthPage() {
                                     name="nome"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel htmlFor="email">Nome</FormLabel>
+                                            <FormLabel htmlFor="email">Nome <span className="text-red-500">*</span></FormLabel>
                                             <FormControl>
                                                 <Input
                                                     type="text"
                                                     id="nome"
+                                                    autoComplete="off"
                                                     {...field}
+                                                   
                                                 />
                                             </FormControl>
                                             <FormMessage />
@@ -234,14 +237,15 @@ export default function AuthPage() {
                                 />
                                 <FormField
                                     control={formCadastrar.control}
-                                    name="email"
+                                    name="new-email"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel htmlFor="email">E-mail</FormLabel>
+                                            <FormLabel htmlFor="email">E-mail <span className="text-red-500">*</span></FormLabel>
                                             <FormControl>
                                                 <Input
                                                     type="text"
-                                                    id="email"
+                                                    id="new-email"
+                                                    autoComplete="new-email"
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -251,14 +255,15 @@ export default function AuthPage() {
                                 />
                                 <FormField
                                     control={formCadastrar.control}
-                                    name="senha"
+                                    name="new-senha"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel htmlFor="senha">Senha</FormLabel>
+                                            <FormLabel htmlFor="senha">Senha <span className="text-red-500">*</span></FormLabel>
                                             <FormControl>
                                                 <Input
                                                     type="password"
-                                                    id="senha"
+                                                    id="new-senha"
+                                                    autoComplete="new-senha"
                                                     {...field}
                                                 />
                                             </FormControl>
