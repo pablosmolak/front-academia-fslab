@@ -99,8 +99,6 @@ export default function playerPage({ params }) {
             }
         });
 
-    console.log(curso)
-
     const {
         data: inscricao = [],
         isLoading: isLoadingInscricao,

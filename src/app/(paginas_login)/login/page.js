@@ -1,6 +1,7 @@
 'use client'
 
 import ButtonLoading from "@/components/buttonLoading"
+import InputPassword from "@/components/inputPassword"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -45,8 +46,8 @@ export default function AuthPage() {
         resolver: zodResolver(schemaCadastrar),
         defaultValues: {
             nome: "",
-            email: "",
-            senha: "",
+            "new-email": "",
+            "new-senha": "",
         }
     });
 
@@ -171,8 +172,9 @@ export default function AuthPage() {
 
 
                                             <FormControl>
-                                                <Input
-                                                    type="password"
+                                                <InputPassword
+                                                    form={formLogar}
+                                                    field={field}
                                                     id="senha"
                                                     {...field}
                                                 />
@@ -228,7 +230,7 @@ export default function AuthPage() {
                                                     id="nome"
                                                     autoComplete="off"
                                                     {...field}
-                                                   
+
                                                 />
                                             </FormControl>
                                             <FormMessage />
@@ -260,10 +262,12 @@ export default function AuthPage() {
                                         <FormItem>
                                             <FormLabel htmlFor="senha">Senha <span className="text-red-500">*</span></FormLabel>
                                             <FormControl>
-                                                <Input
-                                                    type="password"
+                                                <InputPassword
+                                                    form={formLogar}
+                                                    field={field}
                                                     id="new-senha"
                                                     autoComplete="new-senha"
+
                                                     {...field}
                                                 />
                                             </FormControl>

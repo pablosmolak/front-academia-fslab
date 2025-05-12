@@ -1,11 +1,17 @@
 "use client"
 
-import { useEffect, useState } from "react";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationEllipsis } from "./ui/pagination";
+import { useEffect, useState } from "react";
+import { useSidebar } from "./ui/sidebar";
+import { useIsMobile } from "./hooks/use-mobile";
 
 export default function PaginationComponent({ maxPageComponent = 3, totalPages, currentPage, querys, route, wordQueryPage = "pagina" }) {
 
   const [paginas, setPaginas] = useState([]);
+
+  const isMobile  = useIsMobile();
+
+  const maxPage = isMobile ? 1 : maxPageComponent;
 
   function paginationFunction(maxPageComponent, currentPage, totalPages) {
     let pages = [];
@@ -41,23 +47,24 @@ export default function PaginationComponent({ maxPageComponent = 3, totalPages, 
 
     let newQuerys = new URLSearchParams(querys);
 
-    link = link + `?${newQuerys.toString()}`
+    link = `${link}?${newQuerys.toString()}`
 
     return link;
   }
 
   useEffect(() => {
-    setPaginas(paginationFunction(maxPageComponent, currentPage, totalPages));
-  }, [querys, currentPage, totalPages]);
+    setPaginas(paginationFunction(maxPage, currentPage, totalPages));
+  }, [querys, currentPage, totalPages, maxPage]);
+
 
   function encontrarNumero(numero) {
     if (paginas.find(n => Number(n.page) === numero)) return true;
 
     return false;
   }
-  
+
   return (
-    <Pagination className={"m-4 text-primaryLight"}>
+    <Pagination className={"m-4"}>
       <PaginationContent >
 
         <PaginationItem>
@@ -67,7 +74,7 @@ export default function PaginationComponent({ maxPageComponent = 3, totalPages, 
             href={gerarLink(querys, currentPage - 1)}
             aria-disabled={Number(currentPage) === 1}
             className={Number(currentPage) === 1 ? "pointer-events-none opacity-50" : undefined}
-          />
+          >{!isMobile ? "Anterior" : ""}</PaginationPrevious>
         </PaginationItem>
 
         {!encontrarNumero(1) && (
@@ -78,7 +85,7 @@ export default function PaginationComponent({ maxPageComponent = 3, totalPages, 
           </PaginationItem>
         )}
 
-        {!paginas.find((page) => page.page - 1 == 1) && paginas.length >= maxPageComponent && (
+        {(!encontrarNumero(1) && (currentPage - 1 >= maxPageComponent)) && (
           <PaginationEllipsis />
         )}
 
@@ -90,7 +97,7 @@ export default function PaginationComponent({ maxPageComponent = 3, totalPages, 
           </PaginationItem>
         ))}
 
-        {!paginas.find((page) => page.page + 1 == totalPages) && paginas.length >= maxPageComponent && (
+        {(!encontrarNumero(totalPages) && (totalPages - currentPage >= maxPageComponent)) && (
           <PaginationEllipsis />
         )}
 
@@ -109,7 +116,7 @@ export default function PaginationComponent({ maxPageComponent = 3, totalPages, 
             href={gerarLink(querys, currentPage + 1)}
             aria-disabled={Number(currentPage) === totalPages}
             className={Number(currentPage) === totalPages ? "pointer-events-none opacity-50" : undefined}
-          />
+          >{!isMobile ? "Próximo" : ""}</PaginationNext>
         </PaginationItem>
 
       </PaginationContent>

@@ -1,0 +1,11 @@
+{
+  "data": "",
+  "messages": [
+    {
+      "type": "warning",
+      "detail": "Relatório não localizado na base de dados"
+    }
+  ],
+  "length": 0,
+  "httpStatusCode": 200
+}
