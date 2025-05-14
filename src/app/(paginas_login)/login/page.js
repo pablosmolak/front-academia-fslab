@@ -202,7 +202,7 @@ export default function AuthPage() {
                 </div>
                 <div className={cn(
                     "w-full md:w-1/2 p-2 md:p-8  flex items-center justify-center",
-                    isSignUp ? "hidden md:flex" : "flex"
+                    isSignUp ? "flex" : "hidden md:flex"
                 )}>
                     <div className="w-full max-w-sm space-y-4">
                         <div className="text-center">
