@@ -14,7 +14,7 @@ export default async function LayoutNoAuth({ children }) {
     return (
         <div className="flex flex-col min-h-screen">
             <TopBar />
-            <main className="flex-grow content-center">
+            <main className="flex-grow py-8 px-4 xl:px-36 flex-grow  flex  items-center  justify-center">
                 {children}
             </main>
             <Footer />

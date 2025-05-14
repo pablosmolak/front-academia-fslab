@@ -64,7 +64,7 @@ export default function PaginationComponent({ maxPageComponent = 3, totalPages, 
   }
 
   return (
-    <Pagination className={"m-4"}>
+    <Pagination className={"mt-4"}>
       <PaginationContent >
 
         <PaginationItem>

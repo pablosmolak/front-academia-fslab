@@ -1,20 +1,19 @@
 "use client";
 
 import ButtonLoading from "@/components/buttonLoading";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
+import logoFslab from "@/public/assets/logo_fslab.svg";
 import { handleFormErrors } from "@/src/errors/handleFormErrors";
 import { alteraSenhaSchema } from "@/src/schemas/alteraSenhaSchema";
 import { fetchApi } from "@/src/utils/fetchApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import LogoFslab from "@/public/assets/logo_fslab.svg";
 
 export default function AlterarSenhaPage({ searchParams }) {
     const router = useRouter();
@@ -67,78 +66,83 @@ export default function AlterarSenhaPage({ searchParams }) {
     }
 
     return (
-        <>
-            <div className="flex justify-center">
-                <div className="w-full max-w-4xl flex flex-col md:flex-row">
-                    {/* Container da Imagem e do Separador */}
-                    <div className="w-full md:w-1/2 flex justify-center hidden md:flex">
-                        <div className="content-center">
-                            <Image src={LogoFslab} alt="Logo FSLAB" width={300} height={300} className="" />
+        <div className="relative w-full max-w-3xl h-[550px] overflow-hidden rounded-xl shadow-lg">
+            <div className="flex w-full h-full">
+                <div className={
+                    "hidden md:flex h-full w-1/2 bg-muted items-center justify-center"
+                }>
+                    <Image
+                        src={logoFslab}
+                        alt="Logo FSLab"
+                        className="object-contain w-3/4 max-w-xs h-auto dark:brightness-[0.2]"
+                    />
+                </div>
+                <div className={`
+                w-full 
+                md:w-1/2 
+                p-2 md:p-8 
+                flex items-center justify-center block
+            `}>
+                    <div className="w-full max-w-sm space-y-6">
+                        <div className="text-center">
+                            <h1 className="text-2xl font-bold">Alterar Senha</h1>
+                            <p className="text-muted-foreground">Altere sua senha na Academia FSLab</p>
                         </div>
-                        <Separator className="ml-10" orientation='vertical' />
-                    </div>
-                    {/* Container do Formulário */}
-                    <div className="w-full md:w-1/2">
-                        <div className="flex items-center justify-center mb-8">
-                            <h1 className="text-2xl font-bold">Recuperar senha</h1>
-                        </div>
-
-                        <Card>
-                            <Form {...form}>
-                                <form id="formAlterarSenha" onSubmit={form.handleSubmit(alterarSenha)} className="flex flex-col pt-4">
-                                    <CardContent>
-                                        <FormField
-                                            control={form.control}
-                                            name="senha"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel htmlFor="senha">Senha</FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            type="password"
-                                                            id="senha"
-                                                            {...field}
-                                                        />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name="confirmarSenha"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel htmlFor="senha">Confirmar Senha</FormLabel>
-                                                    <FormControl>
-                                                        <Input
-                                                            type="password"
-                                                            id="confirmarSenha"
-                                                            {...field}
-                                                        />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </CardContent>
-                                    <CardFooter className="flex justify-center">
-                                        <ButtonLoading
-                                            type="submit"
-                                            className="flex items-center space-x-2 w-full"
-                                            isLoading={LoadingAlterar}
-                                            form="formAlterarSenha">
-                                            Alterar senha
-                                        </ButtonLoading>
-                                    </CardFooter>
-                                </form>
-                            </Form>
-                        </Card>
+                        <Form {...form}>
+                            <form
+                                id="formAlterarSenha"
+                                onSubmit={form.handleSubmit(alterarSenha)}
+                                className="space-y-2"
+                            >
+                                <FormField
+                                    control={form.control}
+                                    name="senha"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel htmlFor="senha">Senha</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="password"
+                                                    id="senha"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="confirmarSenha"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel htmlFor="senha">Confirmar Senha</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="password"
+                                                    id="confirmarSenha"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <div className="pt-4">
+                                    <ButtonLoading
+                                        type="submit"
+                                        className="w-full"
+                                        isLoading={LoadingAlterar}
+                                        form="formAlterarSenha">
+                                        Alterar senha
+                                    </ButtonLoading>
+                                </div>
+                            </form>
+                        </Form>
                     </div>
                 </div>
             </div>
-        </>
-
+        </div>
     )
 }
 

@@ -98,8 +98,6 @@ export default function AuthPage() {
             senha: data['new-senha']
         });
 
-        console.log(response)
-
         if (response.error) {
 
             if (response.code === 422) {
@@ -120,18 +118,17 @@ export default function AuthPage() {
     }
 
     return (
-
         <div className="relative w-full max-w-3xl h-[550px] overflow-hidden rounded-xl shadow-lg">
             <div className="flex w-full h-full">
 
                 <div className={cn(
-                    "w-full md:w-1/2 p-8 flex items-center justify-center",
-                    isSignUp ? "hidden md:block" : "block"
+                    "w-full md:w-1/2 p-2 md:p-8 flex items-center justify-center",
+                    isSignUp ? "hidden md:flex" : "flex"
                 )}>
                     <div className="w-full max-w-sm space-y-4">
                         <div className="text-center mb-14">
                             <h1 className="text-2xl font-bold">Bem-vindo de volta</h1>
-                            <p className="text-muted-foreground">Login na conta Academia FLab</p>
+                            <p className="text-muted-foreground">Login na conta Academia FSLab</p>
                         </div>
                         <Form {...formLogar}>
                             <form
@@ -146,8 +143,9 @@ export default function AuthPage() {
                                             <FormLabel htmlFor="email">E-mail</FormLabel>
                                             <FormControl>
                                                 <Input
-                                                    type="text"
+                                                    type="email"
                                                     id="email"
+                                                    autoComplete="email"
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -169,13 +167,12 @@ export default function AuthPage() {
                                                     Esqueceu sua senha?
                                                 </Link>
                                             </div>
-
-
                                             <FormControl>
                                                 <InputPassword
                                                     form={formLogar}
                                                     field={field}
                                                     id="senha"
+                                                    autoComplete="current-password"
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -204,17 +201,17 @@ export default function AuthPage() {
                     </div>
                 </div>
                 <div className={cn(
-                    "w-full md:w-1/2 p-8 flex items-center justify-center",
-                    isSignUp ? "block" : "hidden md:block"
+                    "w-full md:w-1/2 p-2 md:p-8  flex items-center justify-center",
+                    isSignUp ? "hidden md:flex" : "flex"
                 )}>
-                    <div className="w-full max-w-sm space-y-6">
+                    <div className="w-full max-w-sm space-y-4">
                         <div className="text-center">
                             <h1 className="text-2xl font-bold">Criar Conta</h1>
                             <p className="text-muted-foreground">Cadastre-se na Academia FLab</p>
                         </div>
                         <Form {...formCadastrar}>
                             <form
-                                className="space-y-2" id="formCadastrar"
+                                className="space-y-2 pt-2" id="formCadastrar"
                                 onSubmit={formCadastrar.handleSubmit(cadastrar)}
                             >
 
@@ -223,7 +220,7 @@ export default function AuthPage() {
                                     name="nome"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel htmlFor="email">Nome <span className="text-red-500">*</span></FormLabel>
+                                            <FormLabel htmlFor="nome">Nome <span className="text-red-500">*</span></FormLabel>
                                             <FormControl>
                                                 <Input
                                                     type="text"
@@ -242,7 +239,7 @@ export default function AuthPage() {
                                     name="new-email"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel htmlFor="email">E-mail <span className="text-red-500">*</span></FormLabel>
+                                            <FormLabel htmlFor="new-email">E-mail <span className="text-red-500">*</span></FormLabel>
                                             <FormControl>
                                                 <Input
                                                     type="text"
@@ -260,7 +257,7 @@ export default function AuthPage() {
                                     name="new-senha"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel htmlFor="senha">Senha <span className="text-red-500">*</span></FormLabel>
+                                            <FormLabel htmlFor="new-senha">Senha <span className="text-red-500">*</span></FormLabel>
                                             <FormControl>
                                                 <InputPassword
                                                     form={formLogar}
