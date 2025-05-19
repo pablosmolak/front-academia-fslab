@@ -93,9 +93,9 @@ export default function AuthPage() {
         setLoadingCadastrar(true)
 
         const response = await fetchApi("/usuarios", "POST", {
-            nome: data["nome"],
-            email: data['new-email'],
-            senha: data['new-senha']
+            nome: data.nome,
+            email: data.email,
+            senha: data.senha
         });
 
         if (response.error) {
@@ -132,6 +132,7 @@ export default function AuthPage() {
                         </div>
                         <Form {...formLogar}>
                             <form
+                                autoComplete="on"
                                 className="space-y-4" id="formLogin"
                                 onSubmit={formLogar.handleSubmit(login)}
                             >
@@ -145,7 +146,7 @@ export default function AuthPage() {
                                                 <Input
                                                     type="email"
                                                     id="email"
-                                                    autoComplete="email"
+                                                    autoComplete="username"
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -236,7 +237,7 @@ export default function AuthPage() {
                                 />
                                 <FormField
                                     control={formCadastrar.control}
-                                    name="new-email"
+                                    name="email"
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel htmlFor="new-email">E-mail <span className="text-red-500">*</span></FormLabel>
@@ -254,16 +255,16 @@ export default function AuthPage() {
                                 />
                                 <FormField
                                     control={formCadastrar.control}
-                                    name="new-senha"
+                                    name="senha"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel htmlFor="new-senha">Senha <span className="text-red-500">*</span></FormLabel>
+                                            <FormLabel htmlFor="new-password">Senha <span className="text-red-500">*</span></FormLabel>
                                             <FormControl>
                                                 <InputPassword
                                                     form={formLogar}
                                                     field={field}
-                                                    id="new-senha"
-                                                    autoComplete="new-senha"
+                                                    id="new-password"
+                                                    autoComplete="new-password"
 
                                                     {...field}
                                                 />

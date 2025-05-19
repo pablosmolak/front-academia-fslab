@@ -9,8 +9,8 @@ export class authSchema{
         senha: myZ.senha()
     })
     static cadastrar = z.object({
-        "nome": z.string().min(3).max(200),
-        "new-email": myZ.email(),
-        "new-senha": myZ.senha()
+        nome: z.string().min(3).max(50),
+        email: myZ.email(),
+        senha: myZ.senha()
     })
 }
