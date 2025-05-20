@@ -17,6 +17,7 @@ import { ApplicationContext } from "@/src/context/applicationContext";
 import { set } from "zod";
 import { getUserInfos } from "@/src/actions/authAction";
 import { handleImagePath } from "@/src/utils/handleImagePath";
+import { useMutation } from "@tanstack/react-query";
 
 export default function EditarPerfilDialog({ usuario }) {
 
@@ -35,22 +36,23 @@ export default function EditarPerfilDialog({ usuario }) {
         }
     });
 
-    async function atualizarPerfil(data) {
 
-        const response = await fetchApi(`/usuarios/${usuario.id}`, "PATCH", {
-            nome: data.nome,
-            email: data.email
-        })
 
-        if (response.error) {
-            if (response.code === 422) {
-                toast.error("Erro ao atualizar o usuário, verifique o formulário!")
+    const { mutate: atualizarPerfil, isLoading: isLoadingCriarInscricao } = useMutation({
+        mutationFn: async (data) => {
+            const response = await fetchApi(`/usuarios/${usuario.id}`, "PATCH", {
+                nome: data.nome,
+                email: data.email
+            })
+
+            if (response.error) {
+                throw response.errors;
             }
 
-            console.log(response.errors)
-            handleFormErrors(response.errors, formAtualizarPerfil);
+            return response.data;
 
-        } else {
+        },
+        onSuccess: async () => {
             setUser({
                 ... await getUserInfos(),
                 fotoPerfilUrl: handleImagePath(`/usuarios/${usuario?.id}/image?time=${Date.now()}`)
@@ -58,8 +60,15 @@ export default function EditarPerfilDialog({ usuario }) {
 
             toast.success("Usuário atualizado com sucesso!");
             setOpen(false);
-        }
-    }
+        },
+        onError: (error) => {
+            if (response.code === 422) {
+                toast.error("Erro ao atualizar o usuário, verifique o formulário!")
+            }
+
+            handleFormErrors(response.errors, formAtualizarPerfil);
+        },
+    });
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -173,7 +182,7 @@ export default function EditarPerfilDialog({ usuario }) {
 
                         />
                         <div className="pt-4">
-                            <ButtonLoading className={"w-full"}>
+                            <ButtonLoading isLoading={isLoadingCriarInscricao} className={"w-full"}>
                                 Atualizar
                             </ButtonLoading>
 

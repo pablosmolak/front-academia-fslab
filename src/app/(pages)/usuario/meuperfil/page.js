@@ -1,12 +1,11 @@
 "use client"
 
-import EditarPerfilDialog from "@/components/editarPerfil/editarPerfilDialog";
+import EditarPerfilDialog from "@/components/Perfil/editarPerfilDialog";
+import ListaExpansiva from "@/components/Perfil/list";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ApplicationContext } from "@/src/context/applicationContext";
 import { fetchApi } from "@/src/utils/fetchApi";
-import { handleImagePath } from "@/src/utils/handleImagePath";
 import { useQuery } from "@tanstack/react-query";
-import { Edit } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useContext } from "react";
 
@@ -21,7 +20,6 @@ export default function MeuPerfilPage() {
     const userId = session?.user?.id
 
     const { user: userContext } = useContext(ApplicationContext);
-
 
     const nomesSingulares = {
         "Cursantes": "Cursante",
@@ -56,12 +54,71 @@ export default function MeuPerfilPage() {
             }
         })
 
+
+    const {
+        data: certificados,
+        isLoading: isLoadingCertificados,
+        isError: isErrorCertificados,
+        error: errorCertificados } = useQuery({
+            queryKey: ["meuperfilcertificados", userId],
+            queryFn: async () => {
+                const response = await fetchApi(`/certificados/usuario/${userId}`, "GET");
+
+                if (response.error) {
+                    throw response
+                } else {
+
+                    console.log(response.data)
+                    return response.data || null
+                }
+            },
+            enabled: !!userId,
+            retry: (failureCount, error) => {
+                if (error?.code === 498 || error?.code === 404) {
+                    return false;
+                }
+
+                return failureCount < 3;
+            }
+        })
+
+    const {
+        data: inscricoesEmAndamento,
+        isLoading: isLoadingInscricoesEmAndamento,
+        isError: isErrorInscricoesEmAndamento,
+        error: errorInscricoesEmAndamento } = useQuery({
+            queryKey: ["meuperfilinscricoesemandamento", userId],
+            queryFn: async () => {
+                const response = await fetchApi(`/inscricoes/usuario`, "GET");
+
+                if (response.error) {
+                    throw response
+                } else {
+
+                    const inscricoes = response.data.filter((inscricao) => {
+                        return inscricao.status === "Em Andamento"
+                    })
+
+                    return inscricoes || null
+                }
+            },
+            enabled: !!userId,
+            retry: (failureCount, error) => {
+                if (error?.code === 498 || error?.code === 404) {
+                    return false;
+                }
+
+                return failureCount < 3;
+            }
+        })
+
+
     return (
         <>
             {!isLoadingUsuario && !isErrorUsuario && (
                 <div>
                     <section className="
-                        flex flex-col  md:flex-row
+                        flex flex-col md:flex-row
                         md:justify-between 
                         items-center 
                         bg-zinc-400  
@@ -157,8 +214,21 @@ export default function MeuPerfilPage() {
                             </a>
                         </div>
                     )}
+                    <section className="
+                        flex flex-col
+                        md:justify-between 
+                       
+                       
+                        py-8 px-4 xl:px-36 
+                        gap-4 xl:gap-4">
+                        <ListaExpansiva titulo="Andamento" data={inscricoesEmAndamento} />
 
+                        <ListaExpansiva titulo="Certificados" data={certificados} />
+
+                    </section>
                 </div>
+
+
             )}
         </>
     )
