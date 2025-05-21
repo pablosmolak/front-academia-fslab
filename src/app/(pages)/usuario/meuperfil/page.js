@@ -1,7 +1,8 @@
 "use client"
 
 import EditarPerfilDialog from "@/components/Perfil/editarPerfilDialog";
-import ListaExpansiva from "@/components/Perfil/list";
+import ListaAndamento from "@/components/Perfil/listaAndamento";
+import ListaCertificados from "@/components/Perfil/listaCertificados";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ApplicationContext } from "@/src/context/applicationContext";
 import { fetchApi } from "@/src/utils/fetchApi";
@@ -112,10 +113,12 @@ export default function MeuPerfilPage() {
             }
         })
 
+        const isLoading = isLoadingUsuario || isLoadingCertificados || isLoadingInscricoesEmAndamento
+        const isError = isErrorUsuario || isErrorCertificados || isErrorInscricoesEmAndamento
 
     return (
         <>
-            {!isLoadingUsuario && !isErrorUsuario && (
+            {!isLoading && !isError && (
                 <div>
                     <section className="
                         flex flex-col md:flex-row
@@ -221,9 +224,9 @@ export default function MeuPerfilPage() {
                        
                         py-8 px-4 xl:px-36 
                         gap-4 xl:gap-4">
-                        <ListaExpansiva titulo="Andamento" data={inscricoesEmAndamento} />
+                        <ListaAndamento titulo="Andamento" data={inscricoesEmAndamento} />
 
-                        <ListaExpansiva titulo="Certificados" data={certificados} />
+                        <ListaCertificados titulo="Certificados" data={certificados} />
 
                     </section>
                 </div>

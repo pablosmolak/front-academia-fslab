@@ -7,7 +7,7 @@ import { BadgeCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function ListaExpansiva({ titulo, data }) {
+export default function ListaCertificados({ titulo, data }) {
     const router = useRouter();
     const [expanded, setExpanded] = useState(false);
 
@@ -20,8 +20,8 @@ export default function ListaExpansiva({ titulo, data }) {
             {/* Container com overflow controlado */}
             <div className="transition-all duration-900">
                 <div
-                    className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 transition-all duration-500 ${expanded
-                        ? "max-h-[2000px] opacity-100"
+                    className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 transition-all duration-500 ${expanded
+                        ? "opacity-100"
                         : "max-h-[900px] opacity-90 overflow-hidden"
                         }`}
                 >
@@ -41,7 +41,7 @@ export default function ListaExpansiva({ titulo, data }) {
                                 </p>
                                 <div className="flex gap-2 mt-4">
                                     <Button variant="outline" onClick={() => {
-                                       router.push(`certificado/${card.validador}`);
+                                        router.push(`certificado/${card.validador}`);
                                     }}>
                                         Ver certificado
                                     </Button>
@@ -56,13 +56,16 @@ export default function ListaExpansiva({ titulo, data }) {
                 </div>
             </div>
 
-            <div className="mt-6 text-center">
-                <Button onClick={() => setExpanded(!expanded)} variant="ghost">
-                    {expanded
-                        ? "Ver menos formações"
-                        : `Ver todas as formações concluídas (${data?.length})`}
-                </Button>
-            </div>
+            {data?.length > 4 && (
+                <div className="mt-6 text-center">
+                    <Button onClick={() => setExpanded(!expanded)} variant="ghost">
+                        {expanded
+                            ? "Ver menos formações"
+                            : `Ver todas as formações concluídas (${data?.length})`}
+                    </Button>
+                </div>
+            )}
+
         </div>
     );
 }
