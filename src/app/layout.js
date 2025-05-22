@@ -25,10 +25,13 @@ export const metadata = {
         "IFRO"
     ],
     authors: [
-        { name: "FSLab", url:`${process.env.NEXT_PUBLIC_FRONT_URL}` },
+        { name: "FSLab", url: `${process.env.NEXT_PUBLIC_FRONT_URL}` },
         { name: "Pablo Smolak", url: "https://github.com/pablosmolak" }
     ],
     creator: "FSLab",
+    verification: {
+        google: "PA6vO2EwN9hJNOF6yAIjOcbN7AziRMhaTcumBe0KKRI"
+    },
     publisher: "FSLab",
     metadataBase: new URL(`${process.env.NEXT_PUBLIC_FRONT_URL}`),
     openGraph: {
