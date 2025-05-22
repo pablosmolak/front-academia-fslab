@@ -150,9 +150,7 @@ export default function MeuPerfilPage() {
                                 {userContext?.name}
                             </h1>
                         </div>
-
-
-
+                        
                         <div className="
                             flex flex-col 
                             bg-white 

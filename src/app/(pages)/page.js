@@ -137,17 +137,17 @@ export default function paginaInicial({ searchParams }) {
                                             className="w-full h-40 object-cover rounded-sm"
                                             onError={(event) => {
                                                 event.target.parentNode.innerHTML = `
-                                  <span class="w-full h-40 flex items-center justify-center text-gray-500 bg-gray-100 rounded-sm">
-                                      Imagem indisponível
-                                  </span>
-                                `;
+                                                <span class="w-full h-40 flex items-center justify-center text-gray-500 bg-gray-100 rounded-sm">
+                                                    Imagem indisponível
+                                                </span>
+                                                `;
                                             }}
                                         />
                                     </CardHeader>
 
-                                    <CardContent className="grow">
-                                        <p className="text-base font-bold truncate">{data.nome}</p>
-                                        <p className="text-sm text-gray-600">
+                                    <CardContent className="grow ">
+                                        <p className="text-base font-bold line-clamp-2">{data.nome}</p>
+                                        <p className="text-sm text-gray-600  truncate">
                                             {data.instrutores.map((instrutor) => instrutor.nome).join(', ')}
                                         </p>
                                     </CardContent>
@@ -156,17 +156,17 @@ export default function paginaInicial({ searchParams }) {
                                         <Link
                                             href={`/curso/${data.id}`}
                                             className="
-                                w-full 
-                                flex 
-                                justify-center 
-                                items-center 
-                                py-2 
-                                rounded-sm
-                                border 
-                                border-solid 
-                                border-black 
-                                hover:bg-[#15803D] 
-                                hover:text-white"
+                                                w-full 
+                                                flex 
+                                                justify-center 
+                                                items-center 
+                                                py-2 
+                                                rounded-sm
+                                                border 
+                                                border-solid 
+                                                border-black 
+                                                hover:bg-[#15803D] 
+                                                hover:text-white"
                                         >
                                             <p>Quero fazer esse curso</p>
                                         </Link>

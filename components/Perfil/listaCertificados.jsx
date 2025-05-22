@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { formatarData } from "@/src/utils/mascaras";
 import { BadgeCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -14,43 +14,60 @@ export default function ListaCertificados({ titulo, data }) {
     const cardsVisiveis = expanded ? data : data?.slice(0, 4);
 
     return (
-        <div>
-            <h2 className="text-2xl font-semibold mb-6">{titulo}</h2>
+        <div className="mt-4">
+            <h2 className="
+                text-2xl xl:text-3xl 
+                font-semibold 
+                mb-6
+                text-center md:text-start
+            "
+            >
+                Certificados
+            </h2>
 
-            {/* Container com overflow controlado */}
-            <div className="transition-all duration-900">
+            <div>
                 <div
-                    className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 transition-all duration-500 ${expanded
-                        ? "opacity-100"
-                        : "max-h-[900px] opacity-90 overflow-hidden"
-                        }`}
+                    className={`
+                        grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] 
+                        gap-6 
+                        justify-items-center sm:place-content-center 
+                    `
+                    }
                 >
                     {cardsVisiveis?.map((card, index) => (
-                        <Card key={index} className="relative transition-all duration-500">
-                            <CardContent className="flex flex-col items-center text-center pt-6 pb-4 px-4">
+                        <Card key={index} className="w-full max-w-[25rem] h-[23rem] max-h-[23rem] flex flex-col">
+
+                            <CardHeader>
                                 <div
                                     className={`w-24 h-24 rounded-full flex items-center justify-center mb-4`}
                                 >
                                     <span className="text-4xl">{"</>"}</span>
                                 </div>
-                                <h3 className="text-sm font-medium text-blue-600 leading-snug">
-                                    {card.curso.nome}
-                                </h3>
-                                <p className="text-sm text-muted-foreground mt-2">
+                            </CardHeader>
+
+                            <CardContent className="grow flex gap-2 flex-col">
+                                <p className="text-base font-bold line-clamp-2">{card.curso.nome}</p>
+                                <p className="text-sm text-gray-600">
                                     Concluído em {formatarData(card.created_at)}
                                 </p>
-                                <div className="flex gap-2 mt-4">
-                                    <Button variant="outline" onClick={() => {
-                                        router.push(`certificado/${card.validador}`);
-                                    }}>
-                                        Ver certificado
-                                    </Button>
-                                    <Button variant="outline">
-                                        Adicionar ao perfil
-                                    </Button>
-                                </div>
-                                <BadgeCheck className="absolute top-2 right-2 text-green-500 w-5 h-5" />
                             </CardContent>
+
+                            <CardFooter className="flex gap-2 flex-col md:flex-row">
+                                <Button  className='w-full' variant="outline" onClick={() => {
+                                    router.push(`certificado/${card.validador}`);
+                                }}>
+                                    Ver certificado
+                                </Button>
+                                <Button
+                                    className='w-full'
+                                    variant="outline"
+                                    onClick={() => {
+                                        router.push(`/curso/${card.cursoId}`);
+                                    }}
+                                >
+                                    Ir ao curso
+                                </Button>
+                            </CardFooter>
                         </Card>
                     ))}
                 </div>
