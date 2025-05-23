@@ -3,11 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { formatarData } from "@/src/utils/mascaras";
-import { BadgeCheck } from "lucide-react";
+import { GraduationCap } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function ListaCertificados({ titulo, data }) {
+export default function ListaCertificados({ data }) {
     const router = useRouter();
     const [expanded, setExpanded] = useState(false);
 
@@ -16,7 +16,7 @@ export default function ListaCertificados({ titulo, data }) {
     return (
         <div className="mt-4">
             <h2 className="
-                text-2xl xl:text-3xl 
+                text-xl xl:text-3xl 
                 font-semibold 
                 mb-6
                 text-center md:text-start
@@ -25,64 +25,73 @@ export default function ListaCertificados({ titulo, data }) {
                 Certificados
             </h2>
 
-            <div>
-                <div
-                    className={`
+
+            {cardsVisiveis?.length === 0 ? (
+                <p className="text-center text-md xl:text-xl text-black pt-4 pb-4 xl:pt-8 xl:pb-8">
+                    Poxa, ainda não temos nenhum certificado por aqui 😢<br />
+                    Que tal concluir alguns cursos e começar a colecionar conquistas? 🎓🚀
+                </p>
+            ) : (
+                <section>
+                    <div>
+                        <div
+                            className={`
                         grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] 
                         gap-6 
                         justify-items-center sm:place-content-center 
                     `
-                    }
-                >
-                    {cardsVisiveis?.map((card, index) => (
-                        <Card key={index} className="w-full max-w-[25rem] h-[23rem] max-h-[23rem] flex flex-col">
+                            }
+                        >
+                            {cardsVisiveis?.map((card, index) => (
+                                <Card key={index} className="w-full max-w-[25rem] h-[23rem] max-h-[23rem] flex flex-col">
 
-                            <CardHeader>
-                                <div
-                                    className={`w-24 h-24 rounded-full flex items-center justify-center mb-4`}
-                                >
-                                    <span className="text-4xl">{"</>"}</span>
-                                </div>
-                            </CardHeader>
+                                    <CardHeader>
+                                        <div
+                                            className="w-full h-40 flex items-center justify-center"
+                                        >
+                                            <GraduationCap size={96} />
+                                        </div>
+                                    </CardHeader>
 
-                            <CardContent className="grow flex gap-2 flex-col">
-                                <p className="text-base font-bold line-clamp-2">{card.curso.nome}</p>
-                                <p className="text-sm text-gray-600">
-                                    Concluído em {formatarData(card.created_at)}
-                                </p>
-                            </CardContent>
+                                    <CardContent className="grow flex gap-2 flex-col">
+                                        <p className="text-base font-bold line-clamp-2">{card.curso.nome}</p>
+                                        <p className="text-sm text-gray-600">
+                                            Concluído em {formatarData(card.created_at)}
+                                        </p>
+                                    </CardContent>
 
-                            <CardFooter className="flex gap-2 flex-col md:flex-row">
-                                <Button  className='w-full' variant="outline" onClick={() => {
-                                    router.push(`certificado/${card.validador}`);
-                                }}>
-                                    Ver certificado
-                                </Button>
-                                <Button
-                                    className='w-full'
-                                    variant="outline"
-                                    onClick={() => {
-                                        router.push(`/curso/${card.cursoId}`);
-                                    }}
-                                >
-                                    Ir ao curso
-                                </Button>
-                            </CardFooter>
-                        </Card>
-                    ))}
-                </div>
-            </div>
+                                    <CardFooter className="flex gap-2 flex-col md:flex-row">
+                                        <Button className='w-full' variant="outline" onClick={() => {
+                                            router.push(`certificado/${card.validador}`);
+                                        }}>
+                                            Ver certificado
+                                        </Button>
+                                        <Button
+                                            className='w-full'
+                                            variant="outline"
+                                            onClick={() => {
+                                                router.push(`/curso/${card.cursoId}`);
+                                            }}
+                                        >
+                                            Ir ao curso
+                                        </Button>
+                                    </CardFooter>
+                                </Card>
+                            ))}
+                        </div>
+                    </div>
 
-            {data?.length > 4 && (
-                <div className="mt-6 text-center">
-                    <Button onClick={() => setExpanded(!expanded)} variant="ghost">
-                        {expanded
-                            ? "Ver menos formações"
-                            : `Ver todas as formações concluídas (${data?.length})`}
-                    </Button>
-                </div>
+                    {data?.length > 4 && (
+                        <div className="mt-6 text-center">
+                            <Button onClick={() => setExpanded(!expanded)} variant="ghost">
+                                {expanded
+                                    ? "Ver menos formações"
+                                    : `Ver mais Certificados (${data?.length - 4})`}
+                            </Button>
+                        </div>
+                    )}
+                </section>
             )}
-
         </div>
     );
 }

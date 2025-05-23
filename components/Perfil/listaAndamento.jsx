@@ -17,7 +17,7 @@ export default function ListaAndamento({ data }) {
     return (
         <div className="mt-4">
             <h2 className="
-                text-2xl xl:text-3xl 
+                text-xl xl:text-3xl 
                 font-semibold 
                 mb-6
                 text-center md:text-start
@@ -25,8 +25,8 @@ export default function ListaAndamento({ data }) {
             >Cursos em andamento</h2>
 
             {cardsVisiveis?.length === 0 ? (
-                <div className="text-center text-black mt-4 mb-4">
-                    <p className="text-lg mb-4">Poxa, você ainda não está inscrito em nenhum curso 😢</p>
+                <div className="flex flex-col gap-4 text-center text-black pt-4 pb-4 xl:pt-8 xl:pb-8">
+                    <p className="text-center text-md xl:text-xl">Poxa, você ainda não está inscrito em nenhum curso 😢</p>
                     <Button
                         onClick={() => router.push('/')}
                         className="mx-auto"
@@ -83,7 +83,7 @@ export default function ListaAndamento({ data }) {
                             <Button onClick={() => setExpanded(!expanded)} variant="ghost">
                                 {expanded
                                     ? "Ver menos cursos em andamento"
-                                    : `Ver todos os cursos em andamento (${data?.length - 4})`}
+                                    : `Ver mais cursos em andamento (${data?.length - 4})`}
                             </Button>
                         </div>
                     )}

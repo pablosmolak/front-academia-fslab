@@ -75,7 +75,7 @@ export default function MeuPerfilPage() {
             },
             enabled: !!userId,
             retry: (failureCount, error) => {
-                if (error?.code === 498 || error?.code === 404) {
+                if (error?.code === 498 || error?.code === 404 || error?.code === 401) {
                     return false;
                 }
 
@@ -105,7 +105,7 @@ export default function MeuPerfilPage() {
             },
             enabled: !!userId,
             retry: (failureCount, error) => {
-                if (error?.code === 498 || error?.code === 404) {
+                if (error?.code === 498 || error?.code === 404 || error?.code === 401) {
                     return false;
                 }
 
@@ -113,12 +113,12 @@ export default function MeuPerfilPage() {
             }
         })
 
-        const isLoading = isLoadingUsuario || isLoadingCertificados || isLoadingInscricoesEmAndamento
-        const isError = isErrorUsuario || isErrorCertificados || isErrorInscricoesEmAndamento
+    const isLoading = isLoadingUsuario || isLoadingCertificados || isLoadingInscricoesEmAndamento
+    // const isError = isErrorUsuario
 
     return (
         <>
-            {!isLoading && !isError && (
+            {!isLoading && (
                 <div>
                     <section className="
                         flex flex-col md:flex-row
@@ -150,7 +150,7 @@ export default function MeuPerfilPage() {
                                 {userContext?.name}
                             </h1>
                         </div>
-                        
+
                         <div className="
                             flex flex-col 
                             bg-white 
@@ -169,10 +169,9 @@ export default function MeuPerfilPage() {
                             </Avatar>
 
                             <EditarPerfilDialog usuario={usuario} />
-
                         </div>
                     </section>
-                    {!userContext?.emailVerificado && (
+                    {!userContext?.emailVerificado ? (
                         <div className="
                             flex flex-col 
                             items-center 
@@ -214,22 +213,18 @@ export default function MeuPerfilPage() {
                                 Verificar email
                             </a>
                         </div>
+                    ) : (
+                        <section className="
+                            flex flex-col
+                            md:justify-between 
+                            py-8 px-4 xl:px-36 
+                            gap-4 xl:gap-4"
+                        >
+                            <ListaAndamento data={inscricoesEmAndamento} />
+                            <ListaCertificados data={certificados} />
+                        </section>
                     )}
-                    <section className="
-                        flex flex-col
-                        md:justify-between 
-                       
-                       
-                        py-8 px-4 xl:px-36 
-                        gap-4 xl:gap-4">
-                        <ListaAndamento titulo="Andamento" data={inscricoesEmAndamento} />
-
-                        <ListaCertificados titulo="Certificados" data={certificados} />
-
-                    </section>
                 </div>
-
-
             )}
         </>
     )
