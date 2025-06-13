@@ -1,8 +1,8 @@
-import Image from "next/image";
-import Link from "next/link";
 import LogoIfro from "@/public/assets/logoIfroHorizontal.png";
 import logoFSLab from "@/public/assets/logo_fslab.svg";
-import { Instagram, Phone } from "lucide-react";
+import { Instagram } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function Footer() {
     return (
@@ -11,7 +11,7 @@ export default function Footer() {
 
                 {/* Logos */}
                 <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-6">
-                <div className="flex gap-6">
+                    <div className="flex gap-6">
                         <Image
                             src={logoFSLab}
                             alt="Logo FSLAB"
