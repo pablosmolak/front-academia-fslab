@@ -25,7 +25,6 @@ export default function ListaCertificados({ data }) {
                 Certificados
             </h2>
 
-
             {cardsVisiveis?.length === 0 ? (
                 <p className="text-center text-md xl:text-xl text-black pt-4 pb-4 xl:pt-8 xl:pb-8">
                     Poxa, ainda não temos nenhum certificado por aqui 😢<br />
@@ -36,15 +35,14 @@ export default function ListaCertificados({ data }) {
                     <div>
                         <div
                             className={`
-                        grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] 
-                        gap-6 
-                        justify-items-center sm:place-content-center 
-                    `
+                                grid grid-cols-[repeat(auto-fit,minmax(18rem,1fr))] md:grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] 
+                                gap-6 
+                                justify-items-center sm:place-content-center 
+                            `
                             }
                         >
                             {cardsVisiveis?.map((card, index) => (
-                                <Card key={index} className="w-full max-w-[25rem] h-[23rem] max-h-[23rem] flex flex-col">
-
+                                <Card key={index} className="w-full max-w-[25rem] h-[26rem] max-h-[26rem] md:h-[23rem] md:max-h-[23rem] flex flex-col">
                                     <CardHeader>
                                         <div
                                             className="w-full h-40 flex items-center justify-center"

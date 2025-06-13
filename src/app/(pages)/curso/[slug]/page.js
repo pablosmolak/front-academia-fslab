@@ -228,10 +228,10 @@ export default function cursoPage({ params }) {
                     >
                         {(progresso && !isErrorProgresso) ? <p className="text-base">Acessar curso</p> : <p className="text-base">Inscreva-se no curso</p>}
                     </ButtonLoading>
-
-                    <DropdownMenu>
-                        <DropdownMenuTrigger
-                            className="
+                    {(status === 'authenticated') && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger
+                                className="
                                 rounded-md
                                 bg-gray-100 
                                 w-full md:w-52 
@@ -242,31 +242,32 @@ export default function cursoPage({ params }) {
                                 gap-4
                                 "
 
-                        >
-                            Outras Ações <ChevronDown />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <DropdownMenuItem
-                                disabled={(progresso?.porcentagem !== 100 || isErrorProgresso)}
-                                onClick={() => {
-                                    if (progresso?.porcentagem === 100) {
-                                        router.push(`/usuario/certificado/${certificado?.validador}`)
-                                    }
-                                }}
                             >
-                                Certificado
-                            </DropdownMenuItem>
+                                Outras Ações <ChevronDown />
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem
+                                    disabled={(progresso?.porcentagem !== 100 || isErrorProgresso)}
+                                    onClick={() => {
+                                        if (progresso?.porcentagem === 100) {
+                                            router.push(`/usuario/certificado/${certificado?.validador}`)
+                                        }
+                                    }}
+                                >
+                                    Certificado
+                                </DropdownMenuItem>
 
-                            <DropdownMenuItem
-                                disabled={(!progresso || progresso?.porcentagem === 100) || isErrorProgresso}
-                                onClick={() => {
-                                    desisncreverDoCurso()
-                                }}
-                            >
-                                Cancelar inscrição
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                                <DropdownMenuItem
+                                    disabled={(!progresso || progresso?.porcentagem === 100) || isErrorProgresso}
+                                    onClick={() => {
+                                        desisncreverDoCurso()
+                                    }}
+                                >
+                                    Cancelar inscrição
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    )}
                 </section >
 
                 <section className="

@@ -9,11 +9,8 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchApi } from "@/src/utils/fetchApi";
-import { toast } from "react-toastify";
 
-export function SemInscricaoAlert({ cursoId,criarInscricao,isLoadingCriarInscricao }) {
+export function SemInscricaoAlert({ cursoId, criarInscricao, isLoadingCriarInscricao }) {
     const router = useRouter();
 
     return (

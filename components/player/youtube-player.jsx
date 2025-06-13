@@ -1,11 +1,10 @@
-import { useEffect, useRef, useCallback } from 'react';
 import Script from 'next/script';
+import { useCallback, useEffect, useRef } from 'react';
 
 export function YouTubePlayer({ videoUrl, onReady, onChangeFinalVideo }) {
     const playerRef = useRef(null);
-    const checkIntervalRef = useRef(null);
+    const checarIntervaloRef = useRef(null);
 
-    // Função para extrair o ID do vídeo a partir de diferentes formatos de URLs do YouTube
     const extractVideoId = useCallback((url) => {
         const regex =
             /(?:https?:\/\/)?(?:www\.|m\.)?(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/;
@@ -15,37 +14,33 @@ export function YouTubePlayer({ videoUrl, onReady, onChangeFinalVideo }) {
 
     const videoId = extractVideoId(videoUrl);
 
-    // Verifica se o vídeo está nos últimos 20 segundos
-    const checkTimeLeft = useCallback(() => {
+    const chegarTempoRestante = useCallback(() => {
         if (playerRef.current) {
-            const currentTime = playerRef.current.getCurrentTime(); // Tempo atual do vídeo
-            const duration = playerRef.current.getDuration(); // Duração total do vídeo
-            const timeLeft = duration - currentTime; // Tempo restante
+            const tempoAtual = playerRef.current.getCurrentTime(); 
+            const duracaoVideo = playerRef.current.getDuration();
+            const tempoRestante = duracaoVideo - tempoAtual;
 
-            if (timeLeft <= 20 && timeLeft > 0) {
-                onChangeFinalVideo(true)
+            if (tempoRestante <= 20 && tempoRestante > 0) {
+                onChangeFinalVideo(true);
 
-                clearInterval(checkIntervalRef.current); // Para de verificar após detectar
-                checkIntervalRef.current = null;
+                clearInterval(checarIntervaloRef.current);
+                checarIntervaloRef.current = null;
             }
         }
     }, []);
 
-    // Callback chamado quando o estado do player muda
     const onPlayerStateChange = useCallback(
         (event) => {
             if (event.data === YT.PlayerState.PLAYING) {
-                // Inicia o intervalo para verificar o tempo restante
-                if (!checkIntervalRef.current) {
-                    checkIntervalRef.current = setInterval(checkTimeLeft, 500); // Verifica a cada 500ms
+                if (!checarIntervaloRef.current) {
+                    checarIntervaloRef.current = setInterval(chegarTempoRestante, 500);
                 }
             } else {
-                // Limpa o intervalo quando o vídeo é pausado ou finalizado
-                clearInterval(checkIntervalRef.current);
-                checkIntervalRef.current = null;
+                clearInterval(checarIntervaloRef.current);
+                checarIntervaloRef.current = null;
             }
         },
-        [checkTimeLeft]
+        [chegarTempoRestante]
     );
 
     const initializePlayer = useCallback(() => {
@@ -79,9 +74,8 @@ export function YouTubePlayer({ videoUrl, onReady, onChangeFinalVideo }) {
         }
 
         return () => {
-            // Limpa o intervalo ao desmontar o componente
-            clearInterval(checkIntervalRef.current);
-            checkIntervalRef.current = null;
+            clearInterval(checarIntervaloRef.current);
+            checarIntervaloRef.current = null;
         };
     }, [initializePlayer]);
 
@@ -89,16 +83,11 @@ export function YouTubePlayer({ videoUrl, onReady, onChangeFinalVideo }) {
         <>
             {videoId && (
                 <>
-                    <>
-                        <Script src="https://www.youtube.com/iframe_api" strategy="afterInteractive" />
-                        <div
-                            id="youtube-player"
-                            className="w-full sm:w-1/4 md:w-1/2 lg:w-2/3 xl:w-3/4 2xl:w-2/3 h-auto aspect-video mx-4"
-                            style={{ maxWidth: '1200px', maxHeight: '675px' }}
-                        ></div>
-                    </>
-
-
+                    <Script src="https://www.youtube.com/iframe_api" strategy="afterInteractive" />
+                    <div
+                        className="w-full h-full aspect-video rounded overflow-hidden relative"
+                        id="youtube-player"
+                    />
                 </>
             )}
         </>

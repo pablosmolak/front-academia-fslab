@@ -48,7 +48,7 @@ export function AppSidebar({ onVideoChange, curso, progresso, conteudoSelecionad
                 : curso.topicos[0]?.conteudos[0];
 
             setTopicoSelecionado(topicoAtual?.titulo || null);
-            handleContentClick(conteudoAtual);
+            tratarCliqueConteudo(conteudoAtual);
         }
 
     }, [curso]);
@@ -56,18 +56,18 @@ export function AppSidebar({ onVideoChange, curso, progresso, conteudoSelecionad
     useEffect(() => {
         const topicoAtual = curso?.topicos?.find((topico) =>
             topico.conteudos?.some((conteudo) => conteudo.id === conteudoSelecionado?.id)
-        )
+        );
 
         setTopicoSelecionado(topicoAtual?.titulo || null);
-    }, [conteudoSelecionado])
+    }, [conteudoSelecionado]);
 
     const conteudosFiltrados = curso?.topicos?.find(
         (topico) => topico.titulo === topicoSelecionado
     )?.conteudos;
 
-    const handleContentClick = (conteudo) => {
+    const tratarCliqueConteudo = (conteudo) => {
         if (onVideoChange) onVideoChange(conteudo);
-    };
+    }
 
     const formatarCargaHoraria = (cargaHoraria) => {
         const [horas, minutos, segundos] = cargaHoraria.split(":").map(Number);
@@ -152,11 +152,9 @@ export function AppSidebar({ onVideoChange, curso, progresso, conteudoSelecionad
                                     <SidebarMenuButton
                                         size="Slg"
                                         asChild
-                                        onClick={() => handleContentClick(conteudo)}
+                                        onClick={() => tratarCliqueConteudo(conteudo)}
                                         isActive={conteudoSelecionado?.id === conteudo?.id}
                                     >
-
-
                                         <div className="flex items-center justify-between gap-2">
                                             <div className="flex items-center gap-2">
                                                 <div>
@@ -167,7 +165,7 @@ export function AppSidebar({ onVideoChange, curso, progresso, conteudoSelecionad
                                                 </div>
                                                 <div className="flex items-center justify-between gap-3">
                                                     <span className="text-gray-400 ml-1 text-xs"> {String(conteudo.ordem).padStart(2, "0")}</span>
-                                                    <span> {conteudo.titulo}</span>
+                                                    <span className="overflow-hidden text-ellipsis"> {conteudo.titulo}</span>
                                                 </div>
                                             </div>
                                             <div className="bg-gray-600 px-2 py-1 rounded text-xs">
@@ -182,11 +180,10 @@ export function AppSidebar({ onVideoChange, curso, progresso, conteudoSelecionad
                 </SidebarGroup>
             </SidebarContent>
             <SidebarFooter>
-              {
-                (certificado) && 
-                <PlayerCertificadoAlert certificadoValidador={certificado.validador} />
+                {
+                    (certificado) &&
+                    <PlayerCertificadoAlert certificadoValidador={certificado.validador} />
                 }
-               
             </SidebarFooter>
         </Sidebar>
     );

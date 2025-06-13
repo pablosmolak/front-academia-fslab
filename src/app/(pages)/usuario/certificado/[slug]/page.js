@@ -31,8 +31,6 @@ export default function certificadoPage({ params }) {
         queryFn: async () => {
             const response = await fetchApi(`/certificados/validar/${certificadoid}`, "GET");
 
-            console.log(response.data)
-
             if (response.error) {
                 throw response;
             } else {
@@ -114,13 +112,7 @@ export default function certificadoPage({ params }) {
         return `${baseUrl}&${params.toString()}`;
     }
 
-
-
     const ehDonoDoCertificado = certificado?.usuario.id === session?.user.id
-
-
-    console.log(errorCertificado)
-
 
     if (!isLoadingCertificado && isErrorCertificado) {
         return (

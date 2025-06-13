@@ -2,24 +2,21 @@ import { FileBadge, Trophy } from "lucide-react";
 import Link from "next/link";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
-const PlayerCertificadoPage = ({certificadoValidador}) => {
+const PlayerCertificadoPage = ({ certificadoValidador }) => {
     return (
-        <div className="flex items-center justify-center bg-black text-white">
+        <div className="flex h-full items-center justify-center bg-black text-white pb-28">
             <div className="text-center space-y-6">
-                {/* Ícone de Troféu */}
                 <div className="flex justify-center">
                     <div className="w-16 h-16 flex items-center justify-center bg-primary rounded-full">
-                        <Trophy className="text-black"/>
+                        <Trophy className="text-black" />
                     </div>
                 </div>
 
-                {/* Texto */}
                 <div>
                     <h1 className="text-3xl font-bold">Parabéns!</h1>
                     <p className="text-lg">Você concluiu o curso com sucesso.</p>
                 </div>
 
-                {/* Botão */}
                 <div className="flex justify-center">
                     <Link
                         href={`/usuario/certificado/${certificadoValidador}`}
@@ -29,13 +26,12 @@ const PlayerCertificadoPage = ({certificadoValidador}) => {
                         <span>Acessar Certificado</span>
                     </Link>
                 </div>
-
             </div>
         </div>
     );
 }
 
-const PlayerCertificadoAlert = ({certificadoValidador}) => {
+const PlayerCertificadoAlert = ({ certificadoValidador }) => {
     return (
         <Link href={`/usuario/certificado/${certificadoValidador}`}>
             <Alert className="bg-zinc-700 border-none hover:bg-zinc-600 transition-colors duration-200">
@@ -55,5 +51,4 @@ const PlayerCertificadoAlert = ({certificadoValidador}) => {
     )
 }
 
-
-export { PlayerCertificadoAlert, PlayerCertificadoPage }
+export { PlayerCertificadoAlert, PlayerCertificadoPage };

@@ -111,8 +111,8 @@ export default function AuthPage() {
             toast.success("Cadastro realizado com sucesso!");
 
             login({
-                email: data['new-email'],
-                senha: data['new-senha']
+                email: data['email'],
+                senha: data['senha']
             })
         }
     }
@@ -212,10 +212,10 @@ export default function AuthPage() {
                         </div>
                         <Form {...formCadastrar}>
                             <form
+                                method="post"
                                 className="space-y-2 pt-2" id="formCadastrar"
                                 onSubmit={formCadastrar.handleSubmit(cadastrar)}
                             >
-
                                 <FormField
                                     control={formCadastrar.control}
                                     name="nome"
@@ -226,7 +226,7 @@ export default function AuthPage() {
                                                 <Input
                                                     type="text"
                                                     id="nome"
-                                                    autoComplete="off"
+                                                    autoComplete="name"
                                                     {...field}
 
                                                 />
@@ -243,9 +243,9 @@ export default function AuthPage() {
                                             <FormLabel htmlFor="new-email">E-mail <span className="text-red-500">*</span></FormLabel>
                                             <FormControl>
                                                 <Input
-                                                    type="text"
+                                                    type="email"
                                                     id="new-email"
-                                                    autoComplete="new-email"
+                                                    autoComplete="username"
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -265,7 +265,6 @@ export default function AuthPage() {
                                                     field={field}
                                                     id="new-password"
                                                     autoComplete="new-password"
-
                                                     {...field}
                                                 />
                                             </FormControl>

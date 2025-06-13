@@ -1,7 +1,7 @@
 import { fetchApi } from "@/src/utils/fetchApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import ButtonLoading from "../buttonLoading";
 import { toast } from "react-toastify";
+import ButtonLoading from "../buttonLoading";
 
 export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, onVideoChange, onRecemFinalizadoChange }) {
 
@@ -12,7 +12,7 @@ export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, 
             const response = await fetchApi(`/progressos/finalizaratividade/${conteudo.id}`, "POST")
 
             if (response.error) {
-                throw response.errors
+                throw response.errors;
             }
 
             return response.data[0];
@@ -22,14 +22,14 @@ export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, 
             queryClient.invalidateQueries(["getCertificado", progresso.cursoId]);
 
             if (!data.certificado) {
-                proximoConteudo()
+                proximoConteudo();
             } else {
                 onVideoChange({
                     ...conteudo,
-                    titulo:"Certificado",
+                    titulo: "Certificado",
                     conteudo: "https://youtu.be/Ptbkjjf68ee"
-                })
-                onRecemFinalizadoChange(true)
+                });
+                onRecemFinalizadoChange(true);
             }
         },
         onError: (errors) => {
@@ -38,7 +38,7 @@ export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, 
     });
 
     const ArrayDeConteudos = curso?.topicos
-        .flatMap((topico) => topico.conteudos) || []
+        .flatMap((topico) => topico.conteudos) || [];
 
     const proximoConteudo = () => {
         const ConteudoAtual = conteudo;
@@ -49,9 +49,6 @@ export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, 
 
         const proximo = ArrayDeConteudos[indiceConteudoAtual + 1];
 
-        console.log("proximo")
-        console.log(proximo)
-
         if (proximo) {
             onVideoChange(proximo);
         } else {
@@ -60,17 +57,17 @@ export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, 
                     (conteudo) => conteudo.id === progresso.atividadeAtual
                 );
 
-                onVideoChange(ArrayDeConteudos[indiceConteudo])
+                onVideoChange(ArrayDeConteudos[indiceConteudo]);
             } else {
-                onVideoChange(ArrayDeConteudos[0])
+                onVideoChange(ArrayDeConteudos[0]);
             }
         }
     };
 
-    const ConteudoAtualConcluido = progresso?.atividadesConcluidas?.includes(conteudo?.id)
+    const ConteudoAtualConcluido = progresso?.atividadesConcluidas?.includes(conteudo?.id);
 
-    if (!ConteudoAtualConcluido /*&& videoNofim*/) {
-        return (
+    if ((!ConteudoAtualConcluido && videoNofim)) {
+        return (  
             <>
                 <ButtonLoading
                     isLoading={isLoadingFinalizarAtividade}
@@ -78,10 +75,10 @@ export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, 
                     onClick={() => { finalizarConteudo() }}
                     className="w-44"
                 >
-                    Próximo conteúdo
+                    {ArrayDeConteudos[ArrayDeConteudos.length - 1]?.id !== conteudo?.id ? "Próximo conteúdo":"Finalizar curso"}
                 </ButtonLoading>
             </>
-        )
+        );
     } else if (ConteudoAtualConcluido && ((ArrayDeConteudos[ArrayDeConteudos.length - 1]?.id !== conteudo?.id) || progresso.porcentagem !== 100)) {
         return (
             <>
@@ -94,6 +91,6 @@ export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, 
                     Próximo conteúdo
                 </ButtonLoading>
             </>
-        )
+        );
     }
 }

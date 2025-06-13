@@ -3,6 +3,7 @@
 import { ApplicationContext } from "@/src/context/applicationContext";
 import getCroppedImg from "@/src/utils/cropImage";
 import { fetchApi } from "@/src/utils/fetchApi";
+import { handleImagePath } from "@/src/utils/handleImagePath";
 import { useQueryClient } from "@tanstack/react-query";
 import { Loader2, Pen } from "lucide-react";
 import { useContext, useEffect, useRef, useState, useTransition } from "react";
@@ -15,7 +16,6 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { handleImagePath } from "@/src/utils/handleImagePath";
 
 export default function InputFoto({
     value,
@@ -77,7 +77,6 @@ export default function InputFoto({
     async function handleCropConfirm() {
         const croppedImgUrl = await getCroppedImg(cropImageSrc, croppedAreaPixels);
 
-        // Convert blob URL to File
         const blob = await fetch(croppedImgUrl).then((res) => res.blob());
         const croppedFile = new File([blob], currentFile.name, { type: currentFile.type });
 
@@ -208,11 +207,7 @@ export default function InputFoto({
                 )}
             </div>
 
-            <div
-                className="
-                   
-                "
-            >
+            <div>
                 {photo?.url && (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -238,10 +233,9 @@ export default function InputFoto({
                 )}
             </div>
 
-            {/* Modal de Crop */}
             {cropModalOpen && (
                 <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center">
-                    <div className="relative bg-white w-[90vw] max-w-2xl h-[90vh] rounded shadow-lg p-4 flex flex-col items-center">
+                    <div className="relative bg-white w-[90vw] max-w-2xl h-full rounded shadow-lg p-4 flex flex-col items-center">
                         <div className="relative w-full h-full">
                             <Cropper
                                 image={cropImageSrc}

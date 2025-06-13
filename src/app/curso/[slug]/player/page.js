@@ -15,7 +15,6 @@ import { redirect } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-
 export default function playerPage({ params }) {
 
     const { data: session, status } = useSession({
@@ -30,13 +29,11 @@ export default function playerPage({ params }) {
 
     const { user } = useContext(ApplicationContext);
     if (session) {
-
         if (!user?.emailVerificado) {
             sessionStorage.setItem('redirectPath', window.location.pathname);
             redirect("/verificaremail");
         }
     }
-
 
     const cursoId = params.slug
     const [conteudo, setConteudo] = useState();
@@ -82,7 +79,6 @@ export default function playerPage({ params }) {
             }
         }
     })
-
 
     const {
         data: curso,
@@ -156,8 +152,9 @@ export default function playerPage({ params }) {
 
     if (status === "authenticated") {
         return (
-            <div>
-                <TopBar className="fixed top-0 left-0  w-full h-16 z-10" />
+            <div className="h-screen flex flex-col bg-black text-white overflow-hidden">
+                <TopBar className="fixed top-0 left-0 w-full h-16 z-50" />
+
                 <SidebarProvider>
                     <AppSidebar
                         onVideoChange={(url) => setConteudo(url)}
@@ -166,41 +163,38 @@ export default function playerPage({ params }) {
                         conteudoSelecionado={conteudo}
                         certificado={certificado}
                     />
-                    <main className="w-full bg-black flex flex-col items-center">
-                        {inscreverAlert && (
-                            <SemInscricaoAlert
-                                cursoId={cursoId}
-                                criarInscricao={() => criarInscricao()}
-                                LoadingCriarInscricao={isLoadingCriarInscricao}
-                            />
-                        )}
-                        <div className="bg-zinc-800 h-20 flex items-center justify-center relative w-full mt-16">
-                            <SidebarTrigger className="absolute left-1 hover:bg-zinc-700" />
-                            <p className="text-white">{conteudo?.titulo || ""}</p>
-                        </div>
-                        <div className="relative flex-grow flex flex-col items-center justify-center w-full">
-                            <div
-                                className={`absolute inset-0 flex flex-col 
-                                    items-center justify-center w-full  
-                                    ease-in-out ${cursoRecemFinalizado ? 'opacity-100 z-10' : 'opacity-0 z-0'
-                                    }`}
-                            >
-                                <PlayerCertificadoPage certificadoValidador={certificado?.validador} />
-                            </div>
 
-                            {/* YouTubePlayer e ProximoConteudoButton */}
-                            <div
-                                className={`absolute inset-0 flex flex-col items-center justify-center w-full
-                                     ease-in-out ${cursoRecemFinalizado ? 'opacity-0 z-0' : 'opacity-100 z-10'
-                                    }`}
-                            >
-                                <>
+                    <div className="pt-16 flex flex-col flex-grow overflow-hidden">
+
+                        <div className="sticky top-0 z-40 bg-zinc-800 min-h-20 py-2 px-16 flex items-center justify-center w-full text-center">
+                            <SidebarTrigger className="absolute left-1 hover:bg-zinc-700" />
+                            <p className="text-white break-words">{conteudo?.titulo || ""}</p>
+                        </div>
+
+                        <main className="flex-1 overflow-y-auto px-4 pt-8 pb-2 flex flex-col items-center space-y-6">
+                            {inscreverAlert && (
+                                <SemInscricaoAlert
+                                    cursoId={cursoId}
+                                    criarInscricao={() => criarInscricao()}
+                                    LoadingCriarInscricao={isLoadingCriarInscricao}
+                                />
+                            )}
+                            
+                            {cursoRecemFinalizado && (
+                                <div className="w-full h-full max-w-[640px] 2xl:max-w-[1160px] items-center">
+                                    <PlayerCertificadoPage certificadoValidador={certificado?.validador} />
+                                </div>
+                            )}
+
+                            {!cursoRecemFinalizado && (
+                                <section className="w-full max-w-[640px] 2xl:max-w-[1160px] flex flex-col items-center space-y-4">
+
                                     <YouTubePlayer
                                         videoUrl={conteudo?.conteudo}
                                         onChangeFinalVideo={(final) => setVideoNofim(final)}
                                     />
 
-                                    <div className="w-4/5 h-14 flex justify-center md:justify-end pt-4">
+                                    <div className="h-14 w-full  flex justify-center md:justify-end">
                                         <ProximoConteudoButton
                                             progresso={progresso}
                                             videoNofim={videoNofim}
@@ -210,10 +204,10 @@ export default function playerPage({ params }) {
                                             onRecemFinalizadoChange={(recemFinalizado) => setCursoRecemFinalizado(recemFinalizado)}
                                         />
                                     </div>
-                                </>
-                            </div>
-                        </div>
-                    </main>
+                                </section>
+                            )}
+                        </main>
+                    </div>
                 </SidebarProvider>
             </div>
         );

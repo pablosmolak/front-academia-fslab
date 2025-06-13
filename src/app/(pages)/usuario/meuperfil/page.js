@@ -37,8 +37,6 @@ export default function MeuPerfilPage() {
             queryFn: async () => {
                 const response = await fetchApi(`/usuarios/${userId}`, "GET");
 
-                console.log(response)
-
                 if (response.error) {
                     throw response
                 } else {
@@ -68,8 +66,6 @@ export default function MeuPerfilPage() {
                 if (response.error) {
                     throw response
                 } else {
-
-                    console.log(response.data)
                     return response.data || null
                 }
             },

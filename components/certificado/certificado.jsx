@@ -2,25 +2,29 @@ import { dataPorExtenso, transformarEmFormatoCompacto } from "@/src/utils/mascar
 
 export default function Certificado({ certificado }) {
     return (
-        <section className=" w-[320px] h-[226px] sm:w-[400px] sm:h-[283px] lg:w-[800px] lg:h-[566px]">
+        <section className="w-[320px] h-[226px] sm:w-[400px] sm:h-[283px] lg:w-[800px] lg:h-[566px]">
             <div
                 id="certificado"
                 className="
-            bg-[linear-gradient(180deg,#FAFBF6,#EAEDDC)]
-            text-center 
-            font-sans relative
-            p-[6.4px] sm:p-[8px] lg:p-[16px]
-            "
+                    bg-[linear-gradient(180deg,#FAFBF6,#EAEDDC)]
+                    text-center 
+                    font-sans relative
+                    p-[6.4px] sm:p-[8px] lg:p-[16px]
+                "
             >
-                <div className="
-                border-[1.6px] sm:border-[2px] lg:border-[4px] 
-                border-green-700 border-dashed 
-                h-[213.2px] sm:h-[267px] lg:h-[534px]">
-
+                <div 
+                    className="
+                        border-[1.6px] sm:border-[2px] lg:border-[4px] 
+                        border-green-700 border-dashed 
+                        h-[213.2px] sm:h-[267px] lg:h-[534px]
+                    "
+                >
                     <div
-                        className="flex justify-between 
-                    px-[12px] pt-[4px] sm:px-[15px] sm:pt-[5px] lg:px-[30px] lg:pt-[10px]
-                    ">
+                        className="
+                            flex justify-between 
+                            px-[12px] pt-[4px] sm:px-[15px] sm:pt-[5px] lg:px-[30px] lg:pt-[10px]
+                        "
+                    >
                         <img src="/assets/governo.png"
                             className="w-[30px] h-[30px] sm:w-[37px] sm:h-[38px] lg:w-[59px] lg:h-[60px]"
                         />
