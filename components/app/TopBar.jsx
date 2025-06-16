@@ -30,15 +30,15 @@ export default function TopBar({ className }) {
         <header
             className={`
                 bg-slate-950
-                ${!pathname.endsWith('/player') ? "px-4 xl:px-36" : "px-12"}
+                ${!pathname.endsWith('/player') ? "px-4 xl:px-36" : "px-4 sm:px-12"}
                 gap-4 xl:gap-4
                 ${className}`
             }
         >
             <div
                 className="
-                flex
-                justify-between
+                    flex
+                    justify-between
                 "
             >
                 <Link href="/" className="flex items-center justify-start h-16">

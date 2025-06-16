@@ -115,7 +115,7 @@ export default function EditarPerfilDialog({ usuario }) {
                     Editar Perfil
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md overflow-y-auto max-h-screen">
+            <DialogContent className="sm:max-w-md overflow-y-auto max-h-full">
                 <DialogHeader>
                     <DialogTitle>Editar Perfil</DialogTitle>
                     <DialogDescription>

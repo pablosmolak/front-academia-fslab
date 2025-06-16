@@ -9,6 +9,7 @@ import { Loader2, Pen } from "lucide-react";
 import { useContext, useEffect, useRef, useState, useTransition } from "react";
 import Cropper from "react-easy-crop";
 import { toast } from "react-toastify";
+import { AlertDialog, AlertDialogContent, AlertDialogFooter } from "../ui/alert-dialog";
 import { Button } from "../ui/button";
 import {
     DropdownMenu,
@@ -78,6 +79,14 @@ export default function InputFoto({
         const croppedImgUrl = await getCroppedImg(cropImageSrc, croppedAreaPixels);
 
         const blob = await fetch(croppedImgUrl).then((res) => res.blob());
+
+        // ✅ Validação de tamanho (5MB = 5 * 1024 * 1024 bytes)
+        const maxSizeInBytes = 5 * 1024 * 1024;
+        if (blob.size > maxSizeInBytes) {
+            alert("A imagem recortada ultrapassa o tamanho máximo de 5MB. Por favor, escolha uma imagem menor ou recorte menos.");
+            return;
+        }
+
         const croppedFile = new File([blob], currentFile.name, { type: currentFile.type });
 
         const image = {
@@ -92,6 +101,7 @@ export default function InputFoto({
         processUpload(image);
     }
 
+
     function processUpload(file) {
         startTransition(async () => {
             const data = new FormData();
@@ -99,6 +109,7 @@ export default function InputFoto({
 
             await fetchApi(`/usuarios/${usuario?.id}/image/upload`, "POST", data)
                 .then((response) => {
+                    alert(JSON.stringify(response,null,2))
                     if (response.error) throw response;
 
                     const fotoPerfilUrl = handleImagePath(`/usuarios/${usuario?.id}/image?time=${Date.now()}`)
@@ -233,7 +244,34 @@ export default function InputFoto({
                 )}
             </div>
 
-            {cropModalOpen && (
+            <AlertDialog open={cropModalOpen} onOpenChange={setCropModalOpen}>
+                <AlertDialogContent className="max-w-2xl w-[90vw] h-[80vh] flex flex-col">
+                    <div className="relative flex-1">
+                        <Cropper
+                            image={cropImageSrc}
+                            crop={crop}
+                            zoom={zoom}
+                            aspect={1}
+                            onCropChange={setCrop}
+                            onZoomChange={setZoom}
+                            onCropComplete={(_, croppedArea) => setCroppedAreaPixels(croppedArea)}
+                        />
+                    </div>
+
+                    <AlertDialogFooter className="flex gap-2">
+                        <Button variant="ghost" onClick={() => setCropModalOpen(false)}>
+                            Cancelar
+                        </Button>
+                        <Button onClick={handleCropConfirm}>
+                            Cortar
+                        </Button>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
+
+
+            {/* {cropModalOpen && (
                 <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center">
                     <div className="relative bg-white w-[90vw] max-w-2xl h-full rounded shadow-lg p-4 flex flex-col items-center">
                         <div className="relative w-full h-full">
@@ -257,7 +295,7 @@ export default function InputFoto({
                         </div>
                     </div>
                 </div>
-            )}
+            )} */}
         </div>
     );
 }
