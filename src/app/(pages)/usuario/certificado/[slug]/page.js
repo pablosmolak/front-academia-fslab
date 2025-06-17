@@ -2,6 +2,7 @@
 
 import ButtonLoading from "@/components/buttonLoading";
 import Certificado from "@/components/certificado/certificado";
+import { Skeleton } from "@/components/ui/skeleton";
 import Custom404 from "@/src/app/not-found";
 import { ApplicationContext } from "@/src/context/applicationContext";
 import { fetchApi } from "@/src/utils/fetchApi";
@@ -129,7 +130,7 @@ export default function certificadoPage({ params }) {
                 ">
                 <h1 className="
                      text-lg xl:text-2xl 
-                     pb-8
+                     pb-8 font-semibold
                 ">
                     Certificado de conclusão
                 </h1>
@@ -200,5 +201,27 @@ export default function certificadoPage({ params }) {
 
             </div>
         );
+    }
+
+
+    if (isLoadingCertificado && !isErrorCertificado) {
+
+        return (
+            <>
+                <div className="text-center py-8  xl:px-36 ">
+
+                    <h1 className="
+                      text-lg xl:text-2xl 
+                      pb-8 font-semibold
+                    ">
+                        Certificado de conclusão
+                    </h1>
+                    <div className="flex justify-center">
+                        <Skeleton className="w-[320px] h-[226px] sm:w-[400px] sm:h-[283px] lg:w-[800px] lg:h-[566px]" />
+                    </div>
+                </div>
+            </>
+        )
+
     }
 }

@@ -135,6 +135,7 @@ export default function AuthPage() {
                                 autoComplete="on"
                                 className="space-y-4" id="formLogin"
                                 onSubmit={formLogar.handleSubmit(login)}
+                                noValidate
                             >
                                 <FormField
                                     control={formLogar.control}
@@ -162,6 +163,7 @@ export default function AuthPage() {
                                             <div className="flex items-center">
                                                 <FormLabel htmlFor="senha">Senha</FormLabel>
                                                 <Link
+                                                    tabIndex={-1}
                                                     href="/recuperarsenha"
                                                     className="ml-auto text-sm underline-offset-2 hover:underline"
                                                 >
@@ -174,6 +176,11 @@ export default function AuthPage() {
                                                     field={field}
                                                     id="senha"
                                                     autoComplete="current-password"
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === "Enter") {
+                                                            document.getElementById("formLogin")?.requestSubmit();
+                                                        }
+                                                    }}
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -182,6 +189,7 @@ export default function AuthPage() {
                                     )}
                                 />
                                 <ButtonLoading
+                                    type="submit"
                                     className="w-full"
                                     isLoading={formLogar.formState.isSubmitting}
                                     form="formLogin">

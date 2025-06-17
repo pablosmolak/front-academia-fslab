@@ -9,7 +9,7 @@ import { Loader2, Pen } from "lucide-react";
 import { useContext, useEffect, useRef, useState, useTransition } from "react";
 import Cropper from "react-easy-crop";
 import { toast } from "react-toastify";
-import { AlertDialog, AlertDialogContent, AlertDialogFooter } from "../ui/alert-dialog";
+import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogTitle } from "../ui/alert-dialog";
 import { Button } from "../ui/button";
 import {
     DropdownMenu,
@@ -73,6 +73,12 @@ export default function InputFoto({
         setCropImageSrc(preview);
         setCurrentFile(file);
         setCropModalOpen(true);
+
+        if (refInputFile.current) {
+            refInputFile.current.value = null;
+        }
+
+        setZoom(1)
     }
 
     async function handleCropConfirm() {
@@ -81,9 +87,9 @@ export default function InputFoto({
         const blob = await fetch(croppedImgUrl).then((res) => res.blob());
 
         // ✅ Validação de tamanho (5MB = 5 * 1024 * 1024 bytes)
-        const maxSizeInBytes = 5 * 1024 * 1024;
+        const maxSizeInBytes = Number(process.env.NEXT_PUBLIC_LIMITE_UPLOAD_ARQUIVOS) * 1024 * 1024;
         if (blob.size > maxSizeInBytes) {
-            alert("A imagem recortada ultrapassa o tamanho máximo de 5MB. Por favor, escolha uma imagem menor ou recorte menos.");
+            toast.error(`O tamanho da imagem recortada ultrapassa o limite de ${process.env.NEXT_PUBLIC_LIMITE_UPLOAD_ARQUIVOS}MB. Tente escolher uma imagem menor ou ajustar o recorte.`);
             return;
         }
 
@@ -99,6 +105,7 @@ export default function InputFoto({
         setPhoto(image);
         setCropModalOpen(false);
         processUpload(image);
+        setCurrentFile(null)
     }
 
 
@@ -109,7 +116,6 @@ export default function InputFoto({
 
             await fetchApi(`/usuarios/${usuario?.id}/image/upload`, "POST", data)
                 .then((response) => {
-                    alert(JSON.stringify(response,null,2))
                     if (response.error) throw response;
 
                     const fotoPerfilUrl = handleImagePath(`/usuarios/${usuario?.id}/image?time=${Date.now()}`)
@@ -246,8 +252,10 @@ export default function InputFoto({
 
             <AlertDialog open={cropModalOpen} onOpenChange={setCropModalOpen}>
                 <AlertDialogContent className="max-w-2xl w-[90vw] h-[80vh] flex flex-col">
+                    <AlertDialogTitle className="hidden"></AlertDialogTitle>
                     <div className="relative flex-1">
                         <Cropper
+                            key={cropImageSrc}
                             image={cropImageSrc}
                             crop={crop}
                             zoom={zoom}
@@ -257,7 +265,6 @@ export default function InputFoto({
                             onCropComplete={(_, croppedArea) => setCroppedAreaPixels(croppedArea)}
                         />
                     </div>
-
                     <AlertDialogFooter className="flex gap-2">
                         <Button variant="ghost" onClick={() => setCropModalOpen(false)}>
                             Cancelar

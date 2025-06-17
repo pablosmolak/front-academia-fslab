@@ -30,6 +30,7 @@ const InputPassword = forwardRef(({ field, className, ...props }, ref) => {
                     {...props}
                 />
                 <Button
+                    tabIndex={-1}
                     variant="ghost"
                     type="button"
                     className="absolute right-0 inset-y-0 p-2"

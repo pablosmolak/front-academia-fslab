@@ -86,7 +86,6 @@ export default function paginaInicial({ searchParams }) {
     const cursosVisiveis = cursos ?? [];
     const total = cursosVisiveis.length;
 
-    // Supondo 4 colunas como referência em telas maiores:
     const colunas = 5;
     const preenchimento = (colunas - (total % colunas)) % colunas;
 

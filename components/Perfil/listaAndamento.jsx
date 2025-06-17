@@ -11,7 +11,11 @@ export default function ListaAndamento({ data }) {
     const router = useRouter();
     const [expanded, setExpanded] = useState(false);
 
-    const cardsVisiveis = expanded ? data : data?.slice(0, 4);
+    const colunas = 4;
+    const cardsVisiveis = expanded ? data : data?.slice(0, colunas);
+    
+    const total = cardsVisiveis?.length || 0;
+    const preenchimento = (colunas - (total % colunas)) % colunas;
 
     return (
         <div className="mt-4">
@@ -76,6 +80,11 @@ export default function ListaAndamento({ data }) {
                                 </CardFooter>
                             </Card>
                         ))}
+
+                        {Array.from({ length: preenchimento }).map((_, i) => (
+                            <div key={`placeholder-${i}`} className="hidden sm:inline w-full max-w-[25rem] invisible" />
+                        ))}
+
                     </div>
 
                     {data?.length > 4 && (

@@ -11,7 +11,11 @@ export default function ListaCertificados({ data }) {
     const router = useRouter();
     const [expanded, setExpanded] = useState(false);
 
-    const cardsVisiveis = expanded ? data : data?.slice(0, 4);
+    const colunas = 4;
+    const cardsVisiveis = expanded ? data : data?.slice(0, colunas);
+
+    const total = cardsVisiveis?.length || 0;
+    const preenchimento = (colunas - (total % colunas)) % colunas;
 
     return (
         <div className="mt-4">
@@ -37,7 +41,7 @@ export default function ListaCertificados({ data }) {
                             className={`
                                 grid grid-cols-[repeat(auto-fit,minmax(18rem,1fr))] md:grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] 
                                 gap-6 
-                                justify-items-center sm:place-content-center 
+                                justify-items-start sm:place-content-start 
                             `
                             }
                         >
@@ -75,6 +79,10 @@ export default function ListaCertificados({ data }) {
                                         </Button>
                                     </CardFooter>
                                 </Card>
+                            ))}
+
+                            {Array.from({ length: preenchimento }).map((_, i) => (
+                                <div key={`placeholder-${i}`} className="hidden sm:inline w-full max-w-[25rem] invisible" />
                             ))}
                         </div>
                     </div>

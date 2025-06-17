@@ -58,7 +58,7 @@ export default function TopBar({ className }) {
                             <div className="flex flex-row items-center gap-x-2">
                                 <Avatar >
                                     <AvatarImage src={userContext?.fotoPerfilUrl} />
-                                    <AvatarFallback>{userContext?.name?.trim().slice(0, 2).toUpperCase()}</AvatarFallback>
+                                    <AvatarFallback className="text-black">{userContext?.name?.trim().slice(0, 2).toUpperCase()}</AvatarFallback>
                                 </Avatar>
                                 <Label className="text-white hidden sm:inline">{
                                     userContext?.name?.split(" ")
@@ -70,10 +70,10 @@ export default function TopBar({ className }) {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56">
                             <DropdownMenuGroup>
-                                <DropdownMenuItem onClick={() => { router.push("/usuario/meuperfil") }}>
+                                <DropdownMenuItem className="text-base" onClick={() => { router.push("/usuario/meuperfil") }}>
                                     Meu Perfil
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => { signOut() }}>
+                                <DropdownMenuItem className="text-base" onClick={() => { signOut() }}>
                                     Sair
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
