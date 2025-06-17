@@ -52,8 +52,6 @@ export default function AuthPage() {
     });
 
     async function login(data) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
         const response = await signIn("credentials", {
             email: data.email,
             senha: data.senha,
@@ -109,6 +107,8 @@ export default function AuthPage() {
             setLoadingCadastrar(false)
         } else {
             toast.success("Cadastro realizado com sucesso!");
+
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
             login({
                 email: data['email'],
@@ -223,6 +223,7 @@ export default function AuthPage() {
                                 method="post"
                                 className="space-y-2 pt-2" id="formCadastrar"
                                 onSubmit={formCadastrar.handleSubmit(cadastrar)}
+                                noValidate
                             >
                                 <FormField
                                     control={formCadastrar.control}
@@ -273,6 +274,11 @@ export default function AuthPage() {
                                                     field={field}
                                                     id="new-password"
                                                     autoComplete="new-password"
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === "Enter") {
+                                                            document.getElementById("formCadastrar")?.requestSubmit();
+                                                        }
+                                                    }}
                                                     {...field}
                                                 />
                                             </FormControl>
@@ -282,6 +288,7 @@ export default function AuthPage() {
                                 />
 
                                 <ButtonLoading
+                                    type="submit"
                                     className="w-full"
                                     isLoading={LoadingCadastrar}
                                     form="formCadastrar">

@@ -1,3 +1,4 @@
+import { signOut } from "next-auth/react";
 import { createURLSearch } from "./createURLSearch";
 import { getSessionClient } from "./getSessionClient";
 import { getSessionServer } from "./getSessionServer";
@@ -53,7 +54,7 @@ export const fetchApi = async (route, method, data, ...props) => {
       if (data instanceof FormData) {
         // Se os dados forem uma instância de FormData (envio de arquivos)
         headers["accept"] = "multipart/form-data";
-        dados = data ;
+        dados = data;
       } else {
         // Caso contrário, assume-se que são dados JSON
         headers["Content-Type"] = "application/json";
@@ -70,6 +71,16 @@ export const fetchApi = async (route, method, data, ...props) => {
     })
 
     const responseData = await response.json();
+
+    if (responseData.error && responseData.code === 498) {
+      if (typeof window !== "undefined") {
+        await signOut();
+      } else {
+        const { redirect } = await import("next/navigation");
+
+        redirect("/api/auth/logout");
+      }
+    }
 
     // se erro retorna o array de dados vazio
     if (responseData?.error) {

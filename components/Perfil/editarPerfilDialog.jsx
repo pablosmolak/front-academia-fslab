@@ -86,6 +86,8 @@ export default function EditarPerfilDialog({ usuario }) {
         onSuccess: async () => {
             toast.success("Conta excluída com sucesso!");
 
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
             signOut();
         },
         onError: (error) => {

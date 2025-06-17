@@ -277,34 +277,6 @@ export default function InputFoto({
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-
-
-
-            {/* {cropModalOpen && (
-                <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center">
-                    <div className="relative bg-white w-[90vw] max-w-2xl h-full rounded shadow-lg p-4 flex flex-col items-center">
-                        <div className="relative w-full h-full">
-                            <Cropper
-                                image={cropImageSrc}
-                                crop={crop}
-                                zoom={zoom}
-                                aspect={1}
-                                onCropChange={setCrop}
-                                onZoomChange={setZoom}
-                                onCropComplete={(_, croppedArea) => setCroppedAreaPixels(croppedArea)}
-                            />
-                        </div>
-                        <div className="mt-4 flex gap-2">
-                            <Button variant="ghost" onClick={() => setCropModalOpen(false)}>
-                                Cancelar
-                            </Button>
-                            <Button type="button" onClick={handleCropConfirm}>
-                                Cortar
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            )} */}
         </div>
     );
 }
