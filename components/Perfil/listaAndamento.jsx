@@ -29,7 +29,7 @@ export default function ListaAndamento({ data }) {
 
             {cardsVisiveis?.length === 0 ? (
                 <div className="flex flex-col gap-4 text-center text-black pt-4 pb-4 xl:pt-8 xl:pb-8">
-                    <p className="text-center text-md xl:text-xl">Poxa, você ainda não está inscrito em nenhum curso 😢</p>
+                    <p className="text-center text-md xl:text-lg">Poxa, você ainda não está inscrito em nenhum curso 😢</p>
                     <Button
                         onClick={() => router.push('/')}
                         className="mx-auto"

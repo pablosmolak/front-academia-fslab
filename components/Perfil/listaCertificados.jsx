@@ -30,7 +30,7 @@ export default function ListaCertificados({ data }) {
             </h2>
 
             {cardsVisiveis?.length === 0 ? (
-                <p className="text-center text-md xl:text-xl text-black pt-4 pb-4 xl:pt-8 xl:pb-8">
+                <p className="text-center text-md xl:text-lg text-black pt-4 pb-4 xl:pt-8 xl:pb-8">
                     Poxa, ainda não temos nenhum certificado por aqui 😢<br />
                     Que tal concluir alguns cursos e começar a colecionar conquistas? 🎓🚀
                 </p>

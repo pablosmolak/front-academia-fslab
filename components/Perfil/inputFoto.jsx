@@ -86,10 +86,12 @@ export default function InputFoto({
 
         const blob = await fetch(croppedImgUrl).then((res) => res.blob());
 
-        // ✅ Validação de tamanho (5MB = 5 * 1024 * 1024 bytes)
-        const maxSizeInBytes = Number(process.env.NEXT_PUBLIC_LIMITE_UPLOAD_ARQUIVOS) * 1024 * 1024;
+        const raw = Number(process.env.NEXT_PUBLIC_LIMITE_UPLOAD_ARQUIVOS);
+        const limite = isNaN(raw) ? 0 : raw;
+
+        const maxSizeInBytes = limite * 1024 * 1024;
         if (blob.size > maxSizeInBytes) {
-            toast.error(`O tamanho da imagem recortada ultrapassa o limite de ${process.env.NEXT_PUBLIC_LIMITE_UPLOAD_ARQUIVOS}MB. Tente escolher uma imagem menor ou ajustar o recorte.`);
+            toast.error(`O tamanho da imagem recortada ultrapassa o limite de ${limite}MB. Tente escolher uma imagem menor ou ajustar o recorte.`);
             return;
         }
 

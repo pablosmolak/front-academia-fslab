@@ -70,10 +70,10 @@ export default function TopBar({ className }) {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56">
                             <DropdownMenuGroup>
-                                <DropdownMenuItem className="text-base" onClick={() => { router.push("/usuario/meuperfil") }}>
+                                <DropdownMenuItem className="max-md:text-base" onClick={() => { router.push("/usuario/meuperfil") }}>
                                     Meu Perfil
                                 </DropdownMenuItem>
-                                <DropdownMenuItem className="text-base" onClick={() => { signOut() }}>
+                                <DropdownMenuItem className="max-md:text-base" onClick={() => { signOut() }}>
                                     Sair
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
