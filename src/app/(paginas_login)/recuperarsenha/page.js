@@ -88,6 +88,7 @@ export default function RecuperarSenhaPage() {
                                             <FormLabel htmlFor='email'>Email <span className="text-red-500">*</span></FormLabel>
                                             <FormControl>
                                                 <Input
+                                                    data-test= "inpEmailRecuperarSenha"
                                                     type="text"
                                                     id="email"
                                                     autoComplete='recuperarSenha'
@@ -99,6 +100,7 @@ export default function RecuperarSenhaPage() {
                                     )}
                                 />
                                 <ButtonLoading
+                                    data-test="bntRecuperarSenha"
                                     className="w-full"
                                     isLoading={LoadingRecuperar}
                                     form="formRecuperarSenha">
@@ -109,6 +111,7 @@ export default function RecuperarSenhaPage() {
                         <div className="text-center text-sm">
                             Lembrou sua senha?{" "}
                             <Link
+                                data-test="linkFazerLogin"
                                 href="/login"
                                 className="underline underline-offset-4"
                             >Fazer login</Link>

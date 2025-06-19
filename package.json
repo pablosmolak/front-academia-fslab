@@ -55,6 +55,9 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@tailwindcss/line-clamp": "^0.4.4"
+    "@tailwindcss/line-clamp": "^0.4.4",
+    "cypress": "^14.4.1",
+    "cypress-file-upload": "^5.0.8",
+    "dotenv": "^16.5.0"
   }
 }

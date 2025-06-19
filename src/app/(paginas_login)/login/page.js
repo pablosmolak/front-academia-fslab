@@ -77,7 +77,7 @@ export default function AuthPage() {
                     toast.error("Servidor fora do ar, contate o Administrador do sistema!");
                     break;
                 case "CredentialsSignin":
-                    toast.error("E-mail ou senha incorreta!");
+                    toast.error("E-mail ou senha incorretos!");
                     break;
                 default:
                     toast.error("Erro ao capturar mensagem do servidor, contate o Administrador do sistema!");
@@ -120,7 +120,6 @@ export default function AuthPage() {
     return (
         <div className="relative w-full max-w-3xl h-[550px] overflow-hidden rounded-xl shadow-lg">
             <div className="flex w-full h-full">
-
                 <div className={cn(
                     "w-full md:w-1/2 p-2 md:p-8 flex items-center justify-center",
                     isSignUp ? "hidden md:flex" : "flex"
@@ -145,6 +144,7 @@ export default function AuthPage() {
                                             <FormLabel htmlFor="email">E-mail</FormLabel>
                                             <FormControl>
                                                 <Input
+                                                    data-test="inpEmail"
                                                     type="email"
                                                     id="email"
                                                     autoComplete="username"
@@ -163,6 +163,7 @@ export default function AuthPage() {
                                             <div className="flex items-center">
                                                 <FormLabel htmlFor="senha">Senha</FormLabel>
                                                 <Link
+                                                    data-test="linkRecuperarSenha"
                                                     tabIndex={-1}
                                                     href="/recuperarsenha"
                                                     className="ml-auto text-sm underline-offset-2 hover:underline"
@@ -172,6 +173,7 @@ export default function AuthPage() {
                                             </div>
                                             <FormControl>
                                                 <InputPassword
+                                                    data-test = "inpSenha"
                                                     form={formLogar}
                                                     field={field}
                                                     id="senha"
@@ -189,6 +191,7 @@ export default function AuthPage() {
                                     )}
                                 />
                                 <ButtonLoading
+                                    data-test="bntEntrar"
                                     type="submit"
                                     className="w-full"
                                     isLoading={formLogar.formState.isSubmitting}
@@ -201,6 +204,7 @@ export default function AuthPage() {
                         <div className="text-center text-sm">
                             Não tem uma conta?{" "}
                             <button
+                                data-test="btnCriarConta"
                                 className="underline underline-offset-4"
                                 onClick={() => setIsSignUp(true)}
                             >
@@ -233,6 +237,7 @@ export default function AuthPage() {
                                             <FormLabel htmlFor="nome">Nome <span className="text-red-500">*</span></FormLabel>
                                             <FormControl>
                                                 <Input
+                                                    data-test="inpNovoNome"
                                                     type="text"
                                                     id="nome"
                                                     autoComplete="name"
@@ -252,6 +257,7 @@ export default function AuthPage() {
                                             <FormLabel htmlFor="new-email">E-mail <span className="text-red-500">*</span></FormLabel>
                                             <FormControl>
                                                 <Input
+                                                    data-test="inpNovoEmail"
                                                     type="email"
                                                     id="new-email"
                                                     autoComplete="username"
@@ -270,6 +276,7 @@ export default function AuthPage() {
                                             <FormLabel htmlFor="new-password">Senha <span className="text-red-500">*</span></FormLabel>
                                             <FormControl>
                                                 <InputPassword
+                                                    data-test="inpNovaSenha"
                                                     form={formLogar}
                                                     field={field}
                                                     id="new-password"
@@ -288,6 +295,7 @@ export default function AuthPage() {
                                 />
 
                                 <ButtonLoading
+                                    data-test="btnCadastrar"
                                     type="submit"
                                     className="w-full"
                                     isLoading={LoadingCadastrar}
@@ -299,6 +307,7 @@ export default function AuthPage() {
                         <div className="text-center text-sm">
                             Já tem uma conta?{" "}
                             <button
+                                data-test="btnTemConta"
                                 className="underline underline-offset-4"
                                 onClick={() => setIsSignUp(false)}
                             >
@@ -321,6 +330,5 @@ export default function AuthPage() {
                 />
             </div>
         </div>
-
     )
 }

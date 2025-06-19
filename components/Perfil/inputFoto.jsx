@@ -200,6 +200,7 @@ export default function InputFoto({
                     Adicionar foto
                 </label>
                 <input
+                    data-test="inpFotoPerfil"
                     id={id}
                     type="file"
                     ref={refInputFile}
@@ -268,10 +269,17 @@ export default function InputFoto({
                         />
                     </div>
                     <AlertDialogFooter className="flex gap-2">
-                        <Button variant="ghost" onClick={() => setCropModalOpen(false)}>
+                        <Button 
+                            data-test='bntCropCancelar'
+                            variant="ghost" 
+                            onClick={() => setCropModalOpen(false)}
+                        >
                             Cancelar
                         </Button>
-                        <Button onClick={handleCropConfirm}>
+                        <Button 
+                            onClick={handleCropConfirm}
+                            data-test='bntCropCortar'
+                        >
                             Cortar
                         </Button>
                     </AlertDialogFooter>

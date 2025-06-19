@@ -32,6 +32,7 @@ export function SemInscricaoAlert({ cursoId, criarInscricao, isLoadingCriarInscr
                     className="flex gap-2"
                 >
                     <AlertDialogCancel
+                        data-test="btnCancelarInscricao"
                         onClick={() => {
                             router.push(`/curso/${cursoId}`);
                         }}
@@ -39,6 +40,7 @@ export function SemInscricaoAlert({ cursoId, criarInscricao, isLoadingCriarInscr
                         Cancelar
                     </AlertDialogCancel>
                     <AlertDialogAction
+                        data-test="btnInscreverCursoPlayer"
                         className="bg-green-700 hover:bg-green-600 text-white"
                         disabled={isLoadingCriarInscricao}
                         onClick={() => criarInscricao()}

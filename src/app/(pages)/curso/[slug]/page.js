@@ -59,6 +59,7 @@ export default function cursoPage({ params }) {
                     return response.data[0] || null
                 }
             },
+            enabled: status === "authenticated",
             retry: (failureCount, error) => {
                 if (error?.code === 498 || error?.code === 404) {
                     return false;
@@ -100,6 +101,7 @@ export default function cursoPage({ params }) {
                     return response.data[0] || null
                 }
             },
+            enabled: status === "authenticated",
             retry: (failureCount, error) => {
                 if (error?.code === 498 || error?.code === 404) {
                     return false;
@@ -221,6 +223,7 @@ export default function cursoPage({ params }) {
                     w-full
                 ">
                     <ButtonLoading
+                        data-test="btnAcessarCurso"
                         onClick={() => { inscreverNoCurso() }}
                         className="
                         w-full md:w-52 
@@ -231,6 +234,7 @@ export default function cursoPage({ params }) {
                     {(status === 'authenticated') && (
                         <DropdownMenu>
                             <DropdownMenuTrigger
+                                data-test="dropOutrasAcoes"
                                 className="
                                 rounded-md
                                 bg-gray-100 
@@ -247,6 +251,7 @@ export default function cursoPage({ params }) {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                                 <DropdownMenuItem
+                                    data-test="dropItemCertificado"
                                     disabled={(progresso?.porcentagem !== 100 || isErrorProgresso)}
                                     onClick={() => {
                                         if (progresso?.porcentagem === 100) {
@@ -258,6 +263,7 @@ export default function cursoPage({ params }) {
                                 </DropdownMenuItem>
 
                                 <DropdownMenuItem
+                                    data-test="dropItemDesiscreverDoCurso"
                                     disabled={(!progresso || progresso?.porcentagem === 100) || isErrorProgresso}
                                     onClick={() => {
                                         desisncreverDoCurso()
@@ -307,7 +313,11 @@ export default function cursoPage({ params }) {
 
                             <Accordion type="single" collapsible className="w-full">
                                 {curso?.topicos.map((topico) => (
-                                    <AccordionItem value={topico.id} key={topico.id}>
+                                    <AccordionItem 
+                                        data-test="accordionTopicos" 
+                                        value={topico.id} 
+                                        key={topico.id}
+                                    >
                                         <AccordionTrigger>{topico.titulo}</AccordionTrigger>
                                         {topico?.conteudos.map((conteudos) => (
                                             <AccordionContent key={conteudos.id} className='px-4'>

@@ -91,6 +91,7 @@ export function AppSidebar({ onVideoChange, curso, progresso, conteudoSelecionad
             <SidebarHeader className='flex flex-col items-center'>
                 <SidebarGroup className='flex flex-row items-center gap-2'>
                     <Button
+                        data-test="btnVoltarPlayer"
                         type="button"
                         variant="ghost"
                         size="icon"
@@ -121,6 +122,7 @@ export function AppSidebar({ onVideoChange, curso, progresso, conteudoSelecionad
                     <SidebarGroupContent>
                         <SidebarGroupLabel>Tópico Atual</SidebarGroupLabel>
                         <Select
+                            data-test="inpTopicos"
                             value={topicoSelecionado}
                             onValueChange={(value) => setTopicoSelecionado(value)}
                         >
@@ -130,8 +132,9 @@ export function AppSidebar({ onVideoChange, curso, progresso, conteudoSelecionad
                             <SelectContent
                                 className="bg-zinc-800 text-gray-100 border-zinc-500 "
                             >
-                                {curso?.topicos?.map((item) => (
+                                {curso?.topicos?.map((item, index) => (
                                     <SelectItem
+                                        data-test={`topico${index}`}
                                         key={item.id}
                                         value={item.titulo}
                                         className="focus:bg-zinc-700 focus:text-gray-100"
@@ -147,9 +150,10 @@ export function AppSidebar({ onVideoChange, curso, progresso, conteudoSelecionad
                     <SidebarGroupContent>
                         <SidebarGroupLabel>Conteúdos</SidebarGroupLabel>
                         <SidebarMenu>
-                            {conteudosFiltrados?.map((conteudo) => (
+                            {conteudosFiltrados?.map((conteudo,index) => (
                                 <SidebarMenuItem key={conteudo.id}>
                                     <SidebarMenuButton
+                                        data-test={`btnSidebarConteudo${index}`}
                                         size="Slg"
                                         asChild
                                         onClick={() => tratarCliqueConteudo(conteudo)}

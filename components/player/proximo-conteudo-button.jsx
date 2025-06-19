@@ -66,16 +66,17 @@ export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, 
 
     const ConteudoAtualConcluido = progresso?.atividadesConcluidas?.includes(conteudo?.id);
 
-    if ((!ConteudoAtualConcluido && videoNofim)) {
-        return (  
+    if ((!ConteudoAtualConcluido /*&& videoNofim*/)) {
+        return (
             <>
                 <ButtonLoading
+                    data-test="btnfinalizarConteudo"
                     isLoading={isLoadingFinalizarAtividade}
                     type="button"
                     onClick={() => { finalizarConteudo() }}
                     className="w-44"
                 >
-                    {ArrayDeConteudos[ArrayDeConteudos.length - 1]?.id !== conteudo?.id ? "Próximo conteúdo":"Finalizar curso"}
+                    {ArrayDeConteudos[ArrayDeConteudos.length - 1]?.id !== conteudo?.id ? "Próximo conteúdo" : "Finalizar curso"}
                 </ButtonLoading>
             </>
         );
@@ -83,6 +84,7 @@ export function ProximoConteudoButton({ progresso, videoNofim, conteudo, curso, 
         return (
             <>
                 <ButtonLoading
+                    data-test="btnProximoConteudo"
                     isLoading={isLoadingFinalizarAtividade}
                     type="button"
                     onClick={() => { proximoConteudo() }}

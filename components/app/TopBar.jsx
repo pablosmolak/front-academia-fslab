@@ -55,7 +55,10 @@ export default function TopBar({ className }) {
                 {pathname !== '/login' && status === "authenticated" && (
                     <DropdownMenu className="">
                         <DropdownMenuTrigger asChild>
-                            <div className="flex flex-row items-center gap-x-2">
+                            <div
+                                data-test="dropMenu"
+                                className="flex flex-row items-center gap-x-2"
+                            >
                                 <Avatar >
                                     <AvatarImage src={userContext?.fotoPerfilUrl} />
                                     <AvatarFallback className="text-black">{userContext?.name?.trim().slice(0, 2).toUpperCase()}</AvatarFallback>
@@ -70,10 +73,10 @@ export default function TopBar({ className }) {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56">
                             <DropdownMenuGroup>
-                                <DropdownMenuItem className="max-md:text-base" onClick={() => { router.push("/usuario/meuperfil") }}>
+                                <DropdownMenuItem data-test="dropMenuPerfil" className="max-md:text-base" onClick={() => { router.push("/usuario/meuperfil") }}>
                                     Meu Perfil
                                 </DropdownMenuItem>
-                                <DropdownMenuItem className="max-md:text-base" onClick={() => { signOut() }}>
+                                <DropdownMenuItem data-test="dropMenuSair" className="max-md:text-base" onClick={() => { signOut() }}>
                                     Sair
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>

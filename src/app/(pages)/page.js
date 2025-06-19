@@ -104,6 +104,7 @@ export default function paginaInicial({ searchParams }) {
                                 <FormItem className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
                                     <FormControl>
                                         <Input
+                                            data-test="inpFiltro"
                                             type="text"
                                             id="filtro"
                                             placeholder="Pesquisar"
@@ -116,6 +117,7 @@ export default function paginaInicial({ searchParams }) {
                             )}
                         />
                         <ButtonLoading
+                             data-test="btnFiltrar"
                             className="w-36 h-full"
                             isLoading={isLoading}
                             form="formFiltrar">
@@ -153,6 +155,7 @@ export default function paginaInicial({ searchParams }) {
 
                                     <CardFooter>
                                         <Link
+                                            data-test={`linkCurso${index}`}
                                             href={`/curso/${data.id}`}
                                             className="
                                                 w-full 

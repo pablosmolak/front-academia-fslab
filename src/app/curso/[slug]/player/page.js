@@ -167,7 +167,10 @@ export default function playerPage({ params }) {
                     <div className="pt-16 flex flex-col flex-grow overflow-hidden">
 
                         <div className="sticky top-0 z-40 bg-zinc-800 min-h-20 py-2 px-16 flex items-center justify-center w-full text-center">
-                            <SidebarTrigger className="absolute left-1 hover:bg-zinc-700" />
+                            <SidebarTrigger 
+                                data-test="triggerSidebarPlayer" 
+                                className="absolute left-1 hover:bg-zinc-700" 
+                            />
                             <p className="text-white break-words">{conteudo?.titulo || ""}</p>
                         </div>
 

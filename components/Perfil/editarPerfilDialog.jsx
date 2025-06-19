@@ -113,7 +113,7 @@ export default function EditarPerfilDialog({ usuario }) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" className="w-32" size="sm">
+                <Button data-test="btnEditarPerfil" variant="outline" className="w-32" size="sm">
                     Editar Perfil
                 </Button>
             </DialogTrigger>
@@ -141,7 +141,6 @@ export default function EditarPerfilDialog({ usuario }) {
                                             id={"foto"}
                                             value={field.value}
                                             onChange={field.onChange}
-                                            data-test="fotoItem"
                                             usuario={usuario}
                                         />
                                     </FormControl>
@@ -157,6 +156,7 @@ export default function EditarPerfilDialog({ usuario }) {
                                     <FormLabel htmlFor="nome">Nome <span className="text-red-500">*</span></FormLabel>
                                     <FormControl>
                                         <Input
+                                            data-test="inpNomePerfil"
                                             id="nome"
                                             {...field}
                                         />
@@ -174,6 +174,7 @@ export default function EditarPerfilDialog({ usuario }) {
                                     <FormLabel htmlFor="email">E-mail <span className="text-red-500">*</span></FormLabel>
                                     <FormControl>
                                         <Input
+                                            data-test="inpEmailPerfil"
                                             id="email"
                                             {...field}
                                         />
@@ -192,6 +193,7 @@ export default function EditarPerfilDialog({ usuario }) {
                                 <FormItem className="flex items-center space-x-2 space-y-0">
                                     <FormControl>
                                         <Checkbox
+                                            data-test="inpAlterarSenhaPerfil"
                                             id="alterarSenha"
                                             checked={field.value}
                                             onCheckedChange={field.onChange}
@@ -212,6 +214,7 @@ export default function EditarPerfilDialog({ usuario }) {
                                             <FormLabel htmlFor="senha">Senha <span className="text-red-500">*</span></FormLabel>
                                             <FormControl>
                                                 <InputPassword
+                                                    data-test="inpSenhaPerfil"
                                                     form={formAtualizarPerfil}
                                                     field={field}
                                                     id="new-password"
@@ -232,6 +235,7 @@ export default function EditarPerfilDialog({ usuario }) {
                                             <FormLabel htmlFor="confirmaSenha">Confirmar Senha <span className="text-red-500">*</span></FormLabel>
                                             <FormControl>
                                                 <InputPassword
+                                                    data-test="inpConfirmaSenhaPerfil"
                                                     form={formAtualizarPerfil}
                                                     field={field}
                                                     id="confirmaSenha"
@@ -246,7 +250,7 @@ export default function EditarPerfilDialog({ usuario }) {
                             </>
                         )}
                         <div className="pt-4">
-                            <ButtonLoading isLoading={isLoadingCriarInscricao} className={"w-full"}>
+                            <ButtonLoading data-test="btnAtualizarPerfil" isLoading={isLoadingCriarInscricao} className={"w-full"}>
                                 Atualizar
                             </ButtonLoading>
                         </div>
@@ -258,6 +262,7 @@ export default function EditarPerfilDialog({ usuario }) {
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
                             <Button
+                                data-test="btnDeletarPerfil"
                                 variant="link"
                                 className="mt-4 text-sm text-red-500"
                             >
@@ -272,8 +277,8 @@ export default function EditarPerfilDialog({ usuario }) {
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => excluirConta()}>Excluir conta</AlertDialogAction>
+                                <AlertDialogCancel data-test="bntCancelarExclusaoPerfil" >Cancelar</AlertDialogCancel>
+                                <AlertDialogAction data-test="btnExcluirConta" onClick={() => excluirConta()}>Excluir conta</AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>

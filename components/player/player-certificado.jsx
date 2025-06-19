@@ -19,6 +19,7 @@ const PlayerCertificadoPage = ({ certificadoValidador }) => {
 
                 <div className="flex justify-center">
                     <Link
+                        data-test="linkCertificadoPlayer"
                         href={`/usuario/certificado/${certificadoValidador}`}
                         className="bg-primary hover:bg-yellow-500 text-black font-bold py-3 px-12 rounded-lg flex items-center space-x-2"
                     >
@@ -33,7 +34,10 @@ const PlayerCertificadoPage = ({ certificadoValidador }) => {
 
 const PlayerCertificadoAlert = ({ certificadoValidador }) => {
     return (
-        <Link href={`/usuario/certificado/${certificadoValidador}`}>
+        <Link 
+            data-test="linkSidebarCertificado"
+            href={`/usuario/certificado/${certificadoValidador}`}
+        >
             <Alert className="bg-zinc-700 border-none hover:bg-zinc-600 transition-colors duration-200">
                 <div className="flex items-center gap-2 ">
                     <FileBadge className="text-gray-200" />
