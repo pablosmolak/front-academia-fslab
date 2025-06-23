@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 describe('Tela de Login', () => {
     beforeEach(() => {
         cy.visit('/login');

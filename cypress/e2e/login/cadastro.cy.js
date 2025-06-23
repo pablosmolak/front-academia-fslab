@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 describe('Tela de Cadastro', () => {
     beforeEach(() => {
         cy.visit('/login');
@@ -41,6 +43,6 @@ describe('Tela de Cadastro', () => {
 
         cy.contains('Cadastro realizado com sucesso!').should('exist');
 
-        cy.excluirUsuario()
-    })
+        cy.excluirUsuario();
+    });
 });

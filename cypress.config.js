@@ -8,5 +8,8 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
+    env: {
+      LIMITE_UPLOAD_ARQUIVOS: process.env.NEXT_PUBLIC_LIMITE_UPLOAD_ARQUIVOS,
+    }
   },
 });

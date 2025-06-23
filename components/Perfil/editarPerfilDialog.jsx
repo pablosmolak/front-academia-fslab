@@ -7,7 +7,7 @@ import { usuarioSchema } from "@/src/schemas/usuarioSchema";
 import { fetchApi } from "@/src/utils/fetchApi";
 import { handleImagePath } from "@/src/utils/handleImagePath";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { signOut } from "next-auth/react";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -27,6 +27,8 @@ export default function EditarPerfilDialog({ usuario }) {
 
     const [open, setOpen] = useState(false);
     const { setUser } = useContext(ApplicationContext);
+
+     const queryClient = useQueryClient();
 
     const schemaAtualizarPerfil = usuarioSchema.alterarUsuario
     const formAtualizarPerfil = useForm({
@@ -60,6 +62,8 @@ export default function EditarPerfilDialog({ usuario }) {
                 ... await getUserInfos(),
                 fotoPerfilUrl: handleImagePath(`/usuarios/${usuario?.id}/image?time=${Date.now()}`)
             })
+
+            queryClient.invalidateQueries(["meuperfil", usuario?.id]);
 
             toast.success("Usuário atualizado com sucesso!");
             setOpen(false);
@@ -109,6 +113,19 @@ export default function EditarPerfilDialog({ usuario }) {
 
         return () => subscription.unsubscribe();
     }, [formAtualizarPerfil.watch, formAtualizarPerfil.setValue]);
+
+    useEffect(() => {
+        if (open) {
+            formAtualizarPerfil.reset({
+                email: usuario?.email || "",
+                nome: usuario?.nome || "",
+                foto: usuario?.fotoPerfil,
+                alterarSenha: false,
+                senha: "",
+                confirmaSenha: ""
+            });
+        }
+    }, [open]);
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
