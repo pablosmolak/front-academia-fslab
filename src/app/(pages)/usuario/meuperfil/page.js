@@ -62,7 +62,7 @@ export default function MeuPerfilPage() {
         error: errorCertificados } = useQuery({
             queryKey: ["meuperfilcertificados", userId],
             queryFn: async () => {
-                const response = await fetchApi(`/certificados/usuario/${userId}`, "GET");
+                const response = await fetchApi(`/certificados/usuario`, "GET");
 
                 if (response.error) {
                     throw response
