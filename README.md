@@ -18,7 +18,7 @@
 - [📂 Estrutura de Pastas](#-estrutura-de-pastas)
 - [▶️ Como Rodar Localmente](#-como-rodar-localmente)
 - [🔐 Variáveis de Ambiente](#-variáveis-de-ambiente)
-- [👨‍💻 Autor](#autor)
+- [👨‍💻 Autor](#-autor)
 
 ---
 
