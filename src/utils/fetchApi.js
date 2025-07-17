@@ -1,6 +1,7 @@
+import { signOut } from "next-auth/react";
 import { createURLSearch } from "./createURLSearch";
-//import { getSessionClient } from "./getSessionClient";
-//import { getSessionServer } from "./getSessionServer";
+import { getSessionClient } from "./getSessionClient";
+import { getSessionServer } from "./getSessionServer";
 
 // Função para verificar se onde a função está sendo chamada esta do lado do servidor ou esta do lado do cliente
 const verificarRenderizacao = () => {
@@ -15,11 +16,11 @@ const verificarRenderizacao = () => {
 
 const getSessionSafely = async () => {
   if (typeof window !== "undefined") {
-    return //await getSessionClient();
+    return await getSessionClient();
   } else {
     "use server";
 
-    return //await getSessionServer();
+    return await getSessionServer();
   }
 }
 
@@ -29,7 +30,7 @@ const getSessionSafely = async () => {
 export const fetchApi = async (route, method, data, ...props) => {
   try {
     // 
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVlYmYyNDNlLTg2OTItNDc3Zi1hODIyLWQ5ZjlkMWRiYjJkYSIsIm5vbWUiOiJBZG1pbmlzdHJhZG9yIiwiZW1haWwiOiJkZXZAZ21haWwuY29tIiwiYXRpdm8iOnRydWUsImdydXBvIjoiQWRtaW5pc3RyYWRvcmVzIiwiaWF0IjoxNzMxNTQ3MTIyLCJleHAiOjE3MzE2MzM1MjJ9.8qs1QewacP7ank8dVIUUXPaBkpFj-IG5BGBFt6CPbKw"//await getSessionSafely();
+    const token = await getSessionSafely();
 
     // chama função para pegar o env da API
     let urlApi = verificarRenderizacao();
@@ -37,10 +38,10 @@ export const fetchApi = async (route, method, data, ...props) => {
     let dados = null;
 
     // se for método GET recebe as querys e cria uma URL já com encode
-    
+
     if (method === "GET" && data) {
       let urlSearch = createURLSearch(route, data);
-      
+
       route = urlSearch;
     }
 
@@ -71,10 +72,21 @@ export const fetchApi = async (route, method, data, ...props) => {
 
     const responseData = await response.json();
 
+    if (responseData.error && responseData.code === 498) {
+      if (typeof window !== "undefined") {
+        await signOut();
+      } else {
+        const { redirect } = await import("next/navigation");
+
+        redirect("/api/auth/logout");
+      }
+    }
+
     // se erro retorna o array de dados vazio
     if (responseData?.error) {
       return {
         data: [],
+        code: responseData?.code,
         error: true,
         errors: responseData?.errors ?? [{ message: "Não foi possível identificar o erro, contate o Administrador" }]
       };
@@ -85,7 +97,6 @@ export const fetchApi = async (route, method, data, ...props) => {
 
   } catch (error) {
     // se erro retorna o array de dados vazio
-    console.log(error);
 
     return {
       data: [],
