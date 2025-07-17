@@ -1,4 +1,3 @@
-
 <p align="center">
   <img src="public/assets/logo_fslab.png" alt="Logo FSLab" width="250"/>
 </p>
@@ -12,13 +11,13 @@
 
 ## 📑 Sumário
 
-- [🚀 Projeto](#projeto)
-- [🌐 Acesse a Academia em produção](#acesse-a-academia-em-produção)
-- [✨ Funcionalidades](#funcionalidades)
-- [🛠 Tecnologias Utilizadas](#tecnologias-utilizadas)
-- [📂 Estrutura de Pastas](#estrutura-de-pastas)
-- [▶️ Como Rodar Localmente](#como-rodar-localmente)
-- [🔐 Variáveis de Ambiente](#variáveis-de-ambiente)
+- [🚀 Projeto](#-projeto)
+- [🌐 Acesse a Academia em produção](#-acesse-a-academia-em-produção)
+- [✨ Funcionalidades](#-funcionalidades)
+- [🛠 Tecnologias Utilizadas](#-tecnologias-utilizadas)
+- [📂 Estrutura de Pastas](#-estrutura-de-pastas)
+- [▶️ Como Rodar Localmente](#-como-rodar-localmente)
+- [🔐 Variáveis de Ambiente](#-variáveis-de-ambiente)
 - [👨‍💻 Autor](#autor)
 
 ---
