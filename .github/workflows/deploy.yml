@@ -39,3 +39,10 @@ jobs:
           push: true
           platforms: linux/arm64
           tags: ghcr.io/pablosmolak/academia-front:latest
+
+      - name: Update runtime env secret on cluster
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_FRONT_SECRET_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 ubuntu@167.126.8.103 < .env
