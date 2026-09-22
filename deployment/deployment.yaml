@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: front-academia-env
+data:
+  API_URL: "https://api-academia.smolak.dpdns.org"
+  NEXT_PUBLIC_API_URL: "https://api-academia.smolak.dpdns.org"
+  NEXT_PUBLIC_FRONT_URL: "https://front-academia.smolak.dpdns.org"
+  NEXTAUTH_URL: "https://front-academia.smolak.dpdns.org"
+  PORT: "3000"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-academia
+spec:
+  selector:
+    matchLabels:
+      app: front-academia
+  template:
+    metadata:
+      labels:
+        app: front-academia
+    spec:
+      imagePullSecrets:
+      - name: ghcr-secret
+      containers:
+      - name: front-academia
+        image: ghcr.io/pablosmolak/academia-front:latest
+        envFrom:
+        - configMapRef:
+            name: front-academia-env
+        - secretRef:
+            name: front-academia-secret
+        resources: {}
+        ports:
+        - containerPort: 3000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: front-academia
+  labels:
+    rubix.expose: "true"
+spec:
+  type: ClusterIP
+  selector:
+    app: front-academia
+  ports:
+  - port: 80
+    targetPort: 3000
