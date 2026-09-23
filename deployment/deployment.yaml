@@ -19,14 +19,6 @@ spec:
         resources: {}
         ports:
         - containerPort: 3000
-        volumeMounts:
-        - name: envfile
-          mountPath: /app/.env
-          subPath: .env
-      volumes:
-      - name: envfile
-        secret:
-          secretName: front-academia-envfile
 
 ---
 apiVersion: v1
